@@ -8,7 +8,11 @@
 package edu.boisestate.cs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import edu.boisestate.cs.automatonModel.AcyclicWeightedAutomatonModelManager;
+import edu.boisestate.cs.automatonModel.AggregateAutomatonModelManager;
 import edu.boisestate.cs.automatonModel.AutomatonModelManager;
+import edu.boisestate.cs.automatonModel.UnboundedAutomatonModelManager;
 import edu.boisestate.cs.graph.PrintConstraint;
 import edu.boisestate.cs.graph.SymbolicEdge;
 import edu.boisestate.cs.reporting.MCReporter;
@@ -301,15 +305,24 @@ public class SolveMain {
         } else if (selectedSolver == Settings.SolverType.JSA) {
 
             // get model manager instance
+        	// getInstance will return an instance of AutomatonModelManager 
+        	// based on modelVersion:
+        	// modelVersion = 1; UnboundedAutomatonModelManager
+        	// modelVersion = 2; BoundedAutomatonModelManager
+        	// modelVersion = 3; AggregateAutomatonModelManager
+        	// modelVersion = 4; WeightedAutomatonModelManager
+        	// modelVersion = 5; AcyclicWeightedAutomatonModelManager
             AutomatonModelManager modelManager =
                     AutomatonModelManager.getInstance(alphabet,
                                                       modelVersion,
                                                       boundingLength);
 
+            // Reporting only SAT/UNSAT use AutomatonModelSolver
             if (reportType == Settings.ReportType.SAT) {
 
                 solver = new AutomatonModelSolver(modelManager, boundingLength);
 
+            // Reporting MODEL COUNT use MCAutomatonModelSolver   
             } else if (reportType == Settings.ReportType.MODEL_COUNT) {
 
                 solver = new MCAutomatonModelSolver(modelManager,

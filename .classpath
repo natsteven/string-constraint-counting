@@ -11,19 +11,25 @@
 	<classpathentry excluding="java/edu/boisestate/cs/|java/edu/boisestate/|java/edu/|java/" kind="src" path="src/test"/>
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
 		<attributes>
+			<attribute name="test" value="true"/>
 			<attribute name="optional" value="true"/>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/Users/elenasherman/research/git/string-constraint-counting/src/main/resources/repo/eclipse-cpl/eclipse-cpl/1.0/eclipse-cpl-1.0.jar"/>
-	<classpathentry kind="lib" path="/Users/elenasherman/research/git/string-constraint-counting/src/main/resources/repo/dk/brics/string/2.1-1/string-2.1-1.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
+	<classpathentry kind="lib" path="/home/MARLINROBERTS/eclipse-workspace/string-constraint-counting/src/main/resources/repo/eclipse-cpl/eclipse-cpl/1.0/eclipse-cpl-1.0.jar"/>
+	<classpathentry kind="lib" path="/home/MARLINROBERTS/eclipse-workspace/string-constraint-counting/src/main/resources/repo/dk/brics/string/2.1-1/string-2.1-1.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/Users/elenasherman/research/git/string-constraint-counting/src/main/resources/repo/stranger/stranger/1.0/stranger-1.0.jar"/>
+	<classpathentry kind="lib" path="/home/MARLINROBERTS/eclipse-workspace/string-constraint-counting/src/main/resources/repo/stranger/stranger/1.0/stranger-1.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry excluding="**" kind="src" output="target/classes" path="src/main/resources">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
