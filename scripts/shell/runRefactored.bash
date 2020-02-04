@@ -1,5 +1,5 @@
 #! /bin/bash
-#file containing the names of the to the correctness benchmark
+#file containing the names of the benchmarks
 filename="$1"
 
 while read -r line
@@ -26,7 +26,7 @@ do
       #run concrete
       fileName=(${bench//./ })
     
-      outfileOrig=./data/correctness/type/${fileName[0]}.txt
+      outfileOrig=./data/refactor/type/${fileName[0]}.txt
       #echo $outfile
 
       outfile=${outfileOrig//type/concrete}
@@ -40,18 +40,18 @@ do
       java -Xmx4g -cp ./target/classes/:$CLASSPATH edu.boisestate.cs.SolveMain -l ${len} ${pathfile} -r model-count -s jsa  -v 5 > ${outfile}
       
       #compare them
-      #echo "comparing"
-      #java -Xmx4g -cp ./target/classes/:$CLASSPATH edu.boisestate.cs.reporting.MCDifference ${fileName[0]}.txt
+      echo "comparing"
+      java -Xmx4g -cp ./target/classes/:$CLASSPATH edu.boisestate.cs.reporting.CheckRefactor ${fileName[0]}.txt
       
       outfile=${outfileOrig//type/bounded}
       #echo $outfile
-      echo "bounded"
-      java -Xmx4g -cp ./target/classes/:$CLASSPATH edu.boisestate.cs.SolveMain -l ${len} ${pathfile} -r model-count -s jsa  -v 1 > ${outfile}
+      #echo "bounded"
+      #java -Xmx4g -cp ./target/classes/:$CLASSPATH edu.boisestate.cs.SolveMain -l ${len} ${pathfile} -r model-count -s jsa  -v 1 > ${outfile}
       
       outfile=${outfileOrig//type/acyclic}
       #echo $outfile
-      echo "acyclic"
-      java -Xmx4g -cp ./target/classes/:$CLASSPATH edu.boisestate.cs.SolveMain -l ${len} ${pathfile} -r model-count -s jsa  -v 2 > ${outfile}
+      #echo "acyclic"
+      #java -Xmx4g -cp ./target/classes/:$CLASSPATH edu.boisestate.cs.SolveMain -l ${len} ${pathfile} -r model-count -s jsa  -v 2 > ${outfile}
     
     fi
    

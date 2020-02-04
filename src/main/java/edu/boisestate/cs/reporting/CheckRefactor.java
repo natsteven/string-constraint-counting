@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class MCDifference {
+public class CheckRefactor {
 
 	public static void main(String[] args) {
 		//takes in two file names
@@ -13,7 +13,7 @@ public class MCDifference {
 			fName = args[0];
 		}
 		
-		String f1Path = "./data/correctness/concrete/" + fName;
+		String f1Path = "./data/refactor/acyclicWeighted/" + fName;
 		String f2Path = "./data/correctness/acyclicWeighted/" + fName;
 		
 		try {
