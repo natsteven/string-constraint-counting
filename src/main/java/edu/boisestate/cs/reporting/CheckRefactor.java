@@ -9,12 +9,14 @@ public class CheckRefactor {
 	public static void main(String[] args) {
 		//takes in two file names
 		String fName = "delete_concat_l3.txt";
+		String typeDirectory = "";
 		if(args.length != 0){
 			fName = args[0];
+			typeDirectory = args[1];
 		}
 		
-		String f1Path = "./data/refactor/acyclicWeighted/" + fName;
-		String f2Path = "./data/correctness/acyclicWeighted/" + fName;
+		String f1Path = "./data/refactor/" + typeDirectory + "/" + fName;
+		String f2Path = "./data/correctness/" + typeDirectory + "/" + fName;
 		
 		try {
 			BufferedReader brF1 = new BufferedReader(new FileReader(f1Path));
