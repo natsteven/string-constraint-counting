@@ -6,9 +6,8 @@ public class Settings {
     private String alphabetDeclaration;
     /**
      * Version of the automaton model used with JSA family of string constraint
-     * solvers: <ol> <li>Unbounded automaton model</li> <li>Bounded automaton
-     * model</li> <li>Aggregate bounded automata model</li> <li>Proposed
-     * accurate automaton model</li> </ol>
+     * solvers: <ol> <li>Bounded automaton model</li> <li>Acyclic automaton
+     * model</li> <li>Acyclic Weighted automata model</li></ol>
      */
     private int automatonModelVersion;
     private boolean debug;

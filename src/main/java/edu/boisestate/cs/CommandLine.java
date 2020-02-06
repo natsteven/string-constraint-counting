@@ -304,7 +304,7 @@ class CommandLine {
                               .longOpt("length")
                               .desc("Initial bounding length of the " +
                                     "underlying symbolic string, used with " +
-                                    "JSA ans Concrete solvers. Default value " +
+                                    "JSA and Concrete solvers. Default value " +
                                     "is " +
                                     Settings.DEFAULT_BOUNDING_LENGTH + ".")
                               .hasArg()
@@ -312,20 +312,37 @@ class CommandLine {
                               .argName("length")
                               .build();
 
+// TODO: remove        
+//        Option modelVersion = Option.builder("v")
+//                                    .longOpt("model-version")
+//                                    .desc("The version of the automaton model" +
+//                                          " used by the JSA string constraint" +
+//                                          " solver:\n1 - Unbounded Automaton" +
+//                                          " Model\n2 - Bounded Automaton" +
+//                                          " Model\n3 - Aggregate Bounded" +
+//                                          " Automata Model\n4 - Weighted" +
+//                                          " Bounded Automaton Model")
+//                                    .hasArg()
+//                                    .numberOfArgs(1)
+//                                    .argName("version")
+//                                    .build();
+        
         // automaton model version option
+        // Modified MJR: Reduced options to Bounded, Acyclic, Acyclic Weighted.
         Option modelVersion = Option.builder("v")
-                                    .longOpt("model-version")
-                                    .desc("The version of the automaton model" +
-                                          " used by the JSA string constraint" +
-                                          " solver:\n1 - Unbounded Automaton" +
-                                          " Model\n2 - Bounded Automaton" +
-                                          " Model\n3 - Aggregate Bounded" +
-                                          " Automata Model\n4 - Weighted" +
-                                          " Bounded Automaton Model")
-                                    .hasArg()
-                                    .numberOfArgs(1)
-                                    .argName("version")
-                                    .build();
+                					.longOpt("model-version")
+					                .desc("The version of the automaton model" +
+					                      " used by the JSA string constraint" +
+					                      " solver:\n1 - Bounded Automaton" +
+					                      " Model\n2 - Acyclic Automaton" +
+					                      " Model\n3 - Acyclic Weighted Automaton" +
+					                      " Model")
+					                .hasArg()
+					                .numberOfArgs(1)
+					                .argName("version")
+					                .build();
+        
+        
 
         Option old = Option.builder("o")
                            .longOpt("old")
