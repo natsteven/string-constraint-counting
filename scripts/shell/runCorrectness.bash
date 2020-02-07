@@ -37,7 +37,7 @@ do
       outfile=${outfileOrig//type/acyclicWeighted}
       #echo $outfile
       echo "acyclicWeighted"
-      java -Xmx4g -cp ./target/classes/:$CLASSPATH edu.boisestate.cs.SolveMain -l ${len} ${pathfile} -r model-count -s jsa  -v 5 > ${outfile}
+      java -Xmx4g -cp ./target/classes/:$CLASSPATH edu.boisestate.cs.SolveMain -l ${len} ${pathfile} -r model-count -s jsa  -v 3 > ${outfile}
       
       #compare them
       #echo "comparing"

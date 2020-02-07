@@ -15,22 +15,22 @@ public class BoundedAutomatonModelManager
     private final int boundLength;
 
     BoundedAutomatonModelManager(Alphabet alphabet,
-                                         int initialBoundLength) {
+                                           int boundLength) {
         this.alphabet = alphabet;
-        this.boundLength = initialBoundLength;
+        this.boundLength = boundLength;
 
         // set automaton minimization as huffman
         Automaton.setMinimization(0);
     }
 
     static void setInstance(Alphabet alphabet, int initialBoundLength) {
-        instance =
-                new BoundedAutomatonModelManager(alphabet, initialBoundLength);
+        instance = new BoundedAutomatonModelManager(alphabet,
+                                                      initialBoundLength);
     }
 
     @Override
     public AutomatonModel createAnyString(int initialBound) {
-        return this.createAnyString(0, initialBound);
+        return this.createAnyString();
     }
 
     @Override
@@ -44,8 +44,9 @@ public class BoundedAutomatonModelManager
         Automaton boundedAutomaton = anyChar.repeat(min, max);
 
         // return model from bounded automaton
-        return new BoundedAutomatonModel(boundedAutomaton, this.alphabet,
-                                         this.boundLength);
+        return new BoundedAutomatonModel(boundedAutomaton,
+                                           this.alphabet,
+                                           this.boundLength);
     }
 
     @Override
@@ -57,17 +58,20 @@ public class BoundedAutomatonModelManager
                                            .repeat();
 
         // return model from automaton
-        return new BoundedAutomatonModel(anyString, this.alphabet);
+        return new BoundedAutomatonModel(anyString,
+                                           this.alphabet,
+                                           this.boundLength);
     }
 
     @Override
     public AutomatonModel createString(String string) {
         // create string automaton
         Automaton stringAutomaton = BasicAutomata.makeString(string);
-
+        // get string length as bound length
+        int length = string.length();
         // return model from automaton
         return new BoundedAutomatonModel(stringAutomaton,
-                                         this.alphabet,
-                                         this.boundLength);
+                                           this.alphabet,
+                                           length);
     }
 }

@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.boisestate.cs.automatonModel.AcyclicWeightedAutomatonModelManager;
 import edu.boisestate.cs.automatonModel.AggregateAutomatonModelManager;
 import edu.boisestate.cs.automatonModel.AutomatonModelManager;
-import edu.boisestate.cs.automatonModel.UnboundedAutomatonModelManager;
+import edu.boisestate.cs.automatonModel.BoundedAutomatonModelManager;
 import edu.boisestate.cs.graph.PrintConstraint;
 import edu.boisestate.cs.graph.SymbolicEdge;
 import edu.boisestate.cs.reporting.MCReporter;
@@ -307,11 +307,9 @@ public class SolveMain {
             // get model manager instance
         	// getInstance will return an instance of AutomatonModelManager 
         	// based on modelVersion:
-        	// modelVersion = 1; UnboundedAutomatonModelManager
-        	// modelVersion = 2; BoundedAutomatonModelManager
-        	// modelVersion = 3; AggregateAutomatonModelManager
-        	// modelVersion = 4; WeightedAutomatonModelManager
-        	// modelVersion = 5; AcyclicWeightedAutomatonModelManager
+        	// modelVersion = 1; BoundedAutomatonModelManager
+        	// modelVersion = 2; AcyclicAutomatonModelManager
+        	// modelVersion = 3; AcyclicWeightedAutomatonModelManager
             AutomatonModelManager modelManager =
                     AutomatonModelManager.getInstance(alphabet,
                                                       modelVersion,

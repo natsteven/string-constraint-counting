@@ -9,28 +9,28 @@ import edu.boisestate.cs.automatonModel.operations.*;
 import java.math.BigInteger;
 import java.util.Set;
 
-public class UnboundedAutomatonModelManager
+public class AcyclicAutomatonModelManager
         extends AutomatonModelManager {
 
     private final int boundLength;
 
-    UnboundedAutomatonModelManager(Alphabet alphabet,
-                                           int boundLength) {
+    AcyclicAutomatonModelManager(Alphabet alphabet,
+                                         int initialBoundLength) {
         this.alphabet = alphabet;
-        this.boundLength = boundLength;
+        this.boundLength = initialBoundLength;
 
         // set automaton minimization as huffman
         Automaton.setMinimization(0);
     }
 
     static void setInstance(Alphabet alphabet, int initialBoundLength) {
-        instance = new UnboundedAutomatonModelManager(alphabet,
-                                                      initialBoundLength);
+        instance =
+                new AcyclicAutomatonModelManager(alphabet, initialBoundLength);
     }
 
     @Override
     public AutomatonModel createAnyString(int initialBound) {
-        return this.createAnyString();
+        return this.createAnyString(0, initialBound);
     }
 
     @Override
@@ -44,9 +44,8 @@ public class UnboundedAutomatonModelManager
         Automaton boundedAutomaton = anyChar.repeat(min, max);
 
         // return model from bounded automaton
-        return new UnboundedAutomatonModel(boundedAutomaton,
-                                           this.alphabet,
-                                           this.boundLength);
+        return new AcyclicAutomatonModel(boundedAutomaton, this.alphabet,
+                                         this.boundLength);
     }
 
     @Override
@@ -58,20 +57,17 @@ public class UnboundedAutomatonModelManager
                                            .repeat();
 
         // return model from automaton
-        return new UnboundedAutomatonModel(anyString,
-                                           this.alphabet,
-                                           this.boundLength);
+        return new AcyclicAutomatonModel(anyString, this.alphabet);
     }
 
     @Override
     public AutomatonModel createString(String string) {
         // create string automaton
         Automaton stringAutomaton = BasicAutomata.makeString(string);
-        // get string length as bound length
-        int length = string.length();
+
         // return model from automaton
-        return new UnboundedAutomatonModel(stringAutomaton,
-                                           this.alphabet,
-                                           length);
+        return new AcyclicAutomatonModel(stringAutomaton,
+                                         this.alphabet,
+                                         this.boundLength);
     }
 }
