@@ -35,16 +35,16 @@ public class AcyclicAutomatonModel
         this.automaton = automaton;
     }
 
-    private static Automaton getAutomatonFromBoundedModel(AutomatonModel model) {
+    private static Automaton getAutomatonFromAcyclicModel(AutomatonModel model) {
         return ((AcyclicAutomatonModel)model).automaton;
     }
 
     @Override
     public AutomatonModel assertContainedInOther(AutomatonModel containingModel) {
-        ensureBoundedModel(containingModel);
+        ensureAcyclicModel(containingModel);
 
         // get containing automaton
-        Automaton containing = getAutomatonFromBoundedModel(containingModel);
+        Automaton containing = getAutomatonFromAcyclicModel(containingModel);
 
         // if either automata is  empty
         if (this.automaton.isEmpty() || containing.isEmpty()) {
@@ -63,7 +63,7 @@ public class AcyclicAutomatonModel
 
     @Override
     public AutomatonModel assertContainsOther(AutomatonModel containedModel) {
-        ensureBoundedModel(containedModel);
+        ensureAcyclicModel(containedModel);
 
         // create any string automata
         Automaton anyString1 =
@@ -72,7 +72,7 @@ public class AcyclicAutomatonModel
                 BasicAutomata.makeCharSet(this.alphabet.getCharSet()).repeat();
 
         // concatenate with contained automaton
-        Automaton contained = getAutomatonFromBoundedModel(containedModel);
+        Automaton contained = getAutomatonFromAcyclicModel(containedModel);
         Automaton x = anyString1.concatenate(contained).concatenate(anyString2);
 
         // get resulting automaton
@@ -94,10 +94,10 @@ public class AcyclicAutomatonModel
 
     @Override
     public AutomatonModel assertEndsOther(AutomatonModel containingModel) {
-        ensureBoundedModel(containingModel);
+        ensureAcyclicModel(containingModel);
 
         // get containing automaton
-        Automaton containing = getAutomatonFromBoundedModel(containingModel);
+        Automaton containing = getAutomatonFromAcyclicModel(containingModel);
 
         // if either automata is  empty
         if (this.automaton.isEmpty() || containing.isEmpty()) {
@@ -117,14 +117,14 @@ public class AcyclicAutomatonModel
     @SuppressWarnings("Duplicates")
     @Override
     public AutomatonModel assertEndsWith(AutomatonModel endingModel) {
-        ensureBoundedModel(endingModel);
+        ensureAcyclicModel(endingModel);
 
         // create any string automata
         Automaton anyString =
                 BasicAutomata.makeCharSet(this.alphabet.getCharSet()).repeat();
 
         // concatenate with ending automaton
-        Automaton end = getAutomatonFromBoundedModel(endingModel);
+        Automaton end = getAutomatonFromAcyclicModel(endingModel);
         Automaton x = anyString.concatenate(end);
 
         // get bounded resulting automaton
@@ -137,10 +137,10 @@ public class AcyclicAutomatonModel
 
     @Override
     public AutomatonModel assertEquals(AutomatonModel equalModel) {
-        ensureBoundedModel(equalModel);
+        ensureAcyclicModel(equalModel);
 
         // concatenate with contained automaton
-        Automaton equal = getAutomatonFromBoundedModel(equalModel);
+        Automaton equal = getAutomatonFromAcyclicModel(equalModel);
 
         // get resulting automaton
         Automaton result =  this.automaton.intersection(equal);
@@ -151,10 +151,10 @@ public class AcyclicAutomatonModel
 
     @Override
     public AutomatonModel assertEqualsIgnoreCase(AutomatonModel equalModel) {
-        ensureBoundedModel(equalModel);
+        ensureAcyclicModel(equalModel);
 
         // concatenate with contained automaton
-        Automaton equal = getAutomatonFromBoundedModel(equalModel);
+        Automaton equal = getAutomatonFromAcyclicModel(equalModel);
         Automaton equalIgnoreCase = performUnaryOperation(equal, new IgnoreCase(), this.alphabet);
 
         // get resulting automaton
@@ -189,10 +189,10 @@ public class AcyclicAutomatonModel
 
     @Override
     public AutomatonModel assertNotContainedInOther(AutomatonModel notContainingModel) {
-        ensureBoundedModel(notContainingModel);
+        ensureAcyclicModel(notContainingModel);
 
         // get containing automaton
-        Automaton notContaining = getAutomatonFromBoundedModel(notContainingModel);
+        Automaton notContaining = getAutomatonFromAcyclicModel(notContainingModel);
 
         // if not containing automaton is  empty
         if (notContaining.isEmpty() || automaton.isEmpty() || automaton.isEmptyString()) {
@@ -220,10 +220,10 @@ public class AcyclicAutomatonModel
 
     @Override
     public AutomatonModel assertNotContainsOther(AutomatonModel notContainedModel) {
-        ensureBoundedModel(notContainedModel);
+        ensureAcyclicModel(notContainedModel);
 
         // get not contained automaton
-        Automaton notContained = getAutomatonFromBoundedModel(notContainedModel);
+        Automaton notContained = getAutomatonFromAcyclicModel(notContainedModel);
 
         // if not containing automaton is  empty
         if (notContained.isEmpty() || automaton.isEmpty()) {
@@ -265,10 +265,10 @@ public class AcyclicAutomatonModel
 
     @Override
     public AutomatonModel assertNotEndsOther(AutomatonModel notContainingModel) {
-        ensureBoundedModel(notContainingModel);
+        ensureAcyclicModel(notContainingModel);
 
         // get containing automaton
-        Automaton notContaining = getAutomatonFromBoundedModel(notContainingModel);
+        Automaton notContaining = getAutomatonFromAcyclicModel(notContainingModel);
 
         // if not containing automaton is  empty
         if (notContaining.isEmpty() || automaton.isEmpty() || automaton.isEmptyString()) {
@@ -297,9 +297,9 @@ public class AcyclicAutomatonModel
     @SuppressWarnings("Duplicates")
     @Override
     public AutomatonModel assertNotEndsWith(AutomatonModel notEndingModel) {
-        ensureBoundedModel(notEndingModel);
+        ensureAcyclicModel(notEndingModel);
 
-        Automaton notEnding = getAutomatonFromBoundedModel(notEndingModel);
+        Automaton notEnding = getAutomatonFromAcyclicModel(notEndingModel);
 
         // if not containing automaton is  empty
         if (notEnding.isEmpty() || automaton.isEmpty()) {
@@ -329,10 +329,10 @@ public class AcyclicAutomatonModel
 
     @Override
     public AutomatonModel assertNotEquals(AutomatonModel notEqualModel) {
-        ensureBoundedModel(notEqualModel);
+        ensureAcyclicModel(notEqualModel);
 
         // get not equal automaton
-        Automaton notEqual = getAutomatonFromBoundedModel(notEqualModel);
+        Automaton notEqual = getAutomatonFromAcyclicModel(notEqualModel);
 
         // if not containing automaton is  empty
         if (notEqual.isEmpty() || automaton.isEmpty()) {
@@ -352,10 +352,10 @@ public class AcyclicAutomatonModel
 
     @Override
     public AutomatonModel assertNotEqualsIgnoreCase(AutomatonModel notEqualModel) {
-        ensureBoundedModel(notEqualModel);
+        ensureAcyclicModel(notEqualModel);
 
         // get not equal automaton
-        Automaton notEqual = getAutomatonFromBoundedModel(notEqualModel);
+        Automaton notEqual = getAutomatonFromAcyclicModel(notEqualModel);
 
         // if not containing automaton is  empty
         if (notEqual.isEmpty() || automaton.isEmpty()) {
@@ -379,10 +379,10 @@ public class AcyclicAutomatonModel
 
     @Override
     public AutomatonModel assertNotStartsOther(AutomatonModel notContainingModel) {
-        ensureBoundedModel(notContainingModel);
+        ensureAcyclicModel(notContainingModel);
 
         // get containing automaton
-        Automaton notContaining = getAutomatonFromBoundedModel(notContainingModel);
+        Automaton notContaining = getAutomatonFromAcyclicModel(notContainingModel);
 
         // if not containing automaton is  empty
         if (notContaining.isEmpty() || automaton.isEmpty() || automaton.isEmptyString()) {
@@ -411,9 +411,9 @@ public class AcyclicAutomatonModel
     @SuppressWarnings("Duplicates")
     @Override
     public AutomatonModel assertNotStartsWith(AutomatonModel notStartsModel) {
-        ensureBoundedModel(notStartsModel);
+        ensureAcyclicModel(notStartsModel);
 
-        Automaton notStarting = getAutomatonFromBoundedModel(notStartsModel);
+        Automaton notStarting = getAutomatonFromAcyclicModel(notStartsModel);
 
         // if not containing automaton is  empty
         if (notStarting.isEmpty() || automaton.isEmpty()) {
@@ -442,10 +442,10 @@ public class AcyclicAutomatonModel
 
     @Override
     public AutomatonModel assertStartsOther(AutomatonModel containingModel) {
-        ensureBoundedModel(containingModel);
+        ensureAcyclicModel(containingModel);
 
         // get containing automaton
-        Automaton containing = getAutomatonFromBoundedModel(containingModel);
+        Automaton containing = getAutomatonFromAcyclicModel(containingModel);
 
         // if either automata is  empty
         if (this.automaton.isEmpty() || containing.isEmpty()) {
@@ -465,14 +465,14 @@ public class AcyclicAutomatonModel
     @SuppressWarnings("Duplicates")
     @Override
     public AutomatonModel assertStartsWith(AutomatonModel startingModel) {
-        ensureBoundedModel(startingModel);
+        ensureAcyclicModel(startingModel);
 
         // create any string automata
         Automaton anyString =
                 BasicAutomata.makeCharSet(this.alphabet.getCharSet()).repeat();
 
         // concatenate with contained automaton
-        Automaton start = getAutomatonFromBoundedModel(startingModel);
+        Automaton start = getAutomatonFromAcyclicModel(startingModel);
         Automaton x = start.concatenate(anyString);
 
         // get resulting automaton
@@ -495,10 +495,10 @@ public class AcyclicAutomatonModel
 
     @Override
     public AutomatonModel concatenate(AutomatonModel argModel) {
-        ensureBoundedModel(argModel);
+        ensureAcyclicModel(argModel);
 
         // get arg automaton
-        Automaton arg = getAutomatonFromBoundedModel(argModel);
+        Automaton arg = getAutomatonFromAcyclicModel(argModel);
 
         // get concatenation of automata
         Automaton result = this.automaton.concatenate(arg);
@@ -570,10 +570,10 @@ public class AcyclicAutomatonModel
 
     @Override
     public AutomatonModel insert(int offset, AutomatonModel argModel) {
-        ensureBoundedModel(argModel);
+        ensureAcyclicModel(argModel);
 
         // get automata for operations
-        Automaton arg = getAutomatonFromBoundedModel(argModel);
+        Automaton arg = getAutomatonFromAcyclicModel(argModel);
 
         // get resulting automaton
         PreciseInsert insert = new PreciseInsert(offset);
@@ -589,7 +589,7 @@ public class AcyclicAutomatonModel
 
     @Override
     public AutomatonModel intersect(AutomatonModel arg) {
-        ensureBoundedModel(arg);
+        ensureAcyclicModel(arg);
 
         // cast arg model
         AcyclicAutomatonModel argModel = (AcyclicAutomatonModel) arg;
@@ -714,10 +714,10 @@ public class AcyclicAutomatonModel
 
     @Override
     public AutomatonModel setCharAt(int offset, AutomatonModel argModel) {
-        ensureBoundedModel(argModel);
+        ensureAcyclicModel(argModel);
 
         // get automata for operations
-        Automaton arg = getAutomatonFromBoundedModel(argModel);
+        Automaton arg = getAutomatonFromAcyclicModel(argModel);
 
         // get resulting automaton
         PreciseSetCharAt operation = new PreciseSetCharAt(offset);
@@ -808,13 +808,13 @@ public class AcyclicAutomatonModel
                                          this.boundLength);
     }
 
-    private void ensureBoundedModel(AutomatonModel arg) {
+    private void ensureAcyclicModel(AutomatonModel arg) {
         // check if automaton model is bounded
         if (!(arg instanceof AcyclicAutomatonModel)) {
 
             throw new UnsupportedOperationException(
                     "The AcyclicAutomatonModel only supports binary " +
-                    "operations with other BoundedAutomatonModels.");
+                    "operations with other AcyclicAutomatonModels.");
         }
     }
 }
