@@ -9,10 +9,10 @@ package edu.boisestate.cs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import edu.boisestate.cs.automatonModel.AcyclicWeightedAutomatonModelManager;
-import edu.boisestate.cs.automatonModel.AggregateAutomatonModelManager;
+//import edu.boisestate.cs.automatonModel.AcyclicWeightedAutomatonModelManager;
+//import edu.boisestate.cs.automatonModel.AggregateAutomatonModelManager;
 import edu.boisestate.cs.automatonModel.AutomatonModelManager;
-import edu.boisestate.cs.automatonModel.BoundedAutomatonModelManager;
+//import edu.boisestate.cs.automatonModel.BoundedAutomatonModelManager;
 import edu.boisestate.cs.graph.PrintConstraint;
 import edu.boisestate.cs.graph.SymbolicEdge;
 import edu.boisestate.cs.reporting.MCReporter;
@@ -27,7 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-import javax.swing.plaf.synth.SynthSeparatorUI;
+//import javax.swing.plaf.synth.SynthSeparatorUI;
 
 @SuppressWarnings({"Duplicates", "unchecked"})
 public class SolveMain {
