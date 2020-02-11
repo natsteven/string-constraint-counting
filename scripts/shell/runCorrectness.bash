@@ -31,8 +31,8 @@ do
 
       outfile=${outfileOrig//type/concrete}
       #echo $outfile
-      #echo "concrete"
-      #java -Xmx4g -cp ./target/classes/:$CLASSPATH edu.boisestate.cs.SolveMain -l ${len} ${pathfile} -r model-count -s concrete > ${outfile}
+      echo "concrete"
+      java -Xmx4g -cp ./target/classes/:$CLASSPATH edu.boisestate.cs.SolveMain -l ${len} ${pathfile} -r model-count -s concrete > ${outfile}
 
       outfile=${outfileOrig//type/acyclicWeighted}
       #echo $outfile

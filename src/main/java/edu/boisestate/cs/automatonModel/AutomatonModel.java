@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-public abstract class AutomatonModel<T extends AutomatonModel>
+public abstract class AutomatonModel<T extends AutomatonModel<T>>
         implements Cloneable {
 
     protected final Alphabet alphabet;

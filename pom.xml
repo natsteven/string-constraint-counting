@@ -136,9 +136,11 @@
           <excludes>
 	          <exclude>**/edu/boisestate/cs/automatonModel/removed/*.java</exclude>
 	          <exclude>**/edu/boisestate/cs/automaton/removed/*.java</exclude>
+	          <exclude>**/edu/boisestate/cs/automaton/*.java</exclude>
 	          <exclude>**/edu/boisestate/cs/automaton/acyclic/removed/*.java</exclude>
 	          <exclude>**/edu/boisestate/cs/automatonModel/removed/*.java</exclude>
 	          <exclude>**/edu/boisestate/cs/automatonModel/operations/removed/*.java</exclude>
+	          <exclude>**/edu/boisestate/cs/automatonModel/operations/weighted/*.java</exclude>
 	          <exclude>**/edu/boisestate/cs/automatonModel/operations/weighted/removed/*.java</exclude>
           </excludes>
           <source>1.7</source>

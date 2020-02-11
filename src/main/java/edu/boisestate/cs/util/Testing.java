@@ -3,9 +3,9 @@ package edu.boisestate.cs.util;
 import dk.brics.automaton.Automaton;
 import dk.brics.automaton.BasicAutomata;
 import edu.boisestate.cs.Alphabet;
-import edu.boisestate.cs.automaton.WeightedAutomaton;
-import edu.boisestate.cs.automaton.WeightedState;
-import edu.boisestate.cs.automaton.WeightedTransition;
+//import edu.boisestate.cs.automaton.WeightedAutomaton;
+//import edu.boisestate.cs.automaton.WeightedState;
+//import edu.boisestate.cs.automaton.WeightedTransition;
 import edu.boisestate.cs.automatonModel.operations.*;
 
 import java.util.*;
