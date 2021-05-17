@@ -1,6 +1,8 @@
 /target/
 /data/
 /graphs/
+/temp/
 
 .directory
 .settings
+.classpath
