@@ -166,11 +166,17 @@ public class RegExp {
 	
 	private static boolean allow_mutation = false;
 	
+	// kind of operand being stored
 	Kind kind;
+	// expression coming before and after operand
+	// does it store single chars too?
 	RegExp exp1, exp2;
 	String s;
+	// used if only storing a char? REGEXP_CHAR Kind?
 	char c;
 	int min, max, digits;
+	// character before and after operand
+	// what happens if expression is before or after operand?
 	char from, to;
 	
 	String b;
