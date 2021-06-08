@@ -4,11 +4,11 @@ import dk.brics.automaton.Automaton;
 import dk.brics.automaton.BasicAutomata;
 import edu.boisestate.cs.Alphabet;
 
-public class Model_Bounded_Manager extends A_Model_Manager<Model_Bounded> {
+public class Model_Acyclic_Manager extends A_Model_Manager<Model_Acyclic> {
 
 	private final int boundLength;
 
-	Model_Bounded_Manager(Alphabet alphabet, int boundLength) {
+	Model_Acyclic_Manager(Alphabet alphabet, int boundLength) {
 		super(alphabet, boundLength);
 		this.alphabet = alphabet;
 		this.boundLength = boundLength;
@@ -18,12 +18,12 @@ public class Model_Bounded_Manager extends A_Model_Manager<Model_Bounded> {
 	}
 
 	@Override
-	public Model_Bounded createAnyString(int initialBound) {
+	public Model_Acyclic createAnyString(int initialBound) {
 		return this.createAnyString(0, initialBound);
 	}
 
 	@Override
-	public Model_Bounded createAnyString(int min, int max) {
+	public Model_Acyclic createAnyString(int min, int max) {
 
 		// create any string automaton from alphabet
 		String charSet = this.alphabet.getCharSet();
@@ -33,26 +33,26 @@ public class Model_Bounded_Manager extends A_Model_Manager<Model_Bounded> {
 		Automaton boundedAutomaton = anyChar.repeat(min, max);
 
 		// return model from bounded automaton
-		return new Model_Bounded(boundedAutomaton, this.alphabet, this.boundLength);
+		return new Model_Acyclic(boundedAutomaton, this.alphabet, this.boundLength);
 	}
 
 	@Override
-	public Model_Bounded createAnyString() {
+	public Model_Acyclic createAnyString() {
 
 		// create any string automaton from alphabet
 		String charSet = this.alphabet.getCharSet();
 		Automaton anyString = BasicAutomata.makeCharSet(charSet).repeat();
 
 		// return model from automaton
-		return new Model_Bounded(anyString, this.alphabet);
+		return new Model_Acyclic(anyString, this.alphabet);
 	}
 
 	@Override
-	public Model_Bounded createString(String string) {
+	public Model_Acyclic createString(String string) {
 		// create string automaton
 		Automaton stringAutomaton = BasicAutomata.makeString(string);
 
 		// return model from automaton
-		return new Model_Bounded(stringAutomaton, this.alphabet, this.boundLength);
+		return new Model_Acyclic(stringAutomaton, this.alphabet, this.boundLength);
 	}
 }

@@ -1,1081 +1,783 @@
 package edu.boisestate.cs.automatonModel;
 
 import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
-
-import org.apache.commons.math3.fraction.Fraction;
 
 import dk.brics.automaton.Automaton;
 import dk.brics.automaton.BasicAutomata;
+import dk.brics.string.stringoperations.Postfix;
+import dk.brics.string.stringoperations.Prefix;
+import dk.brics.string.stringoperations.Replace1;
+import dk.brics.string.stringoperations.Replace2;
+import dk.brics.string.stringoperations.Replace3;
+import dk.brics.string.stringoperations.Replace4;
+import dk.brics.string.stringoperations.Replace6;
+import dk.brics.string.stringoperations.Reverse;
 import dk.brics.string.stringoperations.Substring;
+import dk.brics.string.stringoperations.ToLowerCase;
+import dk.brics.string.stringoperations.ToUpperCase;
 import edu.boisestate.cs.Alphabet;
-import edu.boisestate.cs.automaton.acyclic.AcyclicWeightedAutomaton;
-import edu.boisestate.cs.automaton.acyclic.BasicAcyclicWeightedAutomaton;
-import edu.boisestate.cs.automaton.acyclic.BasicAcyclicWeightedOperations;
-import edu.boisestate.cs.automaton.acyclic.WeightedState;
-import edu.boisestate.cs.automaton.acyclic.WeightedTransition;
+import edu.boisestate.cs.automatonModel.operations.IgnoreCase;
+import edu.boisestate.cs.automatonModel.operations.PreciseDelete;
+import edu.boisestate.cs.automatonModel.operations.PreciseInsert;
+import edu.boisestate.cs.automatonModel.operations.PreciseSetCharAt;
+import edu.boisestate.cs.automatonModel.operations.PreciseSetLength;
+import edu.boisestate.cs.automatonModel.operations.PreciseSubstring;
+import edu.boisestate.cs.automatonModel.operations.PreciseSuffix;
+import edu.boisestate.cs.automatonModel.operations.PreciseTrim;
+import edu.boisestate.cs.automatonModel.operations.StringModelCounter;
 
 public class Model_Acyclic extends A_Model<Model_Acyclic> {
 
 	private Automaton automaton;
 
-	protected Model_Acyclic(Automaton automaton2, Alphabet alphabet, int initialBoundLength) {
-		super(alphabet, initialBoundLength);
-		this.automaton = automaton2;
+	public String getAutomaton() {
+		return automaton.toString();
 	}
 
-	protected Model_Acyclic(Automaton automaton, Alphabet alphabet) {
+	Model_Acyclic(Automaton automaton, Alphabet alphabet, int boundLength) {
+		super(alphabet, boundLength);
+
+		this.automaton = automaton;
+		this.modelManager = new Model_Acyclic_Manager(alphabet, boundLength);
+	}
+
+	Model_Acyclic(Automaton automaton, Alphabet alphabet) {
 		super(alphabet, 0);
+
 		this.automaton = automaton;
 	}
 
-	@Override
-	public String getAcceptedStringExample() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Set<String> getFiniteStrings() {
-		// TODO Auto-generated method stub
-		return automaton.getFiniteStrings();
-	}
-
-	@Override
-	public boolean isEmpty() {
-		// TODO Auto-generated method stub
-		return automaton.isEmpty();
-	}
-
-	@Override
-	public boolean isSingleton() {
-		Set<String> strings = automaton.getFiniteStrings(1);
-		return strings != null && strings.size() == 1 && strings.iterator().next() != null;
+	private static Automaton getAutomatonFromBoundedModel(Model_Acyclic model) {
+		return model.automaton;
 	}
 
 	@Override
 	public Model_Acyclic assertContainedInOther(Model_Acyclic containingModel) {
-		ensureAcyclicModel(containingModel);
-		Automaton other = containingModel.automaton;
-		if (this.automaton.isEmpty() || other.isEmpty())
+		ensureBoundedModel(containingModel);
+
+		// get containing automaton
+		Automaton containing = getAutomatonFromBoundedModel(containingModel);
+
+		// if either automata is empty
+		if (this.automaton.isEmpty() || containing.isEmpty()) {
 			return new Model_Acyclic(BasicAutomata.makeEmpty(), this.alphabet, 0);
-		Automaton substrings = performUnaryOperation(other, new Substring(), this.alphabet);
+		}
+
+		// get all substrings
+		Automaton substrings = performUnaryOperation(containing, new Substring(), this.alphabet);
+
+		// get resulting automaton
 		Automaton result = this.automaton.intersection(substrings);
+
+		// return new model from resulting automaton
 		return new Model_Acyclic(result, this.alphabet, this.boundLength);
 	}
 
 	@Override
 	public Model_Acyclic assertContainsOther(Model_Acyclic containedModel) {
-		ensureAcyclicModel(containedModel);
-		Automaton str1 = BasicAutomata.makeCharSet(this.alphabet.getCharSet()).repeat();
-		Automaton str2 = BasicAutomata.makeCharSet(this.alphabet.getCharSet()).repeat();
-		Automaton contained = getAutomatonFromAcyclicModel(containedModel);
-	}
+		ensureBoundedModel(containedModel);
 
-	private Automaton getAutomatonFromAcyclicModel(Model_Acyclic containedModel) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		// create any string automata
+		Automaton anyString1 = BasicAutomata.makeCharSet(this.alphabet.getCharSet()).repeat();
+		Automaton anyString2 = BasicAutomata.makeCharSet(this.alphabet.getCharSet()).repeat();
 
-	@Override
-	public AcyclicWeightedAutomatonModel assertEmpty() {
-		// do the intersection with an empty string (cannot just create an empty one,
-		// otherwise
-		// the empty string count could be of)
-		// System.out.println("Assert Emtpy " + automaton.getStringCount());
-		// AcyclicWeightedAutomaton ret =
-		// this.automaton.intersection(BasicAcyclicWeightedAutomaton.makeEmptyString());
-		automaton.determinize();
-		automaton.normalize();
-		automaton.minimize();
-		AcyclicWeightedAutomaton ret = BasicAcyclicWeightedAutomaton.makeEmpty();
-		if (automaton.getInitialState().isAccept()) {
-			ret.getInitialState().setAccept(true);
-			ret.getInitialState().setWeight(automaton.getInitialState().getWeight());
-		}
+		// concatenate with contained automaton
+		Automaton contained = getAutomatonFromBoundedModel(containedModel);
+		Automaton x = anyString1.concatenate(contained).concatenate(anyString2);
 
-		// otherwise it is just empty
-		return new AcyclicWeightedAutomatonModel(ret, alphabet, 0);
-	}
+		// get resulting automaton
+		Automaton result = this.automaton.intersection(x);
+		result.minimize();
 
-	@Override
-	public AcyclicWeightedAutomatonModel assertEndsOther(AcyclicWeightedAutomatonModel baseModel) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AcyclicWeightedAutomatonModel assertEndsWith(AcyclicWeightedAutomatonModel endingModel) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AcyclicWeightedAutomatonModel assertEquals(AcyclicWeightedAutomatonModel equalModel) {
-		// return the intersection of equlaModel and this
-		AcyclicWeightedAutomaton ret = this.automaton.intersection(equalModel.automaton);
-
-		// if(ret.getStringCount().intValue() == 0){
-		// System.out.println("target1 " + automaton);
-		// System.out.println("arg1 " + equalModel.automaton);
-		// System.out.println("ret1 " + ret);
-		// //System.exit(2);
-		// }
-		ret.determinize();
-		ret.normalize();
-		ret.minimize();
-		return new AcyclicWeightedAutomatonModel(ret, alphabet, boundLength);
-	}
-
-	@Override
-	public AcyclicWeightedAutomatonModel assertEqualsIgnoreCase(AcyclicWeightedAutomatonModel equalModel) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AcyclicWeightedAutomatonModel assertHasLength(int min, int max) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AcyclicWeightedAutomatonModel assertNotContainsOther(AcyclicWeightedAutomatonModel notContainingModel) {
-		// System.out.println("assertNotContainsOther " + isEmpty() + " " +
-		// notContainingModel.isEmpty());
-		AcyclicWeightedAutomaton ret;
-		if (notContainingModel.isEmpty()) {
-			ret = BasicAcyclicWeightedAutomaton.makeEmpty();
-		} else {
-			// System.out.println("notContainingIsEmpyt " + notContainingModel.isEmpty());
-			// create the set minus of this and notContainingModel
-			// 1. complete nonContainingModel
-			// System.out.println("Flattaning");
-			AcyclicWeightedAutomaton notContaining = notContainingModel.automaton.flatten();
-			// System.out.println("notContaining " + notContaining.getStates().size());
-			// up to the maxLenght of notContaining should work since we will surround it
-			// with .*
-			// System.out.println("ABC " + alphabet.getCharSet() + " length " +
-			// notContaining.getMaxLenght());
-			// System.out.println("Completing");
-			notContaining = notContaining.complete(notContaining.getMaxLenght(), alphabet.getCharSet());
-
-			// System.out.println("notContaining " + notContaining.getStates().size());
-			// notContaining.determinize();//cannot do it otherwise removes unreachable
-			// states that we need
-			// DotToGraph.outputDotFile(notContaining.toDot(), "notContainsOtherArg1");
-
-			int maxLength = automaton.getMaxLenght();
-			// DotToGraph.outputDotFile(automaton.toDot(), "notContainsOtherBase");
-			// System.out.println("Building prefix and suffix");
-			// 2. concatenate it with .* on both sides
-			AcyclicWeightedAutomaton prefix = BasicAcyclicWeightedAutomaton.makeCharSet(alphabet.getCharSet()).repeat(0,
-					maxLength);
-			// System.out.println("prefix " + prefix.getStates().size());
-			// prefix.determinize();
-			AcyclicWeightedAutomaton suffix = BasicAcyclicWeightedAutomaton.makeCharSet(alphabet.getCharSet()).repeat(0,
-					maxLength);
-			// System.out.println("suffix " + prefix.getStates().size());
-			// suffix.determinize();
-			notContaining = prefix.concatenate(notContaining);
-			notContaining.determinize();
-			notContaining.normalize();
-			notContaining.minimize();
-			// System.out.println("suffix+arg " + notContaining.getStates().size());
-			notContaining = notContaining.concatenate(suffix);
-			// System.out.println("notContaingAll " + notContaining.getStates().size());
-			notContaining.determinize();
-			notContaining.normalize();
-			notContaining.minimize();
-			// DotToGraph.outputDotFile(notContaining.toDot(), "notContainsInArg2");
-			// it is ok when non-containing is not empty, i.e., accepts at least one string
-			// but when it is empty, it should return the empty machine, that is no
-			// executions are possible there
-			// System.out.println("Performing minus operation " +
-			// automaton.getStates().size() + " notContaining " +
-			// notContaining.getStates().size());
-			ret = automaton.minus(notContaining);
-			// DotToGraph.outputDotFile(ret.toDot(), "notContainsOtherRet");
-			// System.out.println("Determinize");
-			ret.determinize();
-			// System.out.println("Normalize");
-			ret.normalize();
-			ret.minimize();
-		}
-		// System.out.println(ret);
-		return new AcyclicWeightedAutomatonModel(ret, alphabet, boundLength);
-	}
-
-	@Override
-	public AcyclicWeightedAutomatonModel assertNotContainedInOther(AcyclicWeightedAutomatonModel notContainedModel) {
-		// System.out.println("assertNotContainedInOther " + isEmpty() + " " +
-		// notContainedModel.isEmpty());
-		AcyclicWeightedAutomaton ret;
-		if (notContainedModel.automaton.isEmpty()) {
-			ret = BasicAcyclicWeightedAutomaton.makeEmpty();
-		} else {
-			// clone
-			ret = automaton.clone();
-		}
-		// System.out.println(ret);
-		return new AcyclicWeightedAutomatonModel(ret, alphabet, boundLength);
-	}
-
-	@Override
-	public AcyclicWeightedAutomatonModel assertNotEmpty() {
-		// get the empty string and complete it first since we will do the complement of
-		// it
-//		AcyclicWeightedAutomaton arg = BasicAcyclicWeightedAutomaton.makeEmptyString();
-//		//		System.out.println("arg before");
-//		//		System.out.println(arg);
-//		arg = arg.complete(automaton.getMaxLenght(), alphabet.getCharSet());
-//		//		System.out.println("arg complete");
-//		//		System.out.println(arg);
-//		AcyclicWeightedAutomaton ret = this.automaton.minus(arg);
-		automaton.determinize();
-		automaton.normalize();
-		automaton.minimize();
-		AcyclicWeightedAutomaton ret = automaton.clone();
-		// set it initial state to non-accepting, thus removing all epsilon transitins
-		ret.getInitialState().setAccept(false);
-		return new AcyclicWeightedAutomatonModel(ret, alphabet, boundLength);
-	}
-
-	@Override
-	public AcyclicWeightedAutomatonModel assertNotEndsOther(AcyclicWeightedAutomatonModel notEndingModel) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AcyclicWeightedAutomatonModel assertNotEndsWith(AcyclicWeightedAutomatonModel notEndingModel) {
-
-		return null;
-	}
-
-	@Override
-	public AcyclicWeightedAutomatonModel assertNotEquals(AcyclicWeightedAutomatonModel notEqualModel) {
-		// since we will have to do set minus, which requires the complement we should
-		// have a complete automaton
-		// System.out.println("assertNotEquals ");
-		// System.out.println(automaton.getMaxLenght() + " " + alphabet.getCharSet() );
-		// System.out.println("notEqual \n" + notEqualModel.automaton + "\n" +
-		// notEqualModel.automaton.getStringCount());
-
-		// System.out.println("notEqual \n" + automaton + "\n" +
-		// automaton.getStringCount());
-		// can only perform minus operation if the argument is a singleton, otherwise
-		// we over-approximate since it could be anything
-		AcyclicWeightedAutomaton ret;
-		if (!notEqualModel.automaton.isEmpty()) {
-			AcyclicWeightedAutomaton notEqual = notEqualModel.automaton.complete(automaton.getMaxLenght(),
-					alphabet.getCharSet());
-			// System.out.println("notEqual \n" + notEqual);
-			ret = automaton.minus(notEqual);
-		} else {
-
-			ret = automaton.clone();
-		}
-		ret.determinize();
-		ret.normalize();
-		ret.minimize();
-		// System.out.println("ret \n" + ret);
-		return new AcyclicWeightedAutomatonModel(ret, alphabet, boundLength);
-	}
-
-	@Override
-	public AcyclicWeightedAutomatonModel assertNotEqualsIgnoreCase(AcyclicWeightedAutomatonModel notEqualModel) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AcyclicWeightedAutomatonModel assertNotStartsOther(AcyclicWeightedAutomatonModel notStartingModel) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AcyclicWeightedAutomatonModel assertNotStartsWith(AcyclicWeightedAutomatonModel notStartsModel) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AcyclicWeightedAutomatonModel assertStartsOther(AcyclicWeightedAutomatonModel startingModel) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AcyclicWeightedAutomatonModel assertStartsWith(AcyclicWeightedAutomatonModel startingModel) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AcyclicWeightedAutomatonModel concatenate(AcyclicWeightedAutomatonModel arg) {
-//		System.out.println("This " + automaton.getStringCount());
-//		DotToGraph.outputDotFile(automaton.toDot(), "concatTar");
-//		System.out.println("In " + arg.modelCount());
-//		DotToGraph.outputDotFile(arg.automaton.toDot(), "concatArg");
-		AcyclicWeightedAutomaton res = this.automaton.concatenate(arg.automaton);
-//		System.out.println("Concat1 " + res.getStringCount());
-//		DotToGraph.outputDotFile(res.toDot(), "concatRes");
-		// res.minimize();
-		res.determinize();
-		res.normalize();
-		res.minimize();
-//		System.out.println("Concat2 " + res.getStringCount());
-		// System.exit(2);
-		return new AcyclicWeightedAutomatonModel(res, this.alphabet);
-	}
-
-	@Override
-	public boolean containsString(String actualValue) {
-
-		return automaton.run(actualValue);
-	}
-
-	@Override
-	public AcyclicWeightedAutomatonModel delete(int start, int end) {
-		/*
-		 * Removes the characters in a substring of this sequence. The substring begins
-		 * at the specified start and extends to the character at index end - 1 or to
-		 * the end of the sequence if no such character exists. If start is equal to
-		 * end, no changes are made.
-		 * 
-		 * StringIndexOutOfBoundsException - if start is negative, greater than
-		 * length(), or greater than end.
-		 */
-		AcyclicWeightedAutomaton res = null;
-
-		automaton.determinize();
-		automaton.normalize();
-		// System.out.println("deleting " + start + " " + end);
-		// BasicAcyclicWeightedOperations.removeUnreachableStates(automaton);
-		// System.out.println(automaton.getStringCount() + " " +
-		// automaton.getMaxLenght());
-
-		if (start < 0 || start > end || automaton.isEmpty() || start > automaton.getMaxLenght()) {
-			res = BasicAcyclicWeightedAutomaton.makeEmpty();
-		} else if (start == end) {
-			// return automaton with string with
-			// greater or equal length than start
-			res = automaton.clone();
-			// DotToGraph.outputDotFile(res.toDot(), "origRes");
-			// System.out.println("RES " + res);
-			WeightedState nextState = res.getInitialState();
-			if (start > 0) {
-				// make nextState nonfinal since the empty string would throw an
-				// exception
-				nextState.setAccept(false);
-			}
-			// start - 2, the actual indices of the strings which toStates
-			// should be set to non-final
-			removeDFS(nextState, start - 2, 0);
-
-			// System.out.println(res.getStringCount());
-//				res.determinize();
-//				res.normalize();
-			BasicAcyclicWeightedOperations.removeUnreachableStates(res);
-			// DotToGraph.outputDotFile(res.toDot(), "delRes");
-			// System.out.println("DEL " + res);
-
-		} else {
-			// we will do dfs algorithm since we also need to count
-			// the weight of each "removed" substring
-			res = automaton.clone();
-			if (start > 0) { // an empty string will throw an exception
-				res.getInitialState().setAccept(false);
-			}
-			// DotToGraph.outputDotFile(res.toDot(), "origRes");
-			// System.out.println("RES " + res);
-			WeightedState nextState = res.getInitialState();
-			int index = 0;// starting index
-			WeightedState connectFromState = null;// state to create epsilon transitions from
-			// the weight of the given path, start as 1
-			Fraction weight = new Fraction(1, 1);
-			deleteDFS(nextState, start, index, end, connectFromState, weight);
-		}
-
-		// System.out.println("DELETE " + start + "\t" + end + " " +
-		// res.getStringCount());
-		// DotToGraph.outputDotFile(automaton.toDot(), "orig");
-		// DotToGraph.outputDotFile(res.toDot(), "deletedOrig");
-		res.determinize();
-		res.normalize();
-		res.minimize();
-//		System.out.println("resMC " + res.getStringCount());
-//		if(res.getStringCount().intValue() == 336){
-//			DotToGraph.outputDotFile(res.toDot(), "deleted");
-//		}
-		// stop for now
-		// if(start == 1 && end == 2 && res.getStringCount().intValue() < 12){
-		// System.exit(2);
-		// }
-		return new AcyclicWeightedAutomatonModel(res, this.alphabet);
-	}
-
-	private void removeDFS(WeightedState currState, int depth, int index) {
-		if (depth >= index) {
-			Set<WeightedTransition> tr = new HashSet<WeightedTransition>();
-			tr.addAll(currState.getTransitions());
-			for (WeightedTransition t : tr) {
-				WeightedState toState = t.getToState();
-				// should be no conditioning on whether that state is accepting or not
-				// make copies for all
-				// if(toState.isAccept()){
-				// create an non-final version of it
-				WeightedState copy = new WeightedState();
-				// add the transitions to it
-				for (WeightedTransition tTo : toState.getTransitions()) {
-					copy.addTransition(new WeightedTransition(copy, tTo.getSymb(), tTo.getToState(), tTo.getWeight()));
-				}
-				// update the transition
-				t.setToState(copy);
-				toState = copy;
-				// } // end if toState accept
-				// call removeDFS on it again
-				removeDFS(toState, depth, index + 1);
-			}
-		}
-
-	}
-
-	private void deleteDFS(WeightedState currState, int start, int index, int end, WeightedState connectFromState,
-			Fraction weight) {
-		if (start > index) {
-			// create copies of the explored states
-			// have not reached the point where we need to remove the states
-			// thus create a non-final copy of a toState and explore it further, increment
-			// index
-			// a non-final copy represent Exception thrown by Java if the start index is
-			// greater
-			// then the length of the string
-			Set<WeightedTransition> tr = new HashSet<WeightedTransition>();
-			tr.addAll(currState.getTransitions());
-			// further optimizaition create a copyState per set of
-			// transitions with the same toState
-			Map<WeightedState, Set<WeightedTransition>> copySet = new HashMap<WeightedState, Set<WeightedTransition>>();
-			for (WeightedTransition t : tr) {
-				WeightedState toState = t.getToState();
-				Set<WeightedTransition> trSet = null;
-				if (copySet.containsKey(toState)) {
-					trSet = copySet.get(toState);
-				} else {
-					trSet = new HashSet<WeightedTransition>();
-					copySet.put(toState, trSet);
-				}
-				// add the transition to it
-				trSet.add(t);
-				for (Entry<WeightedState, Set<WeightedTransition>> sTr : copySet.entrySet()) {
-					WeightedState newToState = new WeightedState();
-					WeightedState oldToState = sTr.getKey();
-					// if the next is the start then we have to make sure to preserve the acceptace
-					if (index + 1 == start) {
-						if (oldToState.isAccept()) {
-							newToState.setAccept(true);
-							newToState.setWeight(oldToState.getWeight());
-						}
-					}
-
-					for (WeightedTransition tOld : oldToState.getTransitions()) {
-						newToState.addTransition(new WeightedTransition(newToState, tOld.getSymb(), tOld.getToState(),
-								tOld.getWeight()));
-					}
-					// update the transitions for the currentState
-					for (WeightedTransition tCurr : sTr.getValue()) {
-						// change toState toCurr
-						tCurr.setToState(newToState);
-					}
-
-					// now call DFS on tempState, and increment the index count, i.e., the depth
-					deleteDFS(newToState, start, index + 1, end, connectFromState, weight);
-				}
-			}
-		} else if (start == index) {
-			// found the state from which to start to remove transitions
-			connectFromState = currState;
-
-			// explore its transitions and propagate new weight and remove each transition
-			// to that toState
-			HashSet<WeightedTransition> wtSet = new HashSet<WeightedTransition>();
-			wtSet.addAll(currState.getTransitions());
-			for (WeightedTransition wt : wtSet) {
-				currState.removeTransition(wt);
-				deleteDFS(wt.getToState(), start, index + 1, end, connectFromState, weight.multiply(wt.getWeight()));
-			}
-
-		} else if (start < index && index < end) {
-			// if currState is a final state then we need to set conncetFromState as a final
-			// state
-			// and update its weights using addition
-			if (currState.isAccept()) {
-				Fraction newStateWeight = currState.getWeight().multiply(weight);
-				if (connectFromState.isAccept()) {
-					connectFromState.setWeight(connectFromState.getWeight().add(newStateWeight));
-				} else {
-					connectFromState.setAccept(true);
-					connectFromState.setWeight(newStateWeight);
-				}
-			}
-			// explore its transitions and propagate new weight
-			for (WeightedTransition wt : currState.getTransitions()) {
-				deleteDFS(wt.getToState(), start, index + 1, end, connectFromState, weight.multiply(wt.getWeight()));
-			}
-
-		} else if (index == end) {
-			// at this point currState is where the second part starts, thus we need to
-			// connect it to fromState
-
-			if (currState.isAccept()) {
-				Fraction newStateWeight = currState.getWeight().multiply(weight);
-				if (connectFromState.isAccept()) {
-					connectFromState.setWeight(connectFromState.getWeight().add(newStateWeight));
-				} else {
-					connectFromState.setAccept(true);
-					connectFromState.setWeight(newStateWeight);
-				}
-			}
-//			if(start == 0 && end == 1){
-//				System.out.println(connectFromState.getWeight());
-//			}
-			// reconnect the transitions from currState
-			// connectFromState.addEpsilonTransition(automaton.getIncoming(connectFromState),
-			// currState, weight);
-			// cannot use epsilon transitions
-			// copy the transitions from currState to connectFromState
-			for (WeightedTransition wt : currState.getTransitions()) {
-				connectFromState.addTransition(new WeightedTransition(connectFromState, wt.getSymb(), wt.getToState(),
-						weight.multiply(wt.getWeight())));
-			}
-
-//			if(start == 0 && end == 1){
-//				System.out.println(connectFromState.getWeight());
-//			}
-		}
-	}
-
-	@Override
-	public boolean equals(AcyclicWeightedAutomatonModel arg) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public AcyclicWeightedAutomatonModel intersect(AcyclicWeightedAutomatonModel arg) {
-		AcyclicWeightedAutomaton res = this.automaton.intersection(arg.automaton);
-		return new AcyclicWeightedAutomatonModel(res, alphabet);
-	}
-
-	@Override
-	public AcyclicWeightedAutomatonModel insert(int offset, AcyclicWeightedAutomatonModel argModel) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public BigInteger modelCount() {
-		return automaton.getStringCount();
-	}
-
-	@Override
-	public AcyclicWeightedAutomatonModel replace(char find, char replace) {
-
-		AcyclicWeightedAutomaton res = automaton.clone();
-		res.determinize();
-		// DotToGraph.outputDotFile(res.toDot(), "replaceBefore");
-		// find all transitions with that char
-		// remove from fromState and add it back with the updated
-		// char
-		for (WeightedState s : res.getStates()) {
-			Set<WeightedTransition> transSet = new HashSet<WeightedTransition>();
-			transSet.addAll(s.getTransitions());
-			for (WeightedTransition wt : transSet) {
-				if (wt.getSymb() == find) {
-					wt.setSybmol(replace);
-				}
-			}
-		}
-		// DotToGraph.outputDotFile(res.toDot(), "replaceAfter");
-		res.determinize();
-		res.normalize();
-		res.minimize();
-		// DotToGraph.outputDotFile(res.toDot(), "replaceAfterDet");
-		return new AcyclicWeightedAutomatonModel(res, alphabet);
-	}
-
-	@Override
-	public AcyclicWeightedAutomatonModel replace(String find, String replace) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AcyclicWeightedAutomatonModel replaceChar() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AcyclicWeightedAutomatonModel replaceFindKnown(char find) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AcyclicWeightedAutomatonModel replaceReplaceKnown(char replace) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AcyclicWeightedAutomatonModel reverse() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AcyclicWeightedAutomatonModel substring(int start, int end) {
-		// if(start == 0 && end == 0){
-		// System.out.println("In \n" + automaton);
-		// //System.exit(2);
-		// }
-		// so for substring end cannot be greater than the length
-		// otherwise it will throw an exception, while
-		// in delete it will happened when the start is greater than the length
-
-		// AcyclicWeightedAutomatonModel ret = this.delete(0, start);
-		// //check the indices, similar to delete
-		// int maxEnd = ret.automaton.getMaxLenght() + 1;
-		// ret = ret.delete(end - start, maxEnd);
-		// return ret;
-
-		int maxLength = automaton.getMaxLenght();
-		AcyclicWeightedAutomaton res;
-		if (end > maxLength || start < 0 || start > end) {
-			// create an empty one
-			res = BasicAcyclicWeightedAutomaton.makeEmpty();
-		} else {
-			// could optimize extradDFS by following a set of transitions if the lead to the
-			// same state
-			Set<WeightedState> startStates = extractDFS(automaton.getInitialState(), 0, start, end, new Fraction(1));
-			res = BasicAcyclicWeightedAutomaton.makeEmpty();
-			WeightedState startState = res.getInitialState();
-			// now do epsilon connections
-			// System.out.println("startStates " + startStates);
-			for (WeightedState s : startStates) {
-				// do additive epsilon transitions
-				// the weights should be added
-				if (s.isAccept()) {
-					if (startState.isAccept()) {
-						startState.setWeight(startState.getWeight().add(s.getWeight()));
-					} else {
-						startState.setAccept(true);
-						startState.setWeight(s.getWeight());
-					}
-				}
-				for (WeightedTransition wt : s.getTransitions()) {
-					// copy the transitions
-					startState.addTransition(
-							new WeightedTransition(startState, wt.getSymb(), wt.getToState(), wt.getWeight()));
-				}
-				// startState.addEpsilonTransition(res.getIncoming(startState), s);
-			}
-			res.determinize();
-			res.normalize();
-			res.minimize();
-			// if(start == 0 && end == 0){
-			// System.out.println("SS\n " + startStates);
-			// System.out.println("res\n " + res);
-			// //System.exit(2);
-			// }
-		}
-		return new AcyclicWeightedAutomatonModel(res, alphabet);
-	}
-
-	private Set<WeightedState> extractDFS(WeightedState from, int indx, int start, int end, Fraction weight) {
-		Set<WeightedState> ret = new HashSet<WeightedState>();
-		if (indx < start) {
-			// explore its children and keep the count of the weight, which should be
-			// multiplied
-			for (WeightedTransition wt : from.getTransitions()) {
-				// can optimize here by figuring out when children go to the same state
-				ret.addAll(extractDFS(wt.getToState(), indx + 1, start, end, weight.multiply(wt.getWeight())));
-			}
-
-		} else if (indx == start) {
-			// then make from state a start state, i.e., return it
-			// create a copy of from
-			WeightedState newStart = new WeightedState();
-			// not sure it should be accept because
-
-			ret.add(newStart);
-
-			if (start != end) {
-				// explore its children, but do not add anything from it
-				for (WeightedTransition wt : from.getTransitions()) {
-
-					// add the transitions to the new state too
-					// we need to create a copy of toState right here, otherwise
-					// the transition will still go to the old state
-					WeightedState newTo = new WeightedState();
-					WeightedState oldTo = wt.getToState();
-					// System.out.println(wt.getSymb() + " -> " + oldTo);
-					newStart.addTransition(
-							new WeightedTransition(newStart, wt.getSymb(), newTo, wt.getWeight().multiply(weight)));
-					// copy the transitions if we will explore further only
-					if (indx + 1 < end) {
-						for (WeightedTransition wtOldTo : oldTo.getTransitions()) {
-							newTo.addTransition(new WeightedTransition(newTo, wtOldTo.getSymb(), wtOldTo.getToState(),
-									wtOldTo.getWeight()));
-						}
-						extractDFS(newTo, indx + 1, start, end, new Fraction(1)); // we stop considering the weight from
-																					// now on
-					} else if (indx + 1 == end) {
-						// finishing up here
-						int tail = automaton.getStringCountFromState(oldTo).intValue();
-						// System.out.println("tail is " + tail);
-						if (tail > 0) {
-							// make state final and update its weight
-							// update the weight of the state
-							newTo.setAccept(true);
-							Fraction newWeight = new Fraction(tail);
-							// if oldTo is accept then the algorithm will count
-							// it too, so no need to add its weight bac kagain.
-							newTo.setWeight(newWeight);
-						}
-						// System.out.println("newTo " + newTo);
-
-					} else {
-						// cannot be reached
-						System.out.println("Ivalid code location 1");
-						System.exit(2);
-					}
-				}
-			} else {
-				// setting accept based on the count and the accept state
-				int tail = automaton.getStringCountFromState(from).intValue();
-				// System.out.println("tail " + tail);
-				if (tail > 0) {
-					newStart.setAccept(true);
-					Fraction newWeight = new Fraction(0);
-					if (!from.isAccept() && tail > 0) {
-						// all the string that pass through it
-						newWeight = new Fraction(tail).multiply(weight);
-					} else if (from.isAccept()) { // if it is accept the tail will never be 0, it will count the empty
-													// string of from state
-						// remove the empty string of from state
-						Fraction tailNoEps = new Fraction(tail).subtract(from.getWeight());
-						// System.out.println("tailNoEps " + tailNoEps);
-						// all the string that pass through it
-						Fraction allTailNoEps = tailNoEps.multiply(weight);
-						// all the strings that end there
-						Fraction fromAccept = from.getWeight().multiply(weight);
-						newWeight = allTailNoEps.add(fromAccept);
-					}
-
-					// set the new weight
-					newStart.setWeight(newWeight);
-				}
-			}
-		} else if (indx <= end) {
-			// in between start and end
-			// create a copy of toState and explore further
-			// explore its children, but do not add anything from it
-			for (WeightedTransition wt : from.getTransitions()) {
-				// add the transitions to the new state too
-				// we need to create a copy of toState right here, otherwise
-				// the transition will still go to the old state
-				WeightedState newTo = new WeightedState();
-				WeightedState oldTo = wt.getToState();
-				// update the transition
-				// update toState for this transition
-				wt.setToState(newTo);
-				// two cases: to stop reached the end
-				if (indx + 1 == end) {
-					// finishing up here
-					int tail = automaton.getStringCountFromState(oldTo).intValue();
-					if (tail > 0) {
-						// make state final and update its weight
-						// update the weight of the state
-						newTo.setAccept(true);
-						Fraction newWeight = new Fraction(tail);
-						newTo.setWeight(newWeight);
-					}
-				} else {
-					// if it is an intermediate state and oldTo happened to
-					// be a final one then the actual string would throw and exception
-					// and thus will be removed
-					// copy the transitions
-					for (WeightedTransition wtOldTo : oldTo.getTransitions()) {
-						newTo.addTransition(
-								new WeightedTransition(newTo, wtOldTo.getSymb(), wtOldTo.getToState(), wt.getWeight()));
-					}
-					extractDFS(newTo, indx + 1, start, end, new Fraction(1)); // check here too
-				}
-			}
-		}
-		return ret;
-	}
-
-	@Override
-	public AcyclicWeightedAutomatonModel setCharAt(int offset, AcyclicWeightedAutomatonModel argModel) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AcyclicWeightedAutomatonModel setLength(int length) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Model_Acyclic suffix(int start) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Model_Acyclic toLowercase() {
-		AcyclicWeightedAutomaton res = automaton.clone();
-		for (WeightedState s : res.getStates()) {
-			Set<WeightedTransition> transSet = new HashSet<WeightedTransition>();
-			transSet.addAll(s.getTransitions());
-			for (WeightedTransition wt : transSet) {
-				String symb = String.valueOf(wt.getSymb());
-				String lowerCase = symb.toLowerCase();
-				if (!lowerCase.equals(symb)) {
-					// if symb is not a lower case symbol then convert it
-					wt.setSybmol(lowerCase.charAt(0));
-				}
-			}
-		}
-		res.determinize();
-		res.normalize();
-		res.minimize();
-		return new Model_Acyclic(res, alphabet);
-	}
-
-	@Override
-	public Model_Acyclic toUppercase() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Model_Acyclic trim() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Model_Acyclic clone() {
-		AcyclicWeightedAutomaton res = automaton.clone();
-		return new AcyclicWeightedAutomatonModel(res, alphabet);
-	}
-
-	@Override
-	public String getAutomaton() {
-		return automaton.toString();
+		// return new model from resulting automaton
+		return new Model_Acyclic(result, this.alphabet, this.boundLength);
 	}
 
 	@Override
 	public Model_Acyclic assertEmpty() {
-		// TODO Auto-generated method stub
-		return null;
+		// get resulting automaton
+		Automaton result = this.automaton.intersection(BasicAutomata.makeEmptyString());
+
+		// return new model from resulting automaton
+		return new Model_Acyclic(result, this.alphabet, 0);
 	}
 
 	@Override
-	public Model_Acyclic assertHasLength(int min, int max) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public Model_Acyclic assertEndsOther(Model_Acyclic containingModel) {
+		ensureBoundedModel(containingModel);
 
-	@Override
-	public Model_Acyclic assertNotEmpty() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		// get containing automaton
+		Automaton containing = getAutomatonFromBoundedModel(containingModel);
 
-	@Override
-	public Model_Acyclic delete(int start, int end) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		// if either automata is empty
+		if (this.automaton.isEmpty() || containing.isEmpty()) {
+			return new Model_Acyclic(BasicAutomata.makeEmpty(), this.alphabet, 0);
+		}
 
-	@Override
-	public Model_Acyclic replace(char find, char replace) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		// get all suffixes
+		Automaton suffixes = performUnaryOperation(containing, new Postfix(), this.alphabet);
 
-	@Override
-	public Model_Acyclic replace(String find, String replace) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		// get resulting automaton
+		Automaton result = this.automaton.intersection(suffixes);
 
-	@Override
-	public Model_Acyclic replaceChar() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Model_Acyclic replaceFindKnown(char find) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Model_Acyclic replaceReplaceKnown(char replace) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Model_Acyclic reverse() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Model_Acyclic substring(int start, int end) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Model_Acyclic setLength(int length) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Model_Acyclic assertContainsOther(Model_Acyclic containedModel) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Model_Acyclic assertEndsOther(Model_Acyclic baseModel) {
-		// TODO Auto-generated method stub
-		return null;
+		// return new model from resulting automaton
+		return new Model_Acyclic(result, this.alphabet, this.boundLength);
 	}
 
 	@Override
 	public Model_Acyclic assertEndsWith(Model_Acyclic endingModel) {
-		// TODO Auto-generated method stub
-		return null;
+		ensureBoundedModel(endingModel);
+
+		// create any string automata
+		Automaton anyString = BasicAutomata.makeCharSet(this.alphabet.getCharSet()).repeat();
+
+		// concatenate with ending automaton
+		Automaton end = getAutomatonFromBoundedModel(endingModel);
+		Automaton x = anyString.concatenate(end);
+
+		// get bounded resulting automaton
+		Automaton result = this.automaton.intersection(x);
+		result.minimize();
+
+		// return new model from resulting automaton
+		return new Model_Acyclic(result, this.alphabet, this.boundLength);
 	}
 
 	@Override
 	public Model_Acyclic assertEquals(Model_Acyclic equalModel) {
-		// TODO Auto-generated method stub
-		return null;
+		ensureBoundedModel(equalModel);
+
+		// concatenate with contained automaton
+		Automaton equal = getAutomatonFromBoundedModel(equalModel);
+
+		// get resulting automaton
+		Automaton result = this.automaton.intersection(equal);
+
+		// return new model from resulting automaton
+		return new Model_Acyclic(result, this.alphabet, this.boundLength);
 	}
 
 	@Override
 	public Model_Acyclic assertEqualsIgnoreCase(Model_Acyclic equalModel) {
-		// TODO Auto-generated method stub
-		return null;
+		ensureBoundedModel(equalModel);
+
+		// concatenate with contained automaton
+		Automaton equal = getAutomatonFromBoundedModel(equalModel);
+		Automaton equalIgnoreCase = performUnaryOperation(equal, new IgnoreCase(), this.alphabet);
+
+		// get resulting automaton
+		Automaton result = this.automaton.intersection(equalIgnoreCase);
+
+		// return new model from resulting automaton
+		return new Model_Acyclic(result, this.alphabet, this.boundLength);
+	}
+
+	@Override
+	public Model_Acyclic assertHasLength(int min, int max) {
+		// check min and max
+		if (min > max) {
+			return new Model_Acyclic(BasicAutomata.makeEmpty(), this.alphabet, 0);
+		}
+
+		// get any string with length between min and max
+		Automaton minMax = BasicAutomata.makeCharSet(this.alphabet.getCharSet()).repeat(min, max);
+
+		// get resulting automaton
+		Automaton result = this.automaton.intersection(minMax);
+
+		// get new bound length
+		int newBoundLength = max;
+		if (this.boundLength < max) {
+			newBoundLength = this.boundLength;
+		}
+
+		// return new model from resulting automaton
+		return new Model_Acyclic(result, this.alphabet, newBoundLength);
 	}
 
 	@Override
 	public Model_Acyclic assertNotContainedInOther(Model_Acyclic notContainingModel) {
-		// TODO Auto-generated method stub
-		return null;
+		ensureBoundedModel(notContainingModel);
+
+		// get containing automaton
+		Automaton notContaining = getAutomatonFromBoundedModel(notContainingModel);
+
+		// if not containing automaton is empty
+		if (notContaining.isEmpty() || automaton.isEmpty() || automaton.isEmptyString()) {
+			return new Model_Acyclic(BasicAutomata.makeEmpty(), alphabet, 0);
+		}
+
+		// get automaton of required chars from not containing automaton
+		notContaining = getRequiredCharAutomaton(notContaining, alphabet, boundLength);
+
+		Automaton result = automaton;
+		if (!notContaining.isEmpty()) {
+
+			// get all substrings
+			Automaton substrings = performUnaryOperation(notContaining, new Substring(), this.alphabet);
+
+			// get resulting automaton
+			result = this.automaton.minus(substrings);
+		}
+
+		// return new model from resulting automaton
+		return new Model_Acyclic(result, this.alphabet, this.boundLength);
 	}
 
 	@Override
 	public Model_Acyclic assertNotContainsOther(Model_Acyclic notContainedModel) {
-		// TODO Auto-generated method stub
-		return null;
+		ensureBoundedModel(notContainedModel);
+
+		// get not contained automaton
+		Automaton notContained = getAutomatonFromBoundedModel(notContainedModel);
+
+		// if not containing automaton is empty
+		if (notContained.isEmpty() || automaton.isEmpty()) {
+			return new Model_Acyclic(BasicAutomata.makeEmpty(), alphabet, 0);
+		}
+
+		notContained = getRequiredCharAutomaton(notContained, alphabet, boundLength);
+
+		Automaton result = automaton;
+		if (!notContained.isEmpty()) {
+			// create any string automata
+			Automaton anyString1 = BasicAutomata.makeCharSet(this.alphabet.getCharSet()).repeat();
+			Automaton anyString2 = BasicAutomata.makeCharSet(this.alphabet.getCharSet()).repeat();
+
+			// concatenate with not contained automaton
+			Automaton x = anyString1.concatenate(notContained).concatenate(anyString2);
+
+			// get resulting automaton
+			result = this.automaton.minus(x);
+		}
+
+		// return new model from resulting automaton
+		return new Model_Acyclic(result, this.alphabet, this.boundLength);
 	}
 
 	@Override
-	public Model_Acyclic assertNotEndsOther(Model_Acyclic notEndingModel) {
-		// TODO Auto-generated method stub
-		return null;
+	public Model_Acyclic assertNotEmpty() {
+		// get resulting automaton
+		Automaton result = this.automaton.minus(BasicAutomata.makeEmptyString());
+
+		// return new model from resulting automaton
+		return new Model_Acyclic(result, this.alphabet, this.boundLength);
+	}
+
+	@Override
+	public Model_Acyclic assertNotEndsOther(Model_Acyclic notContainingModel) {
+		ensureBoundedModel(notContainingModel);
+
+		// get containing automaton
+		Automaton notContaining = getAutomatonFromBoundedModel(notContainingModel);
+
+		// if not containing automaton is empty
+		if (notContaining.isEmpty() || automaton.isEmpty() || automaton.isEmptyString()) {
+			return new Model_Acyclic(BasicAutomata.makeEmpty(), alphabet, 0);
+		}
+
+		// get automaton of required chars from not containing automaton
+		notContaining = getRequiredCharAutomaton(notContaining, alphabet, boundLength);
+
+		Automaton result = automaton;
+		if (!notContaining.isEmpty()) {
+
+			// get all suffixes
+			Automaton suffixes = performUnaryOperation(notContaining, new Postfix(), this.alphabet);
+
+			// get resulting automaton
+			result = this.automaton.minus(suffixes);
+		}
+
+		// return new model from resulting automaton
+		return new Model_Acyclic(result, this.alphabet, this.boundLength);
 	}
 
 	@Override
 	public Model_Acyclic assertNotEndsWith(Model_Acyclic notEndingModel) {
-		// TODO Auto-generated method stub
-		return null;
+		ensureBoundedModel(notEndingModel);
+
+		Automaton notEnding = getAutomatonFromBoundedModel(notEndingModel);
+
+		// if not containing automaton is empty
+		if (notEnding.isEmpty() || automaton.isEmpty()) {
+			return new Model_Acyclic(BasicAutomata.makeEmpty(), alphabet, 0);
+		}
+
+		notEnding = getRequiredCharAutomaton(notEnding, alphabet, boundLength);
+
+		Automaton result = automaton;
+		if (!notEnding.isEmpty()) {
+
+			// create any string automata
+			Automaton anyString = BasicAutomata.makeCharSet(this.alphabet.getCharSet()).repeat();
+
+			// concatenate with not ending automaton
+			Automaton x = anyString.concatenate(notEnding);
+
+			// get resulting automaton
+			result = this.automaton.minus(x);
+		}
+
+		// return new model from resulting automaton
+		return new Model_Acyclic(result, this.alphabet, this.boundLength);
 	}
 
 	@Override
 	public Model_Acyclic assertNotEquals(Model_Acyclic notEqualModel) {
-		// TODO Auto-generated method stub
-		return null;
+		ensureBoundedModel(notEqualModel);
+
+		// get not equal automaton
+		Automaton notEqual = getAutomatonFromBoundedModel(notEqualModel);
+
+		// if not containing automaton is empty
+		if (notEqual.isEmpty() || automaton.isEmpty()) {
+			return new Model_Acyclic(BasicAutomata.makeEmpty(), alphabet, 0);
+		}
+
+		// if not equal automaton is a singleton
+		Automaton result = automaton;
+		if (notEqual.getFiniteStrings(1) != null) {
+			// get resulting automaton
+			result = this.automaton.minus(notEqual);
+		}
+
+		// return new model from resulting automaton
+		return new Model_Acyclic(result, this.alphabet, this.boundLength);
 	}
 
 	@Override
 	public Model_Acyclic assertNotEqualsIgnoreCase(Model_Acyclic notEqualModel) {
-		// TODO Auto-generated method stub
-		return null;
+		ensureBoundedModel(notEqualModel);
+
+		// get not equal automaton
+		Automaton notEqual = getAutomatonFromBoundedModel(notEqualModel);
+
+		// if not containing automaton is empty
+		if (notEqual.isEmpty() || automaton.isEmpty()) {
+			return new Model_Acyclic(BasicAutomata.makeEmpty(), alphabet, 0);
+		}
+
+		// if not equal automaton is a singleton
+		Automaton result = automaton;
+		if (notEqual.getFiniteStrings(1) != null) {
+			Automaton equalIgnoreCase = performUnaryOperation(notEqual, new IgnoreCase(), this.alphabet);
+
+			// get resulting automaton
+			result = this.automaton.minus(equalIgnoreCase);
+		}
+
+		// return new model from resulting automaton
+		return new Model_Acyclic(result, this.alphabet, this.boundLength);
 	}
 
 	@Override
-	public Model_Acyclic assertNotStartsOther(Model_Acyclic notStartingModel) {
-		// TODO Auto-generated method stub
-		return null;
+	public Model_Acyclic assertNotStartsOther(Model_Acyclic notContainingModel) {
+		ensureBoundedModel(notContainingModel);
+
+		// get containing automaton
+		Automaton notContaining = getAutomatonFromBoundedModel(notContainingModel);
+
+		// if not containing automaton is empty
+		if (notContaining.isEmpty() || automaton.isEmpty() || automaton.isEmptyString()) {
+			return new Model_Acyclic(BasicAutomata.makeEmpty(), alphabet, 0);
+		}
+
+		// get automaton of required chars from not containing automaton
+		notContaining = getRequiredCharAutomaton(notContaining, alphabet, boundLength);
+
+		Automaton result = automaton;
+		if (!notContaining.isEmpty()) {
+
+			// get all prefixes
+			Automaton prefixes = performUnaryOperation(notContaining, new Prefix(), this.alphabet);
+
+			// get resulting automaton
+			result = this.automaton.minus(prefixes);
+		}
+
+		// return new model from resulting automaton
+		return new Model_Acyclic(result, this.alphabet, this.boundLength);
 	}
 
 	@Override
 	public Model_Acyclic assertNotStartsWith(Model_Acyclic notStartsModel) {
-		// TODO Auto-generated method stub
-		return null;
+		ensureBoundedModel(notStartsModel);
+
+		Automaton notStarting = getAutomatonFromBoundedModel(notStartsModel);
+
+		// if not containing automaton is empty
+		if (notStarting.isEmpty() || automaton.isEmpty()) {
+			return new Model_Acyclic(BasicAutomata.makeEmpty(), alphabet, 0);
+		}
+
+		notStarting = getRequiredCharAutomaton(notStarting, alphabet, boundLength);
+
+		Automaton result = automaton;
+		if (!notStarting.isEmpty()) {
+			// create any string automata
+			Automaton anyString = BasicAutomata.makeCharSet(this.alphabet.getCharSet()).repeat();
+
+			// concatenate with not starts automaton
+			Automaton x = notStarting.concatenate(anyString);
+
+			// get resulting automaton
+			result = this.automaton.minus(x);
+		}
+
+		// return new model from resulting automaton
+		return new Model_Acyclic(result, this.alphabet, this.boundLength);
 	}
 
 	@Override
-	public Model_Acyclic assertStartsOther(Model_Acyclic startingModel) {
-		// TODO Auto-generated method stub
-		return null;
+	public Model_Acyclic assertStartsOther(Model_Acyclic containingModel) {
+		ensureBoundedModel(containingModel);
+
+		// get containing automaton
+		Automaton containing = getAutomatonFromBoundedModel(containingModel);
+
+		// if either automata is empty
+		if (this.automaton.isEmpty() || containing.isEmpty()) {
+			return new Model_Acyclic(BasicAutomata.makeEmpty(), this.alphabet, 0);
+		}
+
+		// get all prefixes
+		Automaton prefixes = performUnaryOperation(containing, new Prefix(), this.alphabet);
+
+		// get resulting automaton
+		Automaton result = this.automaton.intersection(prefixes);
+
+		// return new model from resulting automaton
+		return new Model_Acyclic(result, this.alphabet, this.boundLength);
 	}
 
 	@Override
 	public Model_Acyclic assertStartsWith(Model_Acyclic startingModel) {
-		// TODO Auto-generated method stub
-		return null;
+		ensureBoundedModel(startingModel);
+
+		// create any string automata
+		Automaton anyString = BasicAutomata.makeCharSet(this.alphabet.getCharSet()).repeat();
+
+		// concatenate with contained automaton
+		Automaton start = getAutomatonFromBoundedModel(startingModel);
+		Automaton x = start.concatenate(anyString);
+
+		// get resulting automaton
+		Automaton result = this.automaton.intersection(x);
+		result.minimize();
+
+		// return new model from resulting automaton
+		return new Model_Acyclic(result, this.alphabet, this.boundLength);
 	}
 
 	@Override
-	public Model_Acyclic concatenate(Model_Acyclic arg) {
-		// TODO Auto-generated method stub
-		return null;
+	public Model_Acyclic clone() {
+		// create new model from existing automata
+		Automaton cloneAutomaton = this.automaton.clone();
+		return new Model_Acyclic(cloneAutomaton, this.alphabet, this.boundLength);
 	}
 
 	@Override
-	public boolean equals(Model_Acyclic arg) {
-		// TODO Auto-generated method stub
+	public Model_Acyclic concatenate(Model_Acyclic argModel) {
+		ensureBoundedModel(argModel);
+
+		// get arg automaton
+		Automaton arg = getAutomatonFromBoundedModel(argModel);
+
+		// get concatenation of automata
+		Automaton result = this.automaton.concatenate(arg);
+
+		// minimize result automaton
+		result.minimize();
+
+		// calculate new bound length
+		int boundLength = this.boundLength + argModel.boundLength;
+
+		// return bounded model from automaton
+		return new Model_Acyclic(result, this.alphabet, boundLength);
+	}
+
+	@Override
+	public boolean containsString(String actualValue) {
+		return this.automaton.run(actualValue);
+	}
+
+	@Override
+	public Model_Acyclic delete(int start, int end) {
+
+		// perform operation
+		Automaton result = performUnaryOperation(automaton, new PreciseDelete(start, end), this.alphabet);
+
+		// determine new bound length
+		int newBoundLength;
+		if (this.boundLength < start) {
+			newBoundLength = 0;
+		} else if (this.boundLength < end) {
+			newBoundLength = start;
+		} else {
+			int charsDeleted = end - start;
+			newBoundLength = this.boundLength - charsDeleted;
+		}
+
+		// return new model from resulting automaton
+		return new Model_Acyclic(result, this.alphabet, newBoundLength);
+	}
+
+	@Override
+	public boolean equals(Model_Acyclic argModel) {
+
+		// check if arg model is bounded automaton model
+		if (argModel instanceof Model_Acyclic) {
+
+			// get arg automaton
+			Automaton arg = getAutomatonFromBoundedModel(argModel);
+
+			// check underlying automaton models for equality
+			return this.automaton.equals(arg);
+		}
+
 		return false;
 	}
 
 	@Override
-	public Model_Acyclic intersect(Model_Acyclic arg) {
-		// TODO Auto-generated method stub
-		return null;
+	public String getAcceptedStringExample() {
+		return this.automaton.getShortestExample(true);
+	}
+
+	@Override
+	public Set<String> getFiniteStrings() {
+
+		// return finite strings from automaton
+		return automaton.getFiniteStrings();
 	}
 
 	@Override
 	public Model_Acyclic insert(int offset, Model_Acyclic argModel) {
-		// TODO Auto-generated method stub
-		return null;
+		ensureBoundedModel(argModel);
+
+		// get automata for operations
+		Automaton arg = getAutomatonFromBoundedModel(argModel);
+
+		// get resulting automaton
+		PreciseInsert insert = new PreciseInsert(offset);
+		Automaton result = insert.op(automaton, arg);
+		result.minimize();
+
+		// calculate new bound length
+		int newBoundLength = this.boundLength + argModel.boundLength;
+
+		// return unbounded model from automaton
+		return new Model_Acyclic(result, this.alphabet, newBoundLength);
+	}
+
+	@Override
+	public Model_Acyclic intersect(Model_Acyclic argModel) {
+		ensureBoundedModel(argModel);
+
+		// get arg automaton
+		Automaton arg = getAutomatonFromBoundedModel(argModel);
+
+		// get intersection of automata
+		Automaton result = this.automaton.intersection(arg);
+
+		// minimize result automaton
+		result.minimize();
+
+		// calculate new bound length
+		int boundLength = this.boundLength;
+		if (argModel.boundLength < this.boundLength) {
+			boundLength = argModel.boundLength;
+		}
+
+		// return bounded model from automaton
+		return new Model_Acyclic(result, this.alphabet, boundLength);
+	}
+
+	@Override
+	public boolean isEmpty() {
+		/* eas 10-31-18 why, why is EmptyString() ??? */
+		// return this.automaton.isEmptyString();
+		// the correct code
+		return this.automaton.isEmpty();
+
+	}
+
+	@Override
+	public boolean isSingleton() {
+		// get one finite string, null if more
+		Set<String> strings = this.automaton.getFiniteStrings(1);
+
+		// return if single non-null string in automaton
+		return strings != null && strings.size() == 1 && strings.iterator().next() != null;
+	}
+
+	@Override
+	public BigInteger modelCount() {
+		// return model count of automaton
+		return StringModelCounter.ModelCount(automaton);
+	}
+
+	@Override
+	public Model_Acyclic replace(char find, char replace) {
+		// perform operation
+		Automaton result = performUnaryOperation(automaton, new Replace1(find, replace), this.alphabet);
+
+		// return new model from resulting automaton
+		return new Model_Acyclic(result, this.alphabet, this.boundLength);
+	}
+
+	@Override
+	public Model_Acyclic replace(String find, String replace) {
+
+		// perform operation
+		Replace6 replaceOp = new Replace6(find, replace);
+		Automaton result = performUnaryOperation(automaton, replaceOp, this.alphabet);
+
+		// determine new bound length
+		int boundDiff = find.length() - replace.length();
+		int newBoundLength = this.boundLength - boundDiff;
+
+		// return new model from resulting automaton
+		return new Model_Acyclic(result, this.alphabet, newBoundLength);
+	}
+
+	@Override
+	public Model_Acyclic replaceChar() {
+
+		// perform operation
+		Automaton result = performUnaryOperation(automaton, new Replace4(), this.alphabet);
+
+		// return new model from resulting automaton
+		return new Model_Acyclic(result, this.alphabet, this.boundLength);
+	}
+
+	@Override
+	public Model_Acyclic replaceFindKnown(char find) {
+
+		// perform operation
+		Automaton result = performUnaryOperation(automaton, new Replace2(find), this.alphabet);
+
+		// return new model from resulting automaton
+		return new Model_Acyclic(result, this.alphabet, this.boundLength);
+	}
+
+	@Override
+	public Model_Acyclic replaceReplaceKnown(char replace) {
+
+		// perform operation
+		Automaton result = performUnaryOperation(automaton, new Replace3(replace), this.alphabet);
+
+		// return new model from resulting automaton
+		return new Model_Acyclic(result, this.alphabet, this.boundLength);
+	}
+
+	@Override
+	public Model_Acyclic reverse() {
+		// if automaton is empty
+		if (this.automaton.isEmpty()) {
+			return new Model_Acyclic(BasicAutomata.makeEmpty(), this.alphabet, 0);
+		}
+
+		// perform operation
+		Automaton result = performUnaryOperation(automaton, new Reverse(), this.alphabet);
+
+		// return new model from resulting automaton
+		return new Model_Acyclic(result, this.alphabet, this.boundLength);
 	}
 
 	@Override
 	public Model_Acyclic setCharAt(int offset, Model_Acyclic argModel) {
-		// TODO Auto-generated method stub
-		return null;
+		ensureBoundedModel(argModel);
+
+		// get automata for operations
+		Automaton arg = getAutomatonFromBoundedModel(argModel);
+
+		// get resulting automaton
+		PreciseSetCharAt operation = new PreciseSetCharAt(offset);
+		Automaton result = operation.op(automaton, arg);
+		result.minimize();
+
+		// return unbounded model from automaton
+		return new Model_Acyclic(result, this.alphabet, boundLength);
 	}
 
+	@Override
+	public Model_Acyclic setLength(int length) {
+
+		// add null to new alphabet
+		Set<Character> symbolSet = alphabet.getSymbolSet();
+		symbolSet.add('\u0000');
+		Alphabet newAlphabet = new Alphabet(symbolSet);
+
+		// get resulting automaton
+		Automaton result = performUnaryOperation(automaton, new PreciseSetLength(length), newAlphabet);
+
+		// return unbounded model from automaton
+		return new Model_Acyclic(result, this.alphabet, length);
+	}
+
+	@Override
+	public Model_Acyclic substring(int start, int end) {
+		// get resulting automaton
+		Automaton result = performUnaryOperation(automaton, new PreciseSubstring(start, end), this.alphabet);
+
+		// get new bound length
+		int newBoundLength = end - start;
+
+		// return new model from resulting automaton
+		return new Model_Acyclic(result, this.alphabet, newBoundLength);
+	}
+
+	@Override
+	public Model_Acyclic suffix(int start) {
+
+		// perform operation
+		Automaton result = performUnaryOperation(automaton, new PreciseSuffix(start), this.alphabet);
+
+		// determine new bound length
+		int newBoundLength = this.boundLength - start;
+
+		// return new model from resulting automaton
+		return new Model_Acyclic(result, this.alphabet, newBoundLength);
+	}
+
+	@Override
+	public Model_Acyclic toLowercase() {
+
+		// perform operation
+		Automaton result = performUnaryOperation(automaton, new ToLowerCase(), this.alphabet);
+
+		// return new model from resulting automaton
+		return new Model_Acyclic(result, this.alphabet, this.boundLength);
+	}
+
+	@Override
+	public Model_Acyclic toUppercase() {
+
+		// perform operation
+		Automaton result = performUnaryOperation(automaton, new ToUpperCase(), this.alphabet);
+
+		// return new model from resulting automaton
+		return new Model_Acyclic(result, this.alphabet, this.boundLength);
+	}
+
+	@Override
+	public Model_Acyclic trim() {
+
+		// perform operation
+		Automaton result = performUnaryOperation(automaton, new PreciseTrim(), this.alphabet);
+
+		// return new model from resulting automaton
+		return new Model_Acyclic(result, this.alphabet, this.boundLength);
+	}
+
+	private void ensureBoundedModel(Model_Acyclic arg) {
+		// check if automaton model is bounded
+		if (!(arg instanceof Model_Acyclic)) {
+
+			throw new UnsupportedOperationException("The BoundedAutomatonModel only supports binary "
+					+ "operations with other BoundedAutomatonModels.");
+		}
+	}
 }
