@@ -19,8 +19,8 @@ public class Reporter_Count_2<T extends A_Model<T>> extends A_Reporter_2<T> {
 
 	private final ModelCountSolver modelCountSolver;
 
-	public Reporter_Count_2(DirectedGraph<PrintConstraint, SymbolicEdge> graph, Parser parser,
-			Solver<T> extendedSolver, boolean debug, ModelCountSolver modelCountSolver) {
+	public Reporter_Count_2(DirectedGraph<PrintConstraint, SymbolicEdge> graph, Parser parser, Solver<T> extendedSolver,
+			boolean debug, ModelCountSolver modelCountSolver) {
 
 		super(graph, parser, extendedSolver, debug);
 

@@ -8,7 +8,7 @@ public class Model_Bounded_Manager extends A_Model_Manager<Model_Bounded> {
 
 	private final int boundLength;
 
-	Model_Bounded_Manager(Alphabet alphabet, int boundLength) {
+	public Model_Bounded_Manager(Alphabet alphabet, int boundLength) {
 		super(alphabet, boundLength);
 		this.alphabet = alphabet;
 		this.boundLength = boundLength;
