@@ -8,23 +8,22 @@ import java.util.Map;
 import org.jgrapht.DirectedGraph;
 
 import edu.boisestate.cs.BasicTimer;
-import edu.boisestate.cs.Parser;
+import edu.boisestate.cs.Parser_2;
 import edu.boisestate.cs.automatonModel.A_Model;
 import edu.boisestate.cs.graph.PrintConstraint;
 import edu.boisestate.cs.graph.SymbolicEdge;
-import edu.boisestate.cs.solvers.ModelCountSolver;
-import edu.boisestate.cs.solvers.Solver;
+import edu.boisestate.cs.solvers.Solver_Count;
 
 public class Reporter_Count_2<T extends A_Model<T>> extends A_Reporter_2<T> {
 
-	private final ModelCountSolver modelCountSolver;
+	private final Solver_Count<T> countSolver;
 
-	public Reporter_Count_2(DirectedGraph<PrintConstraint, SymbolicEdge> graph, Parser parser, Solver<T> extendedSolver,
-			boolean debug, ModelCountSolver modelCountSolver) {
+	public Reporter_Count_2(DirectedGraph<PrintConstraint, SymbolicEdge> graph, Parser_2<T> parser,
+			Solver_Count<T> countSolver, boolean debug) {
 
-		super(graph, parser, extendedSolver, debug);
+		super(graph, parser, countSolver, debug);
 
-		this.modelCountSolver = modelCountSolver;
+		this.countSolver = countSolver;
 	}
 
 	@Override
@@ -61,7 +60,7 @@ public class Reporter_Count_2<T extends A_Model<T>> extends A_Reporter_2<T> {
 
 		// System.out.printf("Calculating IN MC for Constraint %d\n", base);
 
-		long initialCount = this.modelCountSolver.getModelCount(base);
+		long initialCount = this.countSolver.getModelCount(base);
 		inMCTime = BasicTimer.getRunTime();
 
 		// store symbolic string values
@@ -78,7 +77,7 @@ public class Reporter_Count_2<T extends A_Model<T>> extends A_Reporter_2<T> {
 
 		// System.out.printf("Calculating T MC for Constraint %d\n", base);
 
-		long trueModelCount = this.modelCountSolver.getModelCount(base);
+		long trueModelCount = this.countSolver.getModelCount(base);
 		tMCTime = BasicTimer.getRunTime();
 
 		// revert symbolic string values
@@ -98,7 +97,7 @@ public class Reporter_Count_2<T extends A_Model<T>> extends A_Reporter_2<T> {
 
 		// System.out.printf("Calculating F MC for Constraint %d\n", base);
 
-		long falseModelCount = this.modelCountSolver.getModelCount(base);
+		long falseModelCount = this.countSolver.getModelCount(base);
 		fMCTime = BasicTimer.getRunTime();
 
 		// revert symbolic string values
@@ -156,7 +155,7 @@ public class Reporter_Count_2<T extends A_Model<T>> extends A_Reporter_2<T> {
 		// System.out.printf("Calculating Disjoint MC for Constraint %d\n", base);
 
 		// set yes or no for disjoint branches
-		long overlap = this.modelCountSolver.getModelCount(base);
+		long overlap = this.countSolver.getModelCount(base);
 
 		// revert symbolic string values
 		solver.revertLastPredicate();

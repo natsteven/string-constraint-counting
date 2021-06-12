@@ -19,6 +19,7 @@ import edu.boisestate.cs.graph.PrintConstraint;
 import edu.boisestate.cs.graph.SymbolicEdge;
 import edu.boisestate.cs.reporting.MCReporter;
 import edu.boisestate.cs.reporting.Reporter;
+import edu.boisestate.cs.reporting.Reporter_Count_2;
 import edu.boisestate.cs.reporting.SATReporter;
 import edu.boisestate.cs.solvers.AutomatonModelSolver;
 import edu.boisestate.cs.solvers.BlankSolver;
@@ -70,5 +71,8 @@ public class InputSolver {
 	public static void run_Bounded_Count(DirectedGraph<PrintConstraint, SymbolicEdge> graph) {
 		Model_Bounded_Manager mFactory = new Model_Bounded_Manager(alpha, initialBound);
 		Solver_Count<Model_Bounded> mSolver = new Solver_Count<Model_Bounded>(mFactory, initialBound);
+		Parser_2<Model_Bounded> mParser = new Parser_2<Model_Bounded>(mSolver, debug);
+		Reporter_Count_2<Model_Bounded> mReporter = new Reporter_Count_2<Model_Bounded>(graph, mParser, mSolver, debug);
+		
 	}
 }

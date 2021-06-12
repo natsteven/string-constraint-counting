@@ -14,6 +14,7 @@ import org.jgrapht.traverse.TopologicalOrderIterator;
 
 import edu.boisestate.cs.BasicTimer;
 import edu.boisestate.cs.Parser;
+import edu.boisestate.cs.Parser_2;
 import edu.boisestate.cs.automatonModel.A_Model;
 import edu.boisestate.cs.graph.PrintConstraint;
 import edu.boisestate.cs.graph.PrintConstraintComparator;
@@ -23,14 +24,14 @@ import edu.boisestate.cs.solvers.Solver;
 public abstract class A_Reporter_2<T extends A_Model<T>> {
 
     protected final DirectedGraph<PrintConstraint, SymbolicEdge> graph;
-    protected final Parser parser;
+    protected final Parser_2<T> parser;
     protected final boolean debug;
     protected final Solver<T> solver;
     protected final Map<Integer, String[]> operationsMap;
     protected final Map<Integer, Long> timerMap;
 
     protected A_Reporter_2(DirectedGraph<PrintConstraint, SymbolicEdge> graph,
-                       Parser parser,
+                       Parser_2<T> parser,
                        Solver<T> solver,
                        boolean debug) {
 
