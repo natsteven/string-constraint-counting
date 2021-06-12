@@ -5,15 +5,15 @@ import java.util.Set;
 
 import edu.boisestate.cs.BasicTimer;
 import edu.boisestate.cs.automatonModel.A_Model;
-import edu.boisestate.cs.automatonModel.AutomatonModelManager;
+import edu.boisestate.cs.automatonModel.A_Model_Manager;
 
 public class Solver_Count<T extends A_Model<T>> extends Solver<T> implements I_Solver_Count<T> {
 
-    public Solver_Count(AutomatonModelManager modelFactory) {
+    public Solver_Count(A_Model_Manager<T> modelFactory) {
         super(modelFactory);
     }
 
-    public Solver_Count(AutomatonModelManager modelFactory,
+    public Solver_Count(A_Model_Manager<T> modelFactory,
                                   int initialBound) {
         super(modelFactory, initialBound);
     }

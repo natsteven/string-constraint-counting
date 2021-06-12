@@ -69,5 +69,6 @@ public class InputSolver {
 	
 	public static void run_Bounded_Count(DirectedGraph<PrintConstraint, SymbolicEdge> graph) {
 		Model_Bounded_Manager mFactory = new Model_Bounded_Manager(alpha, initialBound);
+		Solver_Count<Model_Bounded> mSolver = new Solver_Count<Model_Bounded>(mFactory, initialBound);
 	}
 }

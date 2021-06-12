@@ -3,22 +3,21 @@ package edu.boisestate.cs.solvers;
 import edu.boisestate.cs.Alphabet;
 import edu.boisestate.cs.BasicTimer;
 import edu.boisestate.cs.automatonModel.A_Model;
-import edu.boisestate.cs.automatonModel.AutomatonModel;
-import edu.boisestate.cs.automatonModel.AutomatonModelManager;
+import edu.boisestate.cs.automatonModel.A_Model_Manager;
 import edu.boisestate.cs.util.Tuple;
 
 public class Solver<T extends A_Model<T>> extends A_Solver_Extended<T> implements I_Solver<T> {
 
     protected final A_Model_Manager<T> modelManager;
 
-    public Solver(AutomatonModelManager modelManager) {
+    public Solver(A_Model_Manager<T> modelManager) {
         super();
 
         // initialize factory from parameter
         this.modelManager = modelManager;
     }
 
-    public Solver(AutomatonModelManager modelManager,
+    public Solver(A_Model_Manager<T> modelManager,
                                 int initialBound) {
         super(initialBound);
 
