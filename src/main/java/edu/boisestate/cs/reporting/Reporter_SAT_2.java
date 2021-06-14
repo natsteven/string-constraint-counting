@@ -8,6 +8,7 @@ import java.util.Map;
 import org.jgrapht.DirectedGraph;
 
 import edu.boisestate.cs.Parser;
+import edu.boisestate.cs.Parser_2;
 import edu.boisestate.cs.automatonModel.A_Model;
 import edu.boisestate.cs.graph.PrintConstraint;
 import edu.boisestate.cs.graph.SymbolicEdge;
@@ -16,7 +17,7 @@ import edu.boisestate.cs.solvers.Solver;
 public class Reporter_SAT_2<T extends A_Model<T>> extends A_Reporter_2<T> {
 
     public Reporter_SAT_2(DirectedGraph<PrintConstraint, SymbolicEdge> graph,
-                       Parser parser,
+                       Parser_2<T> parser,
                        Solver<T> solver,
                        boolean debug) {
 

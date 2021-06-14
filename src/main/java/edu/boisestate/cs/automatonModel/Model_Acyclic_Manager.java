@@ -8,7 +8,7 @@ public class Model_Acyclic_Manager extends A_Model_Manager<Model_Acyclic> {
 
 	private final int boundLength;
 
-	Model_Acyclic_Manager(Alphabet alphabet, int boundLength) {
+	public Model_Acyclic_Manager(Alphabet alphabet, int boundLength) {
 		super(alphabet, boundLength);
 		this.alphabet = alphabet;
 		this.boundLength = boundLength;
