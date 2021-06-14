@@ -67,15 +67,15 @@ public class InputSolver {
 	// TODO: create Solver_Inverse
 	// TODO: create Model_Bounded_Inverse_Manager
 	// TODO: create Reporter_Inverse_2
-	public static void run_Bounded_Inverse(DirectedGraph<PrintConstraint, SymbolicEdge> graph) {
-		Model_Bounded_Inverse_Manager mFactory = new Model_Bounded_Inverse_Manager(alpha, initialBound);
-		Solver_Inverse<Model_Bounded> mSolver = new Solver_Inverse<Model_Bounded>(mFactory, initialBound);
-		Parser_2<Model_Bounded_Inverse> mParser = new Parser_2<Model_Bounded_Inverse>(mSolver, debug);
-		Reporter_Inverse_2<Model_Bounded_Inverse> mReporter = new Reporter_Inverse_2<Model_Bounded_Inverse>(graph,
-				mParser, mSolver, debug);
-		mSolver.setReduce(reduce);
-		mReporter.run();
-	}
+//	public static void run_Bounded_Inverse(DirectedGraph<PrintConstraint, SymbolicEdge> graph) {
+//		Model_Bounded_Inverse_Manager mFactory = new Model_Bounded_Inverse_Manager(alpha, initialBound);
+//		Solver_Inverse<Model_Bounded> mSolver = new Solver_Inverse<Model_Bounded>(mFactory, initialBound);
+//		Parser_2<Model_Bounded_Inverse> mParser = new Parser_2<Model_Bounded_Inverse>(mSolver, debug);
+//		Reporter_Inverse_2<Model_Bounded_Inverse> mReporter = new Reporter_Inverse_2<Model_Bounded_Inverse>(graph,
+//				mParser, mSolver, debug);
+//		mSolver.setReduce(reduce);
+//		mReporter.run();
+//	}
 
 	public static void run_Bounded_Count(DirectedGraph<PrintConstraint, SymbolicEdge> graph) {
 		Model_Bounded_Manager mFactory = new Model_Bounded_Manager(alpha, initialBound);
@@ -103,31 +103,31 @@ public class InputSolver {
 
 	// TODO: create Model_Acyclic_Inverse_Manager
 	// TODO: create Model_Acyclic_Inverse
-	public static void run_Acyclic_Inverse(DirectedGraph<PrintConstraint, SymbolicEdge> graph) {
-		Model_Acyclic_Inverse_Manager mFactory = new Model_Acyclic_Inverse_Manager(alpha, initialBound);
-		Solver_Inverse<Model_Acyclic_Inverse> mSolver = new Solver_Inverse<Model_Acyclic_Inverse>(mFactory,
-				initialBound);
-		Parser_2<Model_Acyclic_Inverse> mParser = new Parser_2<Model_Acyclic_Inverse>(mSolver, debug);
-		Reporter_Inverse_2<Model_Acyclic_Inverse> mReporter = new Reporter_Inverse_2<Model_Acyclic_Inverse>(graph, mParser,
-				mSolver, debug);
-		mSolver.setReduce(reduce);
-		mReporter.run();
-	}
+//	public static void run_Acyclic_Inverse(DirectedGraph<PrintConstraint, SymbolicEdge> graph) {
+//		Model_Acyclic_Inverse_Manager mFactory = new Model_Acyclic_Inverse_Manager(alpha, initialBound);
+//		Solver_Inverse<Model_Acyclic_Inverse> mSolver = new Solver_Inverse<Model_Acyclic_Inverse>(mFactory,
+//				initialBound);
+//		Parser_2<Model_Acyclic_Inverse> mParser = new Parser_2<Model_Acyclic_Inverse>(mSolver, debug);
+//		Reporter_Inverse_2<Model_Acyclic_Inverse> mReporter = new Reporter_Inverse_2<Model_Acyclic_Inverse>(graph, mParser,
+//				mSolver, debug);
+//		mSolver.setReduce(reduce);
+//		mReporter.run();
+//	}
 
 	// TODO: create Model_Acyclic_Inverse_Manager
 	// TODO: create Model_Acyclic_Inverse
 	// TODO: create Solver_Inverse_r3
 	// TODO: create Reporter_Inverse_r3
-	public static void run_Acyclic_Inverse_r3(DirectedGraph<PrintConstraint, SymbolicEdge> graph) {
-		Model_Acyclic_Inverse_Manager mFactory = new Model_Acyclic_Inverse_Manager(alpha, initialBound);
-		Solver_Inverse_r3<Model_Acyclic_Inverse> mSolver = new Solver_Inverse_r3<Model_Acyclic_Inverse>(mFactory,
-				initialBound);
-		Parser_2<Model_Acyclic_Inverse> mParser = new Parser_2<Model_Acyclic_Inverse>(mSolver, debug);
-		Reporter_Inverse_r3<Model_Acyclic_Inverse> mReporter = new Reporter_Inverse_r3<Model_Acyclic_Inverse>(graph,
-				mParser, mSolver, debug);
-		mSolver.setReduce(reduce);
-		mReporter.run();
-	}
+//	public static void run_Acyclic_Inverse_r3(DirectedGraph<PrintConstraint, SymbolicEdge> graph) {
+//		Model_Acyclic_Inverse_Manager mFactory = new Model_Acyclic_Inverse_Manager(alpha, initialBound);
+//		Solver_Inverse_r3<Model_Acyclic_Inverse> mSolver = new Solver_Inverse_r3<Model_Acyclic_Inverse>(mFactory,
+//				initialBound);
+//		Parser_2<Model_Acyclic_Inverse> mParser = new Parser_2<Model_Acyclic_Inverse>(mSolver, debug);
+//		Reporter_Inverse_r3<Model_Acyclic_Inverse> mReporter = new Reporter_Inverse_r3<Model_Acyclic_Inverse>(graph,
+//				mParser, mSolver, debug);
+//		mSolver.setReduce(reduce);
+//		mReporter.run();
+//	}
 
 	@SuppressWarnings("unchecked")
 	public static DirectedGraph<PrintConstraint, SymbolicEdge> loadGraph(String graphPath) {

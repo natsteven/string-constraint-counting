@@ -47,6 +47,7 @@ public class Model_Bounded_Manager extends A_Model_Manager<Model_Bounded> {
 		return new Model_Bounded(anyString, this.alphabet, this.boundLength);
 	}
 
+	// creates string that accepts only the given string
 	@Override
 	public Model_Bounded createString(String string) {
 		// create string automaton
@@ -55,5 +56,10 @@ public class Model_Bounded_Manager extends A_Model_Manager<Model_Bounded> {
 		int length = string.length();
 		// return model from automaton
 		return new Model_Bounded(stringAutomaton, this.alphabet, length);
+	}
+	
+	// TODO
+	public Model_Bounded createFromRegex(String regex) {
+		return null;
 	}
 }
