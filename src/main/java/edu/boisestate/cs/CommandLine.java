@@ -92,7 +92,6 @@ class CommandLine {
             // get solver choice from option value
             String optionValue = commandLine.getOptionValue("s");
             String choice = optionValue.toLowerCase();
-
             if (choice.equals("blank")) {
                 settings.setSolverType(Settings.SolverType.BLANK);
             } else if (choice.equals("concrete")) {
@@ -103,6 +102,8 @@ class CommandLine {
                 settings.setSolverType(Settings.SolverType.STRANGER);
             } else if (choice.equals("z3")) {
                 settings.setSolverType(Settings.SolverType.Z3);
+            } else if (choice.equals("inverse")) { 
+               	settings.setSolverType(Settings.SolverType.INVERSE);
             } else {
                 String errorMessage = String.format(
                         "The specified solver \"%s\" is not a recognized " +

@@ -127,8 +127,9 @@ public class Settings {
         CONCRETE("Concrete"),
         JSA("JSA"),
         STRANGER("Stranger"),
-        Z3("Z3");
-
+        Z3("Z3"),
+        INVERSE("Inverse");
+        
         public static SolverType DEFAULT = SolverType.JSA;
         private final String name;
 

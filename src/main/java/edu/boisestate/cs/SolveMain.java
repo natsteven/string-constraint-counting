@@ -8,6 +8,8 @@
 package edu.boisestate.cs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import edu.boisestate.cs.Settings.SolverType;
 import edu.boisestate.cs.automatonModel.AutomatonModelManager;
 import edu.boisestate.cs.graph.PrintConstraint;
 import edu.boisestate.cs.graph.SymbolicEdge;
@@ -36,7 +38,13 @@ public class SolveMain {
 		if (settings == null) {
 			return;
 		}
-
+			
+		if (settings.getSolverType() == SolverType.INVERSE) {
+			System.out.println("doing nothing yet...");
+			System.out.println(settings.getGraphFilePath());
+			System.out.println(settings.getInitialBoundingLength());
+		} else {
+		
 		// initialize components object
 		Components components = new Components();
 
@@ -67,6 +75,9 @@ public class SolveMain {
 
 		// run reporter
 		components.getReporter().run();
+		
+		} // end other solver type
+		
 	}
 
 	private static void loadAlphabet(Components components, Settings settings) {

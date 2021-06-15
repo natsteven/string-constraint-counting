@@ -12,6 +12,8 @@ import org.jgrapht.graph.DefaultDirectedGraph;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+//import edu.boisestate.cs.automatonModel.Model_Acyclic_Inverse;
+//import edu.boisestate.cs.automatonModel.Model_Acyclic_Inverse_Manager;
 import edu.boisestate.cs.automatonModel.AutomatonModelManager;
 import edu.boisestate.cs.automatonModel.Model_Acyclic;
 import edu.boisestate.cs.automatonModel.Model_Acyclic_Manager;
@@ -22,6 +24,7 @@ import edu.boisestate.cs.graph.SymbolicEdge;
 import edu.boisestate.cs.reporting.MCReporter;
 import edu.boisestate.cs.reporting.Reporter;
 import edu.boisestate.cs.reporting.Reporter_Count_2;
+//import edu.boisestate.cs.reporting.Reporter_Inverse_r3;
 import edu.boisestate.cs.reporting.Reporter_SAT_2;
 import edu.boisestate.cs.reporting.SATReporter;
 import edu.boisestate.cs.solvers.AutomatonModelSolver;
@@ -32,6 +35,7 @@ import edu.boisestate.cs.solvers.MCAutomatonModelSolver;
 import edu.boisestate.cs.solvers.ModelCountSolver;
 import edu.boisestate.cs.solvers.Solver;
 import edu.boisestate.cs.solvers.Solver_Count;
+//import edu.boisestate.cs.solvers.Solver_Inverse_r3;
 import edu.boisestate.cs.util.LambdaVoid1;
 
 public class InputSolver {
@@ -93,13 +97,13 @@ public class InputSolver {
 		mReporter.run();
 	}
 
-	public static void run_Acyclic_Count(DirectedGraph<PrintConstraint, SymbolicEdge> graph) {
-		Model_Acyclic_Manager mFactory = new Model_Acyclic_Manager(alpha, initialBound);
-		Solver_Count<Model_Acyclic> mSolver = new Solver_Count<Model_Acyclic>(mFactory, initialBound);
-		Parser_2<Model_Acyclic> mParser = new Parser_2<Model_Acyclic>(mSolver, debug);
-		Reporter_Count_2<Model_Acyclic> mReporter = new Reporter_Count_2<Model_Acyclic>(graph, mParser, mSolver, debug);
-		mReporter.run();
-	}
+//	public static void run_Acyclic_Count(DirectedGraph<PrintConstraint, SymbolicEdge> graph) {
+//		Model_Acyclic_Manager mFactory = new Model_Acyclic_Manager(alpha, initialBound);
+//		Solver_Count<Model_Acyclic> mSolver = new Solver_Count<Model_Acyclic>(mFactory, initialBound);
+//		Parser_2<Model_Acyclic> mParser = new Parser_2<Model_Acyclic>(mSolver, debug);
+//		Reporter_Count_2<Model_Acyclic> mReporter = new Reporter_Count_2<Model_Acyclic>(graph, mParser, mSolver, debug);
+//		mReporter.run();
+//	}
 
 	// TODO: create Model_Acyclic_Inverse_Manager
 	// TODO: create Model_Acyclic_Inverse
