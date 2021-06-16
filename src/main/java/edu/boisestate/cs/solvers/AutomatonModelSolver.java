@@ -386,7 +386,7 @@ public class AutomatonModelSolver
 
         // get model
         AutomatonModel model = this.symbolicStringMap.get(id);
-        System.out.println(model);
+        //System.out.println(model);
 
         // return singleton status
         return model.containsString(actualValue) && model.isSingleton();

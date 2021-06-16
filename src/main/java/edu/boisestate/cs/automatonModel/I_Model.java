@@ -3,7 +3,12 @@ package edu.boisestate.cs.automatonModel;
 import java.math.BigInteger;
 import java.util.Set;
 
+//import dk.brics.automaton.Automaton;
+//import dk.brics.string.stringoperations.UnaryOperation;
+//import edu.boisestate.cs.Alphabet;
+
 public interface I_Model<T extends I_Model<T>> {
+	
 
 	String getAcceptedStringExample();
 
@@ -98,4 +103,5 @@ public interface I_Model<T extends I_Model<T>> {
 	T clone();
 
 	String getAutomaton();
+
 }

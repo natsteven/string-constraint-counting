@@ -1,17 +1,5 @@
 package edu.boisestate.cs.reporting;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.Set;
-
-import org.jgrapht.DirectedGraph;
-import org.jgrapht.traverse.TopologicalOrderIterator;
-
 import edu.boisestate.cs.BasicTimer;
 import edu.boisestate.cs.Parser;
 import edu.boisestate.cs.Parser_2;
@@ -19,9 +7,21 @@ import edu.boisestate.cs.automatonModel.A_Model;
 import edu.boisestate.cs.graph.PrintConstraint;
 import edu.boisestate.cs.graph.PrintConstraintComparator;
 import edu.boisestate.cs.graph.SymbolicEdge;
+//import edu.boisestate.cs.solvers.ExtendedSolver;
 import edu.boisestate.cs.solvers.Solver;
 
-public abstract class A_Reporter_2<T extends A_Model<T>> {
+import org.jgrapht.DirectedGraph;
+import org.jgrapht.traverse.TopologicalOrderIterator;
+
+import java.util.*;
+
+/**
+ * 
+ * @author 
+ *
+ * @param <T>
+ */
+abstract public class A_Reporter_2 <T extends A_Model<T>> {
 
     protected final DirectedGraph<PrintConstraint, SymbolicEdge> graph;
     protected final Parser_2<T> parser;
@@ -30,17 +30,24 @@ public abstract class A_Reporter_2<T extends A_Model<T>> {
     protected final Map<Integer, String[]> operationsMap;
     protected final Map<Integer, Long> timerMap;
 
-    protected A_Reporter_2(DirectedGraph<PrintConstraint, SymbolicEdge> graph,
-                       Parser_2<T> parser,
-                       Solver<T> solver,
-                       boolean debug) {
+    /**
+     * 
+     * @param graph
+     * @param parser
+     * @param solver
+     * @param debug
+     */
+    protected A_Reporter_2 (DirectedGraph<PrintConstraint, SymbolicEdge> 	graph,
+                       	   	Parser_2<T> 									parser,
+                       	   	Solver<T> 										solver,
+                       	   	boolean 										debug) {
 
-        this.graph = graph;
-        this.parser = parser;
-        this.debug = debug;
-        this.solver = solver;
-        operationsMap = new HashMap<>();
-        timerMap = new HashMap<>();
+        this.graph 		= graph;
+        this.parser 	= parser;
+        this.debug 		= debug;
+        this.solver 	= solver;
+        operationsMap 	= new HashMap<>();
+        timerMap 		= new HashMap<>();
     }
 
     public void run() {
@@ -58,7 +65,13 @@ public abstract class A_Reporter_2<T extends A_Model<T>> {
 
         // populate root and end sets
         for (PrintConstraint constraint : graph.vertexSet()) {
-
+        	int in = graph.inDegreeOf(constraint);
+        	int out = graph.outDegreeOf(constraint);
+        	
+        	if (debug) {
+        		System.out.printf("all ID: %d I:%d O:%d  %s\n",constraint.getId(),in,out,constraint.getValue());
+        	}
+        	
             // if no in paths, node is a root node
             if (graph.inDegreeOf(constraint) == 0) {
                 roots.add(constraint);
@@ -74,17 +87,26 @@ public abstract class A_Reporter_2<T extends A_Model<T>> {
                 maxId = constraint.getId();
             }
         }
+        
+        
+        if (debug) {
+        	for (PrintConstraint pc : roots) {
+        		System.out.println("reporter-root ID: " + pc.getId() + "  " + pc.getValue());
+        	}
 
+        	for (PrintConstraint pc : ends) {
+        		System.out.println("reporter-end ID: " + pc.getId() + "  " + pc.getValue());
+        	}
+        }
+        
         // set max id in parser
         this.parser.setMaxGraphId(maxId);
 
         // create priority queue structure for topological iteration
-        Queue<PrintConstraint> queue =
-                new PriorityQueue<>(1, new PrintConstraintComparator());
+        Queue<PrintConstraint> queue = new PriorityQueue<>(1, new PrintConstraintComparator());
 
         // create topological iterator for graph
-        TopologicalOrderIterator<PrintConstraint, SymbolicEdge> iterator =
-                new TopologicalOrderIterator<>(this.graph, queue);
+        TopologicalOrderIterator<PrintConstraint, SymbolicEdge> iterator = new TopologicalOrderIterator<>(this.graph, queue);
 
         // while processing constraints in topological order
         while (iterator.hasNext()) {
@@ -92,8 +114,6 @@ public abstract class A_Reporter_2<T extends A_Model<T>> {
             // get constraint
             PrintConstraint constraint = iterator.next();
             int constraintId = constraint.getId();
-
-//            System.out.printf("%d: %s\n", constraintId, constraint.getValue());
 
             // add to unfinished edges
             Set<PrintConstraint> unfinishedOutSet = new HashSet<>();
@@ -121,8 +141,7 @@ public abstract class A_Reporter_2<T extends A_Model<T>> {
             for (SymbolicEdge edge : graph.incomingEdgesOf(constraint)) {
 
                 // get the source constraint
-                PrintConstraint source =
-                        (PrintConstraint) edge.getASource();
+                PrintConstraint source = (PrintConstraint) edge.getASource();
 
                 // add the edge type and source id to the source map
                 sourceMap.put(edge.getType(), source.getId());
@@ -139,14 +158,10 @@ public abstract class A_Reporter_2<T extends A_Model<T>> {
             // if constraint is an end node
             if (ends.contains(constraint)) {
 
-//                System.out.printf("%d: Predicate\n", constraint.getId());
-
                 // add end
                 boolean isBoolFunc = parser.addEnd(constraint);
 
                 if (isBoolFunc) {
-//                    System.out.printf("%d: Predicate Calculating Stats\n", constraint.getId());
-
                     this.calculateStats(constraint);
                 }
 
@@ -154,8 +169,6 @@ public abstract class A_Reporter_2<T extends A_Model<T>> {
             }
             // if constraint is root node
             else if (roots.contains(constraint)) {
-
-//                System.out.printf("%d: Root\n", constraint.getId());
 
                 // add root
                 String init = parser.addRoot(constraint);
@@ -174,8 +187,6 @@ public abstract class A_Reporter_2<T extends A_Model<T>> {
             }
             // constraint is op node
             else {
-
-//                System.out.printf("%d: Operation\n", constraint.getId());
 
                 // add operation
                 String operation = parser.addOperation(constraint);
@@ -206,12 +217,15 @@ public abstract class A_Reporter_2<T extends A_Model<T>> {
                 finishEdges(unfinishedInEdges, unfinishedOutEdges, constraint);
             }
         }
-
+       
+        solveInputs();
+        
         // shut down solver
         solver.shutDown();
-    }
+        
+    } // end run
 
-    private void finishEdges(Map<PrintConstraint, Set<PrintConstraint>> inEdges,
+    protected void finishEdges(Map<PrintConstraint, Set<PrintConstraint>> inEdges,
                              Map<PrintConstraint, Set<PrintConstraint>> outEdges,
                              PrintConstraint vertex) {
         Set<PrintConstraint> parents = inEdges.get(vertex);
@@ -225,7 +239,7 @@ public abstract class A_Reporter_2<T extends A_Model<T>> {
                 siblings.remove(vertex);
                 if (siblings.isEmpty()) {
                     siblings.remove(parent);
-                    solver.remove(parent.getId());
+                   //solver.remove(parent.getId());
                 }
             }
         }
@@ -273,12 +287,13 @@ public abstract class A_Reporter_2<T extends A_Model<T>> {
             // create ops array for base operation
             String[] newBaseOps = Arrays.copyOf(baseOps, baseOps.length + 1);
             if (argWasSingleton) {
+            	//System.out.println("singleton arg: " + arg + " : " + Parser_2.actualVals.get(arg));
                 newBaseOps[newBaseOps.length - 1] =
-                        String.format("[%d]<S:%d>.%s(\\\"%s\\\"){%d}",
+                        String.format("[%d]<S:%d>.%s(\"%s\"){%d}",
                                       const_id,
                                       base,
                                       constName,
-                                      Parser.actualVals.get(arg),
+                                      Parser_2.actualVals.get(arg),
                                       accTime);
             } else {
                 newBaseOps[newBaseOps.length - 1] =
@@ -310,4 +325,7 @@ public abstract class A_Reporter_2<T extends A_Model<T>> {
     protected abstract void outputHeader();
 
     protected abstract void calculateStats(PrintConstraint constraint);
+    
+    protected abstract void solveInputs();
+    
 }

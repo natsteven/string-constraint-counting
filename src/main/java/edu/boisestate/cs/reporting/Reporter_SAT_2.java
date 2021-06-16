@@ -1,18 +1,19 @@
 package edu.boisestate.cs.reporting;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import org.jgrapht.DirectedGraph;
-
-import edu.boisestate.cs.Parser;
+//import edu.boisestate.cs.Parser;
 import edu.boisestate.cs.Parser_2;
 import edu.boisestate.cs.automatonModel.A_Model;
 import edu.boisestate.cs.graph.PrintConstraint;
 import edu.boisestate.cs.graph.SymbolicEdge;
+//import edu.boisestate.cs.solvers.ExtendedSolver;
 import edu.boisestate.cs.solvers.Solver;
+
+import org.jgrapht.DirectedGraph;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 public class Reporter_SAT_2<T extends A_Model<T>> extends A_Reporter_2<T> {
 
@@ -33,7 +34,7 @@ public class Reporter_SAT_2<T extends A_Model<T>> extends A_Reporter_2<T> {
         headers.add("SING");
         headers.add("TSAT");
         headers.add("FSAT");
-        headers.add("DISJOINT");
+        headers.add("DISJ");
         headers.add("PREV OPS");
 
         // generate headers string
@@ -63,10 +64,15 @@ public class Reporter_SAT_2<T extends A_Model<T>> extends A_Reporter_2<T> {
         boolean falseSat = false;
 
         // determine if symbolic strings are singletons
+        
         boolean argIsSingleton = false;
-        if(arg != -1) {
+        
+        // determine if symbolic strings are singletons
+        
+        if (arg != -1) {
         	argIsSingleton = solver.isSingleton(sourceMap.get("s1"));
         }
+        
         if (solver.isSingleton(base, actualVal) &&
             (sourceMap.get("s1") == null || argIsSingleton)) {
             isSingleton = true;
@@ -159,4 +165,10 @@ public class Reporter_SAT_2<T extends A_Model<T>> extends A_Reporter_2<T> {
         System.out.println(row);
 
     }
+
+	@Override
+	protected void solveInputs() {
+		// TODO Auto-generated method stub
+		
+	}
 }

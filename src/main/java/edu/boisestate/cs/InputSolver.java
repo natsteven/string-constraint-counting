@@ -16,6 +16,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 //import edu.boisestate.cs.automatonModel.Model_Acyclic_Inverse_Manager;
 import edu.boisestate.cs.automatonModel.AutomatonModelManager;
 import edu.boisestate.cs.automatonModel.Model_Acyclic;
+import edu.boisestate.cs.automatonModel.Model_Acyclic_Inverse;
+import edu.boisestate.cs.automatonModel.Model_Acyclic_Inverse_Manager;
 import edu.boisestate.cs.automatonModel.Model_Acyclic_Manager;
 import edu.boisestate.cs.automatonModel.Model_Bounded;
 import edu.boisestate.cs.automatonModel.Model_Bounded_Manager;
@@ -24,6 +26,7 @@ import edu.boisestate.cs.graph.SymbolicEdge;
 import edu.boisestate.cs.reporting.MCReporter;
 import edu.boisestate.cs.reporting.Reporter;
 import edu.boisestate.cs.reporting.Reporter_Count_2;
+import edu.boisestate.cs.reporting.Reporter_Inverse_r3;
 //import edu.boisestate.cs.reporting.Reporter_Inverse_r3;
 import edu.boisestate.cs.reporting.Reporter_SAT_2;
 import edu.boisestate.cs.reporting.SATReporter;
@@ -35,6 +38,7 @@ import edu.boisestate.cs.solvers.MCAutomatonModelSolver;
 import edu.boisestate.cs.solvers.ModelCountSolver;
 import edu.boisestate.cs.solvers.Solver;
 import edu.boisestate.cs.solvers.Solver_Count;
+import edu.boisestate.cs.solvers.Solver_Inverse_r3;
 //import edu.boisestate.cs.solvers.Solver_Inverse_r3;
 import edu.boisestate.cs.util.LambdaVoid1;
 
@@ -64,7 +68,7 @@ public class InputSolver {
 		}
 		reduce = true;
 		DirectedGraph<PrintConstraint, SymbolicEdge> graph = loadGraph(inputFile);
-		//run_Acyclic_Inverse_r3(graph);
+		run_Acyclic_Inverse_r3(graph);
 	}
 
 	// TODO: create Model_Bounded_Inverse
@@ -122,16 +126,14 @@ public class InputSolver {
 	// TODO: create Model_Acyclic_Inverse
 	// TODO: create Solver_Inverse_r3
 	// TODO: create Reporter_Inverse_r3
-//	public static void run_Acyclic_Inverse_r3(DirectedGraph<PrintConstraint, SymbolicEdge> graph) {
-//		Model_Acyclic_Inverse_Manager mFactory = new Model_Acyclic_Inverse_Manager(alpha, initialBound);
-//		Solver_Inverse_r3<Model_Acyclic_Inverse> mSolver = new Solver_Inverse_r3<Model_Acyclic_Inverse>(mFactory,
-//				initialBound);
-//		Parser_2<Model_Acyclic_Inverse> mParser = new Parser_2<Model_Acyclic_Inverse>(mSolver, debug);
-//		Reporter_Inverse_r3<Model_Acyclic_Inverse> mReporter = new Reporter_Inverse_r3<Model_Acyclic_Inverse>(graph,
-//				mParser, mSolver, debug);
-//		mSolver.setReduce(reduce);
-//		mReporter.run();
-//	}
+	public static void run_Acyclic_Inverse_r3(DirectedGraph<PrintConstraint, SymbolicEdge> graph) {
+		Model_Acyclic_Inverse_Manager mFactory 					= new Model_Acyclic_Inverse_Manager(alpha, initialBound);
+		Solver_Inverse_r3<Model_Acyclic_Inverse> mSolver 		= new Solver_Inverse_r3<Model_Acyclic_Inverse>(mFactory,	initialBound);
+		Parser_2<Model_Acyclic_Inverse> mParser 				= new Parser_2<Model_Acyclic_Inverse>(mSolver, debug);
+		Reporter_Inverse_r3<Model_Acyclic_Inverse> mReporter 	= new Reporter_Inverse_r3<Model_Acyclic_Inverse>(graph, mParser, mSolver, debug);
+		mSolver.setReduce(reduce);
+		mReporter.run();
+	}
 
 	@SuppressWarnings("unchecked")
 	public static DirectedGraph<PrintConstraint, SymbolicEdge> loadGraph(String graphPath) {

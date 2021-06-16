@@ -9,7 +9,7 @@ import edu.boisestate.cs.Alphabet;
 //import java.math.BigInteger;
 //import java.util.Set;
 
-public class Model_Acyclic_Manager extends A_Model_Manager <Model_Acyclic> {
+public class Model_Acyclic_Inverse_Manager extends A_Model_Manager <Model_Acyclic_Inverse> {
 
     private final int boundLength;
     
@@ -18,7 +18,7 @@ public class Model_Acyclic_Manager extends A_Model_Manager <Model_Acyclic> {
      * @param alphabet
      * @param boundLength
      */
-   public Model_Acyclic_Manager(Alphabet alphabet, int boundLength) {
+   public Model_Acyclic_Inverse_Manager(Alphabet alphabet, int boundLength) {
            	
        	super(alphabet,boundLength);
         this.alphabet = alphabet;
@@ -34,12 +34,12 @@ public class Model_Acyclic_Manager extends A_Model_Manager <Model_Acyclic> {
 //    }
 
     @Override
-    public Model_Acyclic createAnyString(int initialBound) {
+    public Model_Acyclic_Inverse createAnyString(int initialBound) {
         return this.createAnyString(0, initialBound);
     }
 
     @Override
-    public Model_Acyclic createAnyString(int min, int max) {
+    public Model_Acyclic_Inverse createAnyString(int min, int max) {
 
         // create any string automaton from alphabet
         String charSet = this.alphabet.getCharSet();
@@ -49,27 +49,35 @@ public class Model_Acyclic_Manager extends A_Model_Manager <Model_Acyclic> {
         Automaton acyclicAutomaton = anyChar.repeat(min, max);
 
         // return model from bounded automaton
-        return new Model_Acyclic(acyclicAutomaton, this.alphabet, this.boundLength);
+        return new Model_Acyclic_Inverse(acyclicAutomaton, this.alphabet, this.boundLength);
     }
 
     @Override
-    public Model_Acyclic createAnyString() {
+    public Model_Acyclic_Inverse createAnyString() {
 
         // create any string automaton from alphabet
         String charSet = this.alphabet.getCharSet();
         Automaton anyString = BasicAutomata.makeCharSet(charSet).repeat();
 
         // return model from automaton
-        return new Model_Acyclic(anyString, this.alphabet);
+        return new Model_Acyclic_Inverse(anyString, this.alphabet);
     }
 
     @Override
-    public Model_Acyclic createString(String string) {
+    public Model_Acyclic_Inverse createString(String string) {
+    	
+    	// check for null string, set to empty. 
+    	// in case intersection with previous is empty. not the best fix. 
+    	// better to make sure that inverse operations only return valid strings!
+    	if (string == null) {
+    		string = "";
+    	}
+    	
         // create string automaton
         Automaton stringAutomaton = BasicAutomata.makeString(string);
         // get string length as bound length
         int length = string.length();
         // return model from automaton
-        return new Model_Acyclic(stringAutomaton, this.alphabet, length);
+        return new Model_Acyclic_Inverse(stringAutomaton, this.alphabet, length);
     }
 }
