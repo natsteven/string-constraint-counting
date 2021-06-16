@@ -35,7 +35,7 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 		return this.automaton.toString();
 	}
 
-	Model_Bounded(Automaton automaton, Alphabet alphabet, int initialBoundLength) {
+	public Model_Bounded(Automaton automaton, Alphabet alphabet, int initialBoundLength) {
 		super(alphabet, initialBoundLength);
 
 		// set automaton from parameter

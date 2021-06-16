@@ -60,7 +60,7 @@ public class InputSolver {
 		}
 		reduce = true;
 		DirectedGraph<PrintConstraint, SymbolicEdge> graph = loadGraph(inputFile);
-		run_Acyclic_Inverse_r3(graph);
+//		run_Acyclic_Inverse_r3(graph);
 	}
 
 	// TODO: create Model_Bounded_Inverse
