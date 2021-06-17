@@ -15,7 +15,7 @@ import edu.boisestate.cs.util.Tuple;
  * @author marli
  *
  */
-public class InvConstraintConcatSym_r3<T extends A_Model_Inverse<T>> extends A_Inv_Constraint<T> {
+public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_Constraint<T> {
 	
 //	private I_Inv_Constraint suffixConstraint;
 	private int suffixID;
@@ -25,7 +25,7 @@ public class InvConstraintConcatSym_r3<T extends A_Model_Inverse<T>> extends A_I
 	// private int input, arg, base;
 	
 	
-	public InvConstraintConcatSym_r3 (int ID, Solver_Inverse<T> solver) {
+	public InvConstraintConcatSym (int ID, Solver_Inverse<T> solver) {
 		
 		// assignments to class variables in the abstract class A_Inv_Constraint
 		this.solver = solver;

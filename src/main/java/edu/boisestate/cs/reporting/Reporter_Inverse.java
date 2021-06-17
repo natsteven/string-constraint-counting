@@ -4,16 +4,16 @@ import edu.boisestate.cs.BasicTimer;
 import edu.boisestate.cs.Parser_2;
 import edu.boisestate.cs.automatonModel.A_Model_Inverse;
 import edu.boisestate.cs.graph.I_Inv_Constraint;
-import edu.boisestate.cs.graph.InvConstraintConcatSym_r3;
-import edu.boisestate.cs.graph.InvConstraintConcreteValue_r3;
-import edu.boisestate.cs.graph.InvConstraintDeleteCharAt_r3;
-import edu.boisestate.cs.graph.InvConstraintDeleteStartEnd_r3;
-import edu.boisestate.cs.graph.InvConstraintInput_r3;
-import edu.boisestate.cs.graph.InvConstraintPredicate_r3;
-import edu.boisestate.cs.graph.InvConstraintReplaceCharChar_r3;
-import edu.boisestate.cs.graph.InvConstraintSubStringStartEnd_r3;
-import edu.boisestate.cs.graph.InvConstraintToLowerCase_r3;
-import edu.boisestate.cs.graph.InvConstraintToUpperCase_r3;
+import edu.boisestate.cs.graph.InvConstraintConcatSym;
+import edu.boisestate.cs.graph.InvConstraintConcreteValue;
+import edu.boisestate.cs.graph.InvConstraintDeleteCharAt;
+import edu.boisestate.cs.graph.InvConstraintDeleteStartEnd;
+import edu.boisestate.cs.graph.InvConstraintInput;
+import edu.boisestate.cs.graph.InvConstraintPredicate;
+import edu.boisestate.cs.graph.InvConstraintReplaceCharChar;
+import edu.boisestate.cs.graph.InvConstraintSubStringStartEnd;
+import edu.boisestate.cs.graph.InvConstraintToLowerCase;
+import edu.boisestate.cs.graph.InvConstraintToUpperCase;
 import edu.boisestate.cs.graph.Operation;
 import edu.boisestate.cs.graph.PrintConstraint;
 import edu.boisestate.cs.graph.SPFInput;
@@ -389,7 +389,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter_2
 
     		case INIT_CON: 
 
-    			newConstraint = new InvConstraintConcreteValue_r3<T>(ID,invSolver);
+    			newConstraint = new InvConstraintConcreteValue<T>(ID,invSolver);
     			allInverseConstraints.put(ID, newConstraint);
     			
     			if (localDebug) {
@@ -400,7 +400,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter_2
 
     		case INIT_SYM:
 
-    			newConstraint = new InvConstraintInput_r3<T>(ID,invSolver);
+    			newConstraint = new InvConstraintInput<T>(ID,invSolver);
     			allInverseConstraints.put(ID, newConstraint);
     			
     			if (localDebug) {
@@ -411,7 +411,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter_2
 
     		case PREDICATE:
 
-    			newConstraint = new InvConstraintPredicate_r3<T>(ID,invSolver);
+    			newConstraint = new InvConstraintPredicate<T>(ID,invSolver);
     			allInverseConstraints.put(ID, newConstraint);
     			
     			if (localDebug) {
@@ -422,7 +422,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter_2
 
     		case CONCAT_SYM:
 
-    			newConstraint = new InvConstraintConcatSym_r3<T>(ID,invSolver);
+    			newConstraint = new InvConstraintConcatSym<T>(ID,invSolver);
     			allInverseConstraints.put(ID, newConstraint);
     			
     			if (localDebug) {
@@ -435,7 +435,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter_2
 
     			// FIX 
     			// **** Using symbolic code for now, needs concrete ported to r3
-    			newConstraint = new InvConstraintConcatSym_r3<T>(ID,invSolver);
+    			newConstraint = new InvConstraintConcatSym<T>(ID,invSolver);
     			allInverseConstraints.put(ID, newConstraint);
     			
     			if (localDebug) {
@@ -446,7 +446,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter_2
 
     		case TOUPPERCASE:
     			
-       			newConstraint = new InvConstraintToUpperCase_r3<T>(ID,invSolver);
+       			newConstraint = new InvConstraintToUpperCase<T>(ID,invSolver);
     			allInverseConstraints.put(ID, newConstraint);
     			
     			if (localDebug) {
@@ -457,7 +457,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter_2
 
     		case TOLOWERCASE:
 
-    			newConstraint = new InvConstraintToLowerCase_r3<T>(ID,invSolver);
+    			newConstraint = new InvConstraintToLowerCase<T>(ID,invSolver);
     			allInverseConstraints.put(ID, newConstraint); 
     			
     			if (localDebug) {
@@ -469,7 +469,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter_2
     		case SUBSTR_STRT_END:
     			
     			args = pc.getArgList();
-    			newConstraint = new InvConstraintSubStringStartEnd_r3<T>(ID,invSolver,args);
+    			newConstraint = new InvConstraintSubStringStartEnd<T>(ID,invSolver,args);
     			allInverseConstraints.put(ID, newConstraint);
     			
     			if (localDebug) {
@@ -481,7 +481,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter_2
     		case DELETE_START_END:
     			
     			args = pc.getArgList();
-    			newConstraint = new InvConstraintDeleteStartEnd_r3<T>(ID,invSolver,args);
+    			newConstraint = new InvConstraintDeleteStartEnd<T>(ID,invSolver,args);
     			allInverseConstraints.put(ID, newConstraint);
     			
     			if (localDebug) {
@@ -493,7 +493,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter_2
     		case DELETE_CHAR_AT:
 
     			args = pc.getArgList();
-    			newConstraint = new InvConstraintDeleteCharAt_r3<T>(ID,invSolver,args);
+    			newConstraint = new InvConstraintDeleteCharAt<T>(ID,invSolver,args);
     			allInverseConstraints.put(ID, newConstraint);
     			
     			if (localDebug) {
@@ -505,7 +505,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter_2
     		case REPLACE_CHAR_CHAR:
 
     			args = pc.getArgList();
-    			newConstraint = new InvConstraintReplaceCharChar_r3<T>(ID,invSolver,args);
+    			newConstraint = new InvConstraintReplaceCharChar<T>(ID,invSolver,args);
     			allInverseConstraints.put(ID, newConstraint);
     			
     			if (localDebug) {

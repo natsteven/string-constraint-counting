@@ -13,10 +13,10 @@ import edu.boisestate.cs.solvers.Solver_Inverse;
  * @author marli
  *
  */
-public class InvConstraintConcatConcrete_r3<T extends A_Model_Inverse<T>> extends A_Inv_Constraint<T> {
+public class InvConstraintConcatConcrete<T extends A_Model_Inverse<T>> extends A_Inv_Constraint<T> {
 
 	
-	public InvConstraintConcatConcrete_r3 (int ID, Solver_Inverse<T> solver, List<Integer> args) {
+	public InvConstraintConcatConcrete (int ID, Solver_Inverse<T> solver, List<Integer> args) {
 		
 		// Store reference to solver
 		this.solver = solver;
@@ -26,7 +26,7 @@ public class InvConstraintConcatConcrete_r3<T extends A_Model_Inverse<T>> extend
 		this.argString = "[" + argList.get(0) + "] SUFFIX";
 	}
 	
-	public InvConstraintConcatConcrete_r3 (int ID, Solver_Inverse<T> solver, List<Integer> args, int base, int input) {
+	public InvConstraintConcatConcrete (int ID, Solver_Inverse<T> solver, List<Integer> args, int base, int input) {
 		
 		// Store reference to solver
 		this.solver = solver;

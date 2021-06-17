@@ -14,7 +14,7 @@ import edu.boisestate.cs.solvers.Solver_Inverse;
  * @author marli
  *
  */
-public class InvConstraintPredicate_r3<T extends A_Model_Inverse<T>> extends A_Inv_Constraint<T> {
+public class InvConstraintPredicate<T extends A_Model_Inverse<T>> extends A_Inv_Constraint<T> {
 
 	// This will hold a reference to the containing solver.
 	// This allows the constraint access to the solver functions and string tables.
@@ -31,7 +31,7 @@ public class InvConstraintPredicate_r3<T extends A_Model_Inverse<T>> extends A_I
 	
 	//private String argString;
 	
-	public InvConstraintPredicate_r3 (int ID, Solver_Inverse<T> solver) {
+	public InvConstraintPredicate (int ID, Solver_Inverse<T> solver) {
 		
 		// Store reference to solver
 		this.solver = solver;
@@ -43,7 +43,7 @@ public class InvConstraintPredicate_r3<T extends A_Model_Inverse<T>> extends A_I
 	}
 	
 	
-	public InvConstraintPredicate_r3 (int ID, Solver_Inverse<T> solver, int argID) {
+	public InvConstraintPredicate (int ID, Solver_Inverse<T> solver, int argID) {
 		
 		// Store reference to solver
 		this.solver = solver;
@@ -54,7 +54,7 @@ public class InvConstraintPredicate_r3<T extends A_Model_Inverse<T>> extends A_I
 		this.op = Operation.PREDICATE;
 	}
 	
-	public InvConstraintPredicate_r3 (int ID, Solver_Inverse<T> solver, List<Integer> args) {
+	public InvConstraintPredicate (int ID, Solver_Inverse<T> solver, List<Integer> args) {
 		
 		// Store reference to solver
 		this.solver = solver;
@@ -64,7 +64,7 @@ public class InvConstraintPredicate_r3<T extends A_Model_Inverse<T>> extends A_I
 		this.op = Operation.PREDICATE;
 	}
 	
-	public InvConstraintPredicate_r3 (int ID, Solver_Inverse<T> solver, List<Integer> args, int base, int input) {
+	public InvConstraintPredicate (int ID, Solver_Inverse<T> solver, List<Integer> args, int base, int input) {
 		
 		// Store reference to solver
 		this.solver = solver;

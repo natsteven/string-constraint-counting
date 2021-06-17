@@ -13,7 +13,7 @@ import edu.boisestate.cs.solvers.*;
  * @author marli
  *
  */
-public class InvConstraintDeleteCharAt_r3<T extends A_Model_Inverse<T>> extends A_Inv_Constraint<T> {
+public class InvConstraintDeleteCharAt<T extends A_Model_Inverse<T>> extends A_Inv_Constraint<T> {
 	
 	// This will hold a reference to the containing solver.
 	// This allows the constraint access to the solver functions and string tables.
@@ -31,7 +31,7 @@ public class InvConstraintDeleteCharAt_r3<T extends A_Model_Inverse<T>> extends 
 //	private String argString;
 	private int location;
 	
-	public InvConstraintDeleteCharAt_r3 (int ID, Solver_Inverse<T> solver, List<Integer> args) {
+	public InvConstraintDeleteCharAt (int ID, Solver_Inverse<T> solver, List<Integer> args) {
 		
 		// Store reference to solver
 		this.solver = solver;
@@ -45,7 +45,7 @@ public class InvConstraintDeleteCharAt_r3<T extends A_Model_Inverse<T>> extends 
 
 	}
 	
-	public InvConstraintDeleteCharAt_r3 (int ID, Solver_Inverse<T> solver, List<Integer> args, int base, int input) {
+	public InvConstraintDeleteCharAt (int ID, Solver_Inverse<T> solver, List<Integer> args, int base, int input) {
 		
 		// Store reference to solver
 		this.solver = solver;

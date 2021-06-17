@@ -13,31 +13,18 @@ import edu.boisestate.cs.solvers.*;
  * @author marli
  *
  */
-public class InvConstraintDeleteStartEnd_r3<T extends A_Model_Inverse<T>> extends A_Inv_Constraint<T> {
+public class InvConstraintSubStringStartEnd<T extends A_Model_Inverse<T>> extends A_Inv_Constraint<T> {
 	
-	// This will hold a reference to the containing solver.
-	// This allows the constraint access to the solver functions and string tables.
-//	private Solver_Inverse<T> solver;
-//	
-//	private int ID;
-//	
-//	private I_Inv_Constraint prevConstraint;
-//	private I_Inv_Constraint nextConstraint;
-//	
-//	private Operation op;
-//	
-//	private List<Integer> argList;
-//	
-//	private String argString;
+
 	private int start,end;
 	
-	public InvConstraintDeleteStartEnd_r3 (int ID, Solver_Inverse<T> solver, List<Integer> args) {
+	public InvConstraintSubStringStartEnd (int ID, Solver_Inverse<T> solver, List<Integer> args) {
 		
 		// Store reference to solver
 		this.solver = solver;
 		this.ID = ID;
 		this.argList = args;
-		this.op = Operation.DELETE_START_END;
+		this.op = Operation.SUBSTR_STRT_END;
 		this.outputSet = new HashMap<Integer,T>();
 		this.solutionSet = new SolutionSetInternal<T>(ID);
 		this.argString = "0:START 1:END";
@@ -45,13 +32,13 @@ public class InvConstraintDeleteStartEnd_r3<T extends A_Model_Inverse<T>> extend
 		this.end = argList.get(1);
 	}
 	
-	public InvConstraintDeleteStartEnd_r3 (int ID, Solver_Inverse<T> solver, List<Integer> args, int base, int input) {
+	public InvConstraintSubStringStartEnd (int ID, Solver_Inverse<T> solver, List<Integer> args, int base, int input) {
 		
 		// Store reference to solver
 		this.solver = solver;
 		this.ID = ID;
 		this.argList = args;
-		this.op = Operation.DELETE_START_END;
+		this.op = Operation.SUBSTR_STRT_END;
 		this.argString = "0:START 1:END";
 		this.start = argList.get(0);
 		this.end = argList.get(1);
@@ -63,12 +50,12 @@ public class InvConstraintDeleteStartEnd_r3<T extends A_Model_Inverse<T>> extend
 	@Override
 	public boolean evaluate(I_Inv_Constraint<T> inputConstraint, int sourceIndex) {
 		
-		System.out.format("EVALUATE DELETE %d ...\n",ID);
+		System.out.format("EVALUATE SUBSTRING %d ...\n",ID);
 		
 		T inputModel = inputConstraint.output(sourceIndex);
 
 		// perform inverse function on output from the input constraint at given index
-		T resModel = solver.inv_delete(inputModel, start, end);
+		T resModel = solver.inv_substring(inputModel, start, end);
 
 		// intersect result with forward analysis results from previous constraint
 		resModel = solver.intersect(resModel, nextConstraint.getID());
@@ -86,54 +73,17 @@ public class InvConstraintDeleteStartEnd_r3<T extends A_Model_Inverse<T>> extend
 				// we have values, so continue solving ...
 				return nextConstraint.evaluate(this, 1);
 			} else {
-				System.out.println("DELETE SOLUTION SET INCONSISTENT...");
+				System.out.println("SUBSTRING SOLUTION SET INCONSISTENT...");
 				solutionSet.remSolution(inputConstraint.getID());
 				return false;
 			}
 			
 		} else {
-			System.out.println("DELETE RESULT MODEL EMPTY...");
+			System.out.println("SUBSTRING RESULT MODEL EMPTY...");
 			// halt solving, fallback
 			return false;
 		}
 		
 	}
-
-
-//	@Override
-//	public void setNext(I_Inv_Constraint constraint) {
-//		
-//		this.nextConstraint = constraint;
-//	}
-//
-//	@Override
-//	public void setPrev(I_Inv_Constraint constraint) {
-//		
-//		this.prevConstraint = constraint;
-//	}
-//
-//	@Override
-//	public void setOp(Operation op) {
-//		
-//		this.op = op;
-//	}
-//
-//	@Override
-//	public Operation getOp() {
-//		
-//		return op;
-//	}
-//
-//	@Override
-//	public void setID(int ID) {
-//		
-//		this.ID = ID;
-//	}
-//
-//	@Override
-//	public int getID() {
-//
-//		return this.ID;
-//	}
 
 }

@@ -16,7 +16,7 @@ import edu.boisestate.cs.solvers.Solver_Inverse;
  * @author marli
  *
  */
-public class InvConstraintInput_r3<T extends A_Model_Inverse<T>>  extends A_Inv_Constraint<T> {
+public class InvConstraintInput<T extends A_Model_Inverse<T>>  extends A_Inv_Constraint<T> {
 
 	
 	//private SolutionSet<T> solutionSet;
@@ -24,7 +24,7 @@ public class InvConstraintInput_r3<T extends A_Model_Inverse<T>>  extends A_Inv_
 	private int solutionIndex = -1;
 	
 	
-	public InvConstraintInput_r3 (int ID, Solver_Inverse<T> solver) {
+	public InvConstraintInput (int ID, Solver_Inverse<T> solver) {
 		
 		// Store reference to solver
 		this.solver = solver;
@@ -37,7 +37,7 @@ public class InvConstraintInput_r3<T extends A_Model_Inverse<T>>  extends A_Inv_
 	}
 	
 	
-	public InvConstraintInput_r3 (int ID, Solver_Inverse<T> solver, List<Integer> args, SolutionSet<T> solutionSet) {
+	public InvConstraintInput (int ID, Solver_Inverse<T> solver, List<Integer> args, SolutionSet<T> solutionSet) {
 		
 		// Store reference to solver
 		this.solver = solver;
@@ -48,7 +48,7 @@ public class InvConstraintInput_r3<T extends A_Model_Inverse<T>>  extends A_Inv_
 		//this.solutionSet = solutionSet;
 	}
 	
-	public InvConstraintInput_r3 (int ID, Solver_Inverse<T> solver, List<Integer> args, SolutionSet<T> solutionSet, int base, int input) {
+	public InvConstraintInput (int ID, Solver_Inverse<T> solver, List<Integer> args, SolutionSet<T> solutionSet, int base, int input) {
 		
 		// Store reference to solver
 		this.solver = solver;
