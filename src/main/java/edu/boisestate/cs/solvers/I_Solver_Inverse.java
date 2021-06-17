@@ -3,15 +3,15 @@ package edu.boisestate.cs.solvers;
 import java.util.List;
 
 import edu.boisestate.cs.automatonModel.A_Model_Inverse;
-import edu.boisestate.cs.graph.I_Inv_Constraint;
+//import edu.boisestate.cs.graph.I_Inv_Constraint;
 import edu.boisestate.cs.util.Tuple;
 
-public interface I_Solver_Inverse_r3<T extends A_Model_Inverse<T>> {
+public interface I_Solver_Inverse<T extends A_Model_Inverse<T>> {
 	
 	
-	public void pushInvConstraint(I_Inv_Constraint constraint);
-	
-	public I_Inv_Constraint popInvConstraint ();
+//	public void pushInvConstraint(I_Inv_Constraint constraint);
+//	
+//	public I_Inv_Constraint popInvConstraint ();
 	
 	public void outputConcreteStrings ();
 	

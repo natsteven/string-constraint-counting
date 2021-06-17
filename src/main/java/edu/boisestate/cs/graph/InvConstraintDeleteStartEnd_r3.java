@@ -13,7 +13,7 @@ import edu.boisestate.cs.solvers.*;
  * @author marli
  *
  */
-public class InvConstraintDeleteStartEnd_r3<T extends A_Model_Inverse<T>> extends A_Inv_Constraint_r3<T> {
+public class InvConstraintDeleteStartEnd_r3<T extends A_Model_Inverse<T>> extends A_Inv_Constraint<T> {
 	
 	// This will hold a reference to the containing solver.
 	// This allows the constraint access to the solver functions and string tables.
@@ -31,7 +31,7 @@ public class InvConstraintDeleteStartEnd_r3<T extends A_Model_Inverse<T>> extend
 //	private String argString;
 	private int start,end;
 	
-	public InvConstraintDeleteStartEnd_r3 (int ID, Solver_Inverse_r3<T> solver, List<Integer> args) {
+	public InvConstraintDeleteStartEnd_r3 (int ID, Solver_Inverse<T> solver, List<Integer> args) {
 		
 		// Store reference to solver
 		this.solver = solver;
@@ -45,7 +45,7 @@ public class InvConstraintDeleteStartEnd_r3<T extends A_Model_Inverse<T>> extend
 		this.end = argList.get(1);
 	}
 	
-	public InvConstraintDeleteStartEnd_r3 (int ID, Solver_Inverse_r3<T> solver, List<Integer> args, int base, int input) {
+	public InvConstraintDeleteStartEnd_r3 (int ID, Solver_Inverse<T> solver, List<Integer> args, int base, int input) {
 		
 		// Store reference to solver
 		this.solver = solver;
@@ -61,7 +61,7 @@ public class InvConstraintDeleteStartEnd_r3<T extends A_Model_Inverse<T>> extend
 	
 	
 	@Override
-	public boolean evaluate(I_Inv_Constraint_r3<T> inputConstraint, int sourceIndex) {
+	public boolean evaluate(I_Inv_Constraint<T> inputConstraint, int sourceIndex) {
 		
 		System.out.format("EVALUATE DELETE %d ...\n",ID);
 		

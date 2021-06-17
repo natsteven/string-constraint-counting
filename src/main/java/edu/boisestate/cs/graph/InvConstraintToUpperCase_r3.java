@@ -13,10 +13,10 @@ import edu.boisestate.cs.solvers.*;
  * @author marli
  *
  */
-public class InvConstraintToUpperCase_r3<T extends A_Model_Inverse<T>> extends A_Inv_Constraint_r3<T> {
+public class InvConstraintToUpperCase_r3<T extends A_Model_Inverse<T>> extends A_Inv_Constraint<T> {
 	
 	
-	public InvConstraintToUpperCase_r3 (int ID, Solver_Inverse_r3<T> solver) {
+	public InvConstraintToUpperCase_r3 (int ID, Solver_Inverse<T> solver) {
 		
 		// Store reference to solver
 		this.solver = solver;
@@ -29,7 +29,7 @@ public class InvConstraintToUpperCase_r3<T extends A_Model_Inverse<T>> extends A
 	
 
 	
-	public InvConstraintToUpperCase_r3 (int ID, Solver_Inverse_r3<T> solver, List<Integer> args) {
+	public InvConstraintToUpperCase_r3 (int ID, Solver_Inverse<T> solver, List<Integer> args) {
 		
 		// Store reference to solver
 		this.solver = solver;
@@ -39,7 +39,7 @@ public class InvConstraintToUpperCase_r3<T extends A_Model_Inverse<T>> extends A
 		this.argString = "[NONE]";
 	}
 	
-	public InvConstraintToUpperCase_r3 (int ID, Solver_Inverse_r3<T> solver, List<Integer> args, int base, int input) {
+	public InvConstraintToUpperCase_r3 (int ID, Solver_Inverse<T> solver, List<Integer> args, int base, int input) {
 		
 		// Store reference to solver
 		this.solver = solver;
@@ -53,7 +53,7 @@ public class InvConstraintToUpperCase_r3<T extends A_Model_Inverse<T>> extends A
 	
 	
 	@Override
-	public boolean evaluate(I_Inv_Constraint_r3<T> inputConstraint, int sourceIndex) {
+	public boolean evaluate(I_Inv_Constraint<T> inputConstraint, int sourceIndex) {
 
 		System.out.format("EVALUATE TOUPPER %d ...\n",ID);
 		

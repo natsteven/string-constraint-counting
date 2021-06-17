@@ -7,16 +7,16 @@ import java.util.List;
 
 import edu.boisestate.cs.automatonModel.A_Model_Inverse;
 //import edu.boisestate.cs.solvers.Solver_Inverse;
-import edu.boisestate.cs.solvers.Solver_Inverse_r3;
+import edu.boisestate.cs.solvers.Solver_Inverse;
 
 /**
  * @author marli
  *
  */
-public class InvConstraintConcatConcrete_r3<T extends A_Model_Inverse<T>> extends A_Inv_Constraint_r3<T> {
+public class InvConstraintConcatConcrete_r3<T extends A_Model_Inverse<T>> extends A_Inv_Constraint<T> {
 
 	
-	public InvConstraintConcatConcrete_r3 (int ID, Solver_Inverse_r3<T> solver, List<Integer> args) {
+	public InvConstraintConcatConcrete_r3 (int ID, Solver_Inverse<T> solver, List<Integer> args) {
 		
 		// Store reference to solver
 		this.solver = solver;
@@ -26,7 +26,7 @@ public class InvConstraintConcatConcrete_r3<T extends A_Model_Inverse<T>> extend
 		this.argString = "[" + argList.get(0) + "] SUFFIX";
 	}
 	
-	public InvConstraintConcatConcrete_r3 (int ID, Solver_Inverse_r3<T> solver, List<Integer> args, int base, int input) {
+	public InvConstraintConcatConcrete_r3 (int ID, Solver_Inverse<T> solver, List<Integer> args, int base, int input) {
 		
 		// Store reference to solver
 		this.solver = solver;
@@ -40,7 +40,7 @@ public class InvConstraintConcatConcrete_r3<T extends A_Model_Inverse<T>> extend
 	
 	
 	@Override
-	public boolean evaluate(I_Inv_Constraint_r3<T> inputConstraint, int sourceIndex) {
+	public boolean evaluate(I_Inv_Constraint<T> inputConstraint, int sourceIndex) {
 		
 		int arg = argList.get(0);
 		solver.inv_append(ID, prevConstraint.getID(), arg);

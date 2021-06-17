@@ -3,7 +3,7 @@ package edu.boisestate.cs.reporting;
 import edu.boisestate.cs.BasicTimer;
 import edu.boisestate.cs.Parser_2;
 import edu.boisestate.cs.automatonModel.A_Model_Inverse;
-import edu.boisestate.cs.graph.I_Inv_Constraint_r3;
+import edu.boisestate.cs.graph.I_Inv_Constraint;
 import edu.boisestate.cs.graph.InvConstraintConcatSym_r3;
 import edu.boisestate.cs.graph.InvConstraintConcreteValue_r3;
 import edu.boisestate.cs.graph.InvConstraintDeleteCharAt_r3;
@@ -20,7 +20,7 @@ import edu.boisestate.cs.graph.SPFInput;
 import edu.boisestate.cs.graph.SPFInputSet;
 import edu.boisestate.cs.graph.SolutionSet;
 import edu.boisestate.cs.graph.SymbolicEdge;
-import edu.boisestate.cs.solvers.Solver_Inverse_r3;
+import edu.boisestate.cs.solvers.Solver_Inverse;
 
 import org.jgrapht.DirectedGraph;
 
@@ -42,11 +42,11 @@ import java.util.concurrent.TimeUnit;
  * @param <T> - Automata model that implements inverse operations.
  */
 @SuppressWarnings("unused")
-public class Reporter_Inverse_r3<T extends A_Model_Inverse<T>> extends A_Reporter_2<T> {
+public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter_2<T> {
 
-    private final Solver_Inverse_r3<T> invSolver;
+    private final Solver_Inverse<T> invSolver;
 	protected Map<Integer,PrintConstraint> allConstraints = new HashMap<>();
-	protected Map<Integer,I_Inv_Constraint_r3<T>> allInverseConstraints = new HashMap<>();
+	protected Map<Integer,I_Inv_Constraint<T>> allInverseConstraints = new HashMap<>();
 	protected Map<Integer,SolutionSet<T>> inputSolutions = new HashMap<>();
 	protected Map<Integer,Integer> inputIndexes = new HashMap<>();
 	protected List<Integer> predicateIDs = new ArrayList<>();
@@ -69,9 +69,9 @@ public class Reporter_Inverse_r3<T extends A_Model_Inverse<T>> extends A_Reporte
      * @param invSolver
      * @param debug
      */
-    public Reporter_Inverse_r3 (DirectedGraph <PrintConstraint, SymbolicEdge> 	graph,
+    public Reporter_Inverse (DirectedGraph <PrintConstraint, SymbolicEdge> 	graph,
                       		   Parser_2<T> 										parser,
-                      		   Solver_Inverse_r3<T> 							invSolver,
+                      		   Solver_Inverse<T> 							invSolver,
                       		   boolean 											debug) {
     	
         super (graph, parser, invSolver, debug);  	// solver instance variable in A_Reporter available 
@@ -293,14 +293,14 @@ public class Reporter_Inverse_r3<T extends A_Model_Inverse<T>> extends A_Reporte
 //        if (true) {
 //        	System.out.println(cid);
 //        	System.out.println(cid + "Inverse Constraint Set:");
-//        	for (I_Inv_Constraint_r3<T> c : allInverseConstraints.values()) {
+//        	for (I_Inv_Constraint<T> c : allInverseConstraints.values()) {
 //        		System.out.println(cid + c.toString() + "\t" + allConstraints.get(c.getID()).toString());
 //        	}
 //        	System.out.println(cid);
 //        }
 
         // get a reference to the predicate inverse constraint
-       // I_Inv_Constraint_r3<T> predicate = allInverseConstraints.get(predicateID);
+       // I_Inv_Constraint<T> predicate = allInverseConstraints.get(predicateID);
 
         // ********************************
         // The call that starts it all ....
@@ -374,7 +374,7 @@ public class Reporter_Inverse_r3<T extends A_Model_Inverse<T>> extends A_Reporte
     		int ID = pc.getId();
     		Operation op = pc.getOp();
     		//System.out.println("ID " + ID + " op " + op);
-    		I_Inv_Constraint_r3<T> newConstraint;
+    		I_Inv_Constraint<T> newConstraint;
 
     		switch (op) {
 
@@ -532,10 +532,10 @@ public class Reporter_Inverse_r3<T extends A_Model_Inverse<T>> extends A_Reporte
 
     		if (pc.getOp() != Operation.UNDEFINED) {
     			    		// each print constraint has a corresponding inverse constraint, get a reference to it
-    		I_Inv_Constraint_r3<T> invConstraint = allInverseConstraints.get(pc.getId());
+    		I_Inv_Constraint<T> invConstraint = allInverseConstraints.get(pc.getId());
     	   	
     		// the next inverse constraint to evaluate is the base of printconstraint
-    		I_Inv_Constraint_r3<T> nextConstraint = allInverseConstraints.get(pc.getBase());
+    		I_Inv_Constraint<T> nextConstraint = allInverseConstraints.get(pc.getBase());
     		if (nextConstraint != null) {
     			invConstraint.setNext(nextConstraint);
     		}
@@ -576,7 +576,7 @@ public class Reporter_Inverse_r3<T extends A_Model_Inverse<T>> extends A_Reporte
         if (true) {
         	System.out.println(cid);
         	System.out.println(cid + "Inverse Constraint Set:");
-        	for (I_Inv_Constraint_r3<T> c : allInverseConstraints.values()) {
+        	for (I_Inv_Constraint<T> c : allInverseConstraints.values()) {
         		System.out.println(cid + c.toString() + "\t" + allConstraints.get(c.getID()).toString());
         	}
         	System.out.println(cid);
@@ -591,7 +591,7 @@ public class Reporter_Inverse_r3<T extends A_Model_Inverse<T>> extends A_Reporte
         // need to replace with queue and backtracking across predicates.
         for (Integer predicateID : predicateIDs) {
             // get a reference to the predicate inverse constraint
-            I_Inv_Constraint_r3<T> predicate = allInverseConstraints.get(predicateID);
+            I_Inv_Constraint<T> predicate = allInverseConstraints.get(predicateID);
             
             // ********************************
             // The call that starts it all ....
@@ -606,7 +606,7 @@ public class Reporter_Inverse_r3<T extends A_Model_Inverse<T>> extends A_Reporte
         
         long durationInMillis = TimeUnit.NANOSECONDS.toMillis(durationInNano);
         
-        for (I_Inv_Constraint_r3<T> i : allInverseConstraints.values())  {
+        for (I_Inv_Constraint<T> i : allInverseConstraints.values())  {
         	if (i.getOp() == Operation.INIT_SYM) {
         		if (i.getSolution() == null) {
         			System.out.println("\nFAILURE: Failed to get solution to one or more inputs...");
@@ -618,7 +618,7 @@ public class Reporter_Inverse_r3<T extends A_Model_Inverse<T>> extends A_Reporte
         
         System.out.println("\nSOLUTION TIME ms: " + durationInMillis);
         
-        for (I_Inv_Constraint_r3<T> i : allInverseConstraints.values()) {
+        for (I_Inv_Constraint<T> i : allInverseConstraints.values()) {
         	if (i.getOp() == Operation.INIT_SYM) {
         		T solution = i.getSolution();
         		

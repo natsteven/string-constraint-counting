@@ -13,12 +13,12 @@ import edu.boisestate.cs.solvers.*;
  * @author marli
  *
  */
-public class InvConstraintSubStringStartEnd_r3<T extends A_Model_Inverse<T>> extends A_Inv_Constraint_r3<T> {
+public class InvConstraintSubStringStartEnd_r3<T extends A_Model_Inverse<T>> extends A_Inv_Constraint<T> {
 	
 
 	private int start,end;
 	
-	public InvConstraintSubStringStartEnd_r3 (int ID, Solver_Inverse_r3<T> solver, List<Integer> args) {
+	public InvConstraintSubStringStartEnd_r3 (int ID, Solver_Inverse<T> solver, List<Integer> args) {
 		
 		// Store reference to solver
 		this.solver = solver;
@@ -32,7 +32,7 @@ public class InvConstraintSubStringStartEnd_r3<T extends A_Model_Inverse<T>> ext
 		this.end = argList.get(1);
 	}
 	
-	public InvConstraintSubStringStartEnd_r3 (int ID, Solver_Inverse_r3<T> solver, List<Integer> args, int base, int input) {
+	public InvConstraintSubStringStartEnd_r3 (int ID, Solver_Inverse<T> solver, List<Integer> args, int base, int input) {
 		
 		// Store reference to solver
 		this.solver = solver;
@@ -48,7 +48,7 @@ public class InvConstraintSubStringStartEnd_r3<T extends A_Model_Inverse<T>> ext
 	
 	
 	@Override
-	public boolean evaluate(I_Inv_Constraint_r3<T> inputConstraint, int sourceIndex) {
+	public boolean evaluate(I_Inv_Constraint<T> inputConstraint, int sourceIndex) {
 		
 		System.out.format("EVALUATE SUBSTRING %d ...\n",ID);
 		

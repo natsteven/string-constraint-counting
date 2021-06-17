@@ -3,30 +3,31 @@ package edu.boisestate.cs.solvers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
+//import java.util.Stack;
 
 import edu.boisestate.cs.automatonModel.A_Model_Inverse;
 import edu.boisestate.cs.automatonModel.A_Model_Manager;
-import edu.boisestate.cs.graph.I_Inv_Constraint;
+//import edu.boisestate.cs.graph.I_Inv_Constraint;
+//import edu.boisestate.cs.graph.I_Inv_Constraint;
 import edu.boisestate.cs.util.Tuple;
 
 
-public class Solver_Inverse_r3<T extends A_Model_Inverse<T>> extends Solver_Count<T> implements I_Solver_Inverse_r3<T>{
+public class Solver_Inverse<T extends A_Model_Inverse<T>> extends Solver_Count<T> implements I_Solver_Inverse<T>{
 
    // protected final A_Model_Manager<T> modelManager;
 	
     protected Map<Integer, T> invStringMap = new HashMap<>();
     private boolean reduceToShortest = true;
     private static int ARG_OFFSET = 1000;	// TODO: REMOVE symbolic arguments are stored in the symbolic string table with this offset
-    private Stack<I_Inv_Constraint> constraintStack; // REMOVE
+    //private Stack<I_Inv_Constraint> constraintStack; // REMOVE
 
     /**
      * Constructor with modelManager
      * @param modelManager
      */
-    public Solver_Inverse_r3(A_Model_Manager<T> modelManager) {
+    public Solver_Inverse(A_Model_Manager<T> modelManager) {
         super(modelManager);
-        constraintStack = new Stack<I_Inv_Constraint>(); // TODO: REMOVE
+        //constraintStack = new Stack<I_Inv_Constraint>(); // TODO: REMOVE
         // initialize factory from parameter
         //this.modelManager = modelManager;
     }
@@ -36,9 +37,9 @@ public class Solver_Inverse_r3<T extends A_Model_Inverse<T>> extends Solver_Coun
      * @param modelManager
      * @param initialBound
      */
-    public Solver_Inverse_r3(A_Model_Manager<T> modelManager, int initialBound) {
+    public Solver_Inverse(A_Model_Manager<T> modelManager, int initialBound) {
         super(modelManager,initialBound);
-        constraintStack = new Stack<I_Inv_Constraint>(); // TODO: REMOVE
+        //constraintStack = new Stack<I_Inv_Constraint>(); // TODO: REMOVE
         // initialize factory from parameter
         //this.modelManager = modelManager;
     }
@@ -362,18 +363,19 @@ public class Solver_Inverse_r3<T extends A_Model_Inverse<T>> extends Solver_Coun
 		return resModel;
 	}
 
-	@Override // TODO: REMOVE
-	public void pushInvConstraint(I_Inv_Constraint constraint) {
+//	@Override // TODO: REMOVE
+//	public void pushInvConstraint(I_Inv_Constraint constraint) {
+//
+//		//constraintStack.push(constraint);
+//		
+//	}
 
-		constraintStack.push(constraint);
-		
-	}
-
-	@Override // TODO: REMOVE
-	public I_Inv_Constraint popInvConstraint() {
-		
-		return constraintStack.pop();
-	}
+//	@Override // TODO: REMOVE
+//	public I_Inv_Constraint popInvConstraint() {
+//		
+//		//return constraintStack.pop();
+//		return null;
+//	}
 
 	
 	@Override // TODO: REMOVE 

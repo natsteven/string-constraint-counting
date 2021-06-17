@@ -8,16 +8,16 @@ import java.util.HashMap;
 import java.util.List;
 
 import edu.boisestate.cs.automatonModel.A_Model_Inverse;
-import edu.boisestate.cs.solvers.Solver_Inverse_r3;
+import edu.boisestate.cs.solvers.Solver_Inverse;
 import edu.boisestate.cs.util.Tuple;
 
 /**
  * @author marli
  *
  */
-public class InvConstraintConcatSym_r3<T extends A_Model_Inverse<T>> extends A_Inv_Constraint_r3<T> {
+public class InvConstraintConcatSym_r3<T extends A_Model_Inverse<T>> extends A_Inv_Constraint<T> {
 	
-	private I_Inv_Constraint suffixConstraint;
+//	private I_Inv_Constraint suffixConstraint;
 	private int suffixID;
 	private boolean initialized = false;
 	private List<Tuple<T,T>> outputs;
@@ -25,7 +25,7 @@ public class InvConstraintConcatSym_r3<T extends A_Model_Inverse<T>> extends A_I
 	// private int input, arg, base;
 	
 	
-	public InvConstraintConcatSym_r3 (int ID, Solver_Inverse_r3<T> solver) {
+	public InvConstraintConcatSym_r3 (int ID, Solver_Inverse<T> solver) {
 		
 		// assignments to class variables in the abstract class A_Inv_Constraint
 		this.solver = solver;
@@ -43,7 +43,7 @@ public class InvConstraintConcatSym_r3<T extends A_Model_Inverse<T>> extends A_I
 	
 	
 	@Override
-	public boolean evaluate(I_Inv_Constraint_r3<T> inputConstraint, int sourceIndex) {
+	public boolean evaluate(I_Inv_Constraint<T> inputConstraint, int sourceIndex) {
 		
 		evaluateCount++;
 		

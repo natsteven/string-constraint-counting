@@ -17,7 +17,7 @@ import edu.boisestate.cs.graph.PrintConstraint;
 import edu.boisestate.cs.graph.SymbolicEdge;
 import edu.boisestate.cs.reporting.MCReporter;
 import edu.boisestate.cs.reporting.Reporter;
-import edu.boisestate.cs.reporting.Reporter_Inverse_r3;
+import edu.boisestate.cs.reporting.Reporter_Inverse;
 import edu.boisestate.cs.reporting.SATReporter;
 import edu.boisestate.cs.solvers.*;
 import edu.boisestate.cs.util.LambdaVoid1;
@@ -450,9 +450,9 @@ public class SolveMain {
 	
 	public static void run_Acyclic_Inverse_r3(DirectedGraph<PrintConstraint, SymbolicEdge> graph) {
 		Model_Acyclic_Inverse_Manager mFactory 					= new Model_Acyclic_Inverse_Manager(alpha, initialBound);
-		Solver_Inverse_r3<Model_Acyclic_Inverse> mSolver 		= new Solver_Inverse_r3<Model_Acyclic_Inverse>(mFactory,	initialBound);
+		Solver_Inverse<Model_Acyclic_Inverse> mSolver 		= new Solver_Inverse<Model_Acyclic_Inverse>(mFactory,	initialBound);
 		Parser_2<Model_Acyclic_Inverse> mParser 				= new Parser_2<Model_Acyclic_Inverse>(mSolver, debug);
-		Reporter_Inverse_r3<Model_Acyclic_Inverse> mReporter 	= new Reporter_Inverse_r3<Model_Acyclic_Inverse>(graph, mParser, mSolver, debug);
+		Reporter_Inverse<Model_Acyclic_Inverse> mReporter 	= new Reporter_Inverse<Model_Acyclic_Inverse>(graph, mParser, mSolver, debug);
 		mSolver.setReduce(reduce);
 		mReporter.run();
 	}

@@ -9,17 +9,17 @@ import java.util.Map;
 
 import edu.boisestate.cs.automatonModel.A_Model_Inverse;
 //import edu.boisestate.cs.solvers.Solver_Inverse;
-import edu.boisestate.cs.solvers.Solver_Inverse_r3;
+import edu.boisestate.cs.solvers.Solver_Inverse;
 
 /**
  * @author marli
  *
  */
-public abstract class A_Inv_Constraint_r3<T extends A_Model_Inverse<T>> implements I_Inv_Constraint_r3<T> {
+public abstract class A_Inv_Constraint<T extends A_Model_Inverse<T>> implements I_Inv_Constraint<T> {
 
 	// This will hold a reference to the containing solver.
 	// This allows the constraint access to the solver functions and string tables.
-	protected Solver_Inverse_r3<T> solver;
+	protected Solver_Inverse<T> solver;
 	
 	protected int ID;
 	
@@ -32,9 +32,9 @@ public abstract class A_Inv_Constraint_r3<T extends A_Model_Inverse<T>> implemen
 	public int newConcatChoiceCount = 0;
 	public int newSplitOutputCount = 0;
 	
-	protected I_Inv_Constraint_r3<T> prevConstraint;
-	protected I_Inv_Constraint_r3<T> nextConstraint;
-	protected I_Inv_Constraint_r3<T> argConstraint;
+	protected I_Inv_Constraint<T> prevConstraint;
+	protected I_Inv_Constraint<T> nextConstraint;
+	protected I_Inv_Constraint<T> argConstraint;
 	
 	protected SolutionSetInternal<T> solutionSet;
 	
@@ -49,7 +49,7 @@ public abstract class A_Inv_Constraint_r3<T extends A_Model_Inverse<T>> implemen
 	protected boolean debug = false;
 	
 	@Override
-	public boolean evaluate(I_Inv_Constraint_r3<T> inputConstraint, int sourceIndex) {
+	public boolean evaluate(I_Inv_Constraint<T> inputConstraint, int sourceIndex) {
 		
 		return false;
 	}
@@ -71,21 +71,21 @@ public abstract class A_Inv_Constraint_r3<T extends A_Model_Inverse<T>> implemen
 	}
 
 	@Override
-	public void setNext(I_Inv_Constraint_r3<T> constraint) {
+	public void setNext(I_Inv_Constraint<T> constraint) {
 		
 		this.nextConstraint = constraint;
 		this.nextID = constraint.getID();
 	}
 	
 	@Override
-	public void setArg(I_Inv_Constraint_r3<T> constraint) {
+	public void setArg(I_Inv_Constraint<T> constraint) {
 		
 		this.argConstraint = constraint;
 		this.argID = constraint.getID();
 	}
 
 	@Override
-	public void setPrev(I_Inv_Constraint_r3<T> constraint) {
+	public void setPrev(I_Inv_Constraint<T> constraint) {
 		
 		this.prevConstraint = constraint;
 		this.prevID = constraint.getID();

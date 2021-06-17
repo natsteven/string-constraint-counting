@@ -8,14 +8,14 @@ import java.util.List;
 
 import edu.boisestate.cs.automatonModel.A_Model_Inverse;
 //import edu.boisestate.cs.solvers.Solver_Inverse;
-import edu.boisestate.cs.solvers.Solver_Inverse_r3;
+import edu.boisestate.cs.solvers.Solver_Inverse;
 
 
 /**
  * @author marli
  *
  */
-public class InvConstraintConcreteValue_r3<T extends A_Model_Inverse<T>>  extends A_Inv_Constraint_r3<T> {
+public class InvConstraintConcreteValue_r3<T extends A_Model_Inverse<T>>  extends A_Inv_Constraint<T> {
 
 	
 	//private SolutionSet<T> solutionSet;
@@ -23,7 +23,7 @@ public class InvConstraintConcreteValue_r3<T extends A_Model_Inverse<T>>  extend
 	private int solutionIndex = -1;
 	
 	
-	public InvConstraintConcreteValue_r3 (int ID, Solver_Inverse_r3<T> solver) {
+	public InvConstraintConcreteValue_r3 (int ID, Solver_Inverse<T> solver) {
 		
 		// Store reference to solver
 		this.solver = solver;
@@ -36,7 +36,7 @@ public class InvConstraintConcreteValue_r3<T extends A_Model_Inverse<T>>  extend
 	}
 	
 	
-	public InvConstraintConcreteValue_r3 (int ID, Solver_Inverse_r3<T> solver, List<Integer> args, SolutionSet<T> solutionSet) {
+	public InvConstraintConcreteValue_r3 (int ID, Solver_Inverse<T> solver, List<Integer> args, SolutionSet<T> solutionSet) {
 		
 		// Store reference to solver
 		this.solver = solver;
@@ -47,7 +47,7 @@ public class InvConstraintConcreteValue_r3<T extends A_Model_Inverse<T>>  extend
 		//this.solutionSet = solutionSet;
 	}
 	
-	public InvConstraintConcreteValue_r3 (int ID, Solver_Inverse_r3<T> solver, List<Integer> args, SolutionSet<T> solutionSet, int base, int input) {
+	public InvConstraintConcreteValue_r3 (int ID, Solver_Inverse<T> solver, List<Integer> args, SolutionSet<T> solutionSet, int base, int input) {
 		
 		// Store reference to solver
 		this.solver = solver;
@@ -63,7 +63,7 @@ public class InvConstraintConcreteValue_r3<T extends A_Model_Inverse<T>>  extend
 	
 	
 	@Override
-	public boolean evaluate(I_Inv_Constraint_r3<T> inputConstraint, int sourceIndex)  {
+	public boolean evaluate(I_Inv_Constraint<T> inputConstraint, int sourceIndex)  {
 		
 		System.out.format("EVALUATE CONCRETE VALUE %d ...\n",ID);
 		
