@@ -11,7 +11,7 @@ import edu.boisestate.cs.automatonModel.A_Model_Inverse;
 import edu.boisestate.cs.solvers.Solver_Inverse;
 
 /**
- * @author marli
+ * @author Marlin Roberts, 2020-2021
  *
  */
 public class InvConstraintPredicate<T extends A_Model_Inverse<T>> extends A_Inv_Constraint<T> {

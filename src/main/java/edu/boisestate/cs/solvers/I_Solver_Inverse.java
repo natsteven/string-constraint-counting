@@ -17,7 +17,7 @@ public interface I_Solver_Inverse<T extends A_Model_Inverse<T>> {
 	
 	public void outputSymbolicStrings ();
 	
-	void inv_append(int id, int base, int arg, int start, int end);
+//	void inv_append(int id, int base, int arg, int start, int end);
 
 	T inv_append(int id, int base, int arg);
 
@@ -68,7 +68,7 @@ public interface I_Solver_Inverse<T extends A_Model_Inverse<T>> {
 	 * @param input - symbolic string to use as input 
 	 * @param arg - symbolic string to use as argument
 	 */
-	void inv_append(int id, int input, int arg, int base);
+//	void inv_append(int id, int input, int arg, int base);
 
 	public List<Tuple<T, T>> inv_concat_sym_set(int id, int input, int arg, int base); 
 	public void setSymString(int id, T stringModel);

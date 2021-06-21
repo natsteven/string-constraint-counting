@@ -10,7 +10,7 @@ import edu.boisestate.cs.automatonModel.A_Model_Inverse;
 import edu.boisestate.cs.solvers.*;
 
 /**
- * @author marli
+ * @author Marlin Roberts, 2020-2021
  *
  */
 public class InvConstraintToLowerCase<T extends A_Model_Inverse<T>> extends A_Inv_Constraint<T> {

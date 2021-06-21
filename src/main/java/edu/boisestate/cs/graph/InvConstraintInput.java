@@ -13,7 +13,7 @@ import edu.boisestate.cs.solvers.Solver_Inverse;
 
 
 /**
- * @author marli
+ * @author Marlin Roberts, 2020-2021
  *
  */
 public class InvConstraintInput<T extends A_Model_Inverse<T>>  extends A_Inv_Constraint<T> {
@@ -21,7 +21,7 @@ public class InvConstraintInput<T extends A_Model_Inverse<T>>  extends A_Inv_Con
 	
 	//private SolutionSet<T> solutionSet;
 	
-	private int solutionIndex = -1;
+	//private int solutionIndex = -1;
 	
 	
 	public InvConstraintInput (int ID, Solver_Inverse<T> solver) {

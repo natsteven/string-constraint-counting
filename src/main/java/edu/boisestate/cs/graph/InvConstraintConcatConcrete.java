@@ -6,11 +6,10 @@ package edu.boisestate.cs.graph;
 import java.util.List;
 
 import edu.boisestate.cs.automatonModel.A_Model_Inverse;
-//import edu.boisestate.cs.solvers.Solver_Inverse;
 import edu.boisestate.cs.solvers.Solver_Inverse;
 
 /**
- * @author marli
+ * @author Marlin Roberts, 2020-2021
  *
  */
 public class InvConstraintConcatConcrete<T extends A_Model_Inverse<T>> extends A_Inv_Constraint<T> {

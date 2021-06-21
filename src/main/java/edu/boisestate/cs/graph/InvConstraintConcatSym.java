@@ -12,16 +12,16 @@ import edu.boisestate.cs.solvers.Solver_Inverse;
 import edu.boisestate.cs.util.Tuple;
 
 /**
- * @author marli
+ * @author Marlin Roberts, 2020-2021
  *
  */
 public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_Constraint<T> {
 	
 //	private I_Inv_Constraint suffixConstraint;
-	private int suffixID;
-	private boolean initialized = false;
+//	private int suffixID;
+//	private boolean initialized = false;
 	private List<Tuple<T,T>> outputs;
-	private T inputModel;
+//	private T inputModel;
 	// private int input, arg, base;
 	
 	

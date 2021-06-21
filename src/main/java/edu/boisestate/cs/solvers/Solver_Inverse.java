@@ -18,7 +18,7 @@ public class Solver_Inverse<T extends A_Model_Inverse<T>> extends Solver_Count<T
 	
     protected Map<Integer, T> invStringMap = new HashMap<>();
     private boolean reduceToShortest = true;
-    private static int ARG_OFFSET = 1000;	// TODO: REMOVE symbolic arguments are stored in the symbolic string table with this offset
+    //private static int ARG_OFFSET = 1000;	// TODO: REMOVE symbolic arguments are stored in the symbolic string table with this offset
     //private Stack<I_Inv_Constraint> constraintStack; // REMOVE
 
     /**
@@ -65,11 +65,11 @@ public class Solver_Inverse<T extends A_Model_Inverse<T>> extends Solver_Count<T
 		return invStringMap.get(id);
 	}
 
-	@Override // TODO: REMOVE
-	public void inv_append(int id, int base, int arg, int start, int end) {
-		
-		
-	}
+//	@Override // TODO: REMOVE
+//	public void inv_append(int id, int base, int arg, int start, int end) {
+//		
+//		
+//	}
 
 	/**
 	 * r3 version returns T
@@ -100,20 +100,20 @@ public class Solver_Inverse<T extends A_Model_Inverse<T>> extends Solver_Count<T
 	 * @param input - symbolic string to use as input 
 	 * @param arg - symbolic string to use as argument
 	 */
-	@Override // TODO: REMOVE
-	public void inv_append (int id, int input, int arg, int base) {
-		
-		T inputModel = invStringMap.get(input);
-		T argModel = invStringMap.get(arg);
-		T baseModel = invStringMap.get(base);
-		Tuple<T,T> results = inputModel.inv_concatenate_sym(baseModel, argModel);
-		//T resModel = inputModel.inv_concatenate(baseModel, argModel);
-		T resModel = results.get1();
-		invStringMap.put(id, resModel);
-		// we store the new arg value at a different location so we don't overwrite the original.
-		invStringMap.put(arg + ARG_OFFSET, results.get2());
-		
-	}
+//	@Override // TODO: REMOVE
+//	public void inv_append (int id, int input, int arg, int base) {
+//		
+//		T inputModel = invStringMap.get(input);
+//		T argModel = invStringMap.get(arg);
+//		T baseModel = invStringMap.get(base);
+//		Tuple<T,T> results = inputModel.inv_concatenate_sym(baseModel, argModel);
+//		//T resModel = inputModel.inv_concatenate(baseModel, argModel);
+//		T resModel = results.get1();
+//		invStringMap.put(id, resModel);
+//		// we store the new arg value at a different location so we don't overwrite the original.
+//		invStringMap.put(arg + ARG_OFFSET, results.get2());
+//		
+//	}
 
 	@Override
 	public void inv_contains(boolean result, int base, int arg) {
