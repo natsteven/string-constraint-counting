@@ -5,6 +5,7 @@ import java.util.Set;
 
 import dk.brics.automaton.Automaton;
 import dk.brics.automaton.BasicAutomata;
+import dk.brics.automaton.RegExp;
 import dk.brics.string.stringoperations.Postfix;
 import dk.brics.string.stringoperations.Prefix;
 import dk.brics.string.stringoperations.Replace1;
@@ -792,5 +793,19 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 
 		// return unbounded model from automaton
 		return new Model_Bounded(result, this.alphabet, boundLength);
+	}
+
+	/**
+	 * Checks if the given regexString is the same as the Automaton contained
+	 * in this object.
+	 * @param regexString - Regular expression to be checked
+	 * @return True if they match, false if otherwise.
+	 */
+	public boolean matches(String regexString) {
+		// create an Automaton from the regexString
+		RegExp regex = new RegExp(regexString);
+		Automaton regexAutomaton = regex.toAutomaton();
+		// return if the automaton are subsets of each other
+		return regexAutomaton.subsetOf(this.automaton) && this.automaton.subsetOf(regexAutomaton);
 	}
 }

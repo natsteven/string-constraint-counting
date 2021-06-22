@@ -76,9 +76,4 @@ public class Model_Bounded_Manager extends A_Model_Manager<Model_Bounded> {
 		// return model from automaton
 		return new Model_Bounded(regexAutomaton, this.alphabet, this.boundLength);
 	}
-	
-	public boolean matches(String regexString) {
-		RegExp regex = new RegExp(regexString);
-		return false;
-	}
 }
