@@ -66,7 +66,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 
     @Override
     public Model_Acyclic_Inverse assertContainedInOther(Model_Acyclic_Inverse containingModel) {
-        ensureAcyclicModel(containingModel);
+        //ensureAcyclicModel(containingModel);
 
         // get containing automaton
         Automaton containing = getAutomatonFromAcyclicModel(containingModel);
@@ -88,7 +88,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 
     @Override
     public Model_Acyclic_Inverse assertContainsOther(Model_Acyclic_Inverse containedModel) {
-        ensureAcyclicModel(containedModel);
+        //ensureAcyclicModel(containedModel);
 
         // create any string automata
         Automaton anyString1 =
@@ -119,7 +119,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 
     @Override
     public Model_Acyclic_Inverse assertEndsOther(Model_Acyclic_Inverse containingModel) {
-        ensureAcyclicModel(containingModel);
+        //ensureAcyclicModel(containingModel);
 
         // get containing automaton
         Automaton containing = getAutomatonFromAcyclicModel(containingModel);
@@ -142,7 +142,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 
     @Override
     public Model_Acyclic_Inverse assertEndsWith(Model_Acyclic_Inverse endingModel) {
-        ensureAcyclicModel(endingModel);
+        //ensureAcyclicModel(endingModel);
 
         // create any string automata
         Automaton anyString =
@@ -162,7 +162,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 
     @Override
     public Model_Acyclic_Inverse assertEquals(Model_Acyclic_Inverse equalModel) {
-        ensureAcyclicModel(equalModel);
+        //ensureAcyclicModel(equalModel);
 
         // concatenate with contained automaton
         Automaton equal = getAutomatonFromAcyclicModel(equalModel);
@@ -176,7 +176,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 
     @Override
     public Model_Acyclic_Inverse assertEqualsIgnoreCase(Model_Acyclic_Inverse equalModel) {
-        ensureAcyclicModel(equalModel);
+        //ensureAcyclicModel(equalModel);
 
         // concatenate with contained automaton
         Automaton equal = getAutomatonFromAcyclicModel(equalModel);
@@ -214,7 +214,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 
     @Override
     public Model_Acyclic_Inverse assertNotContainedInOther(Model_Acyclic_Inverse notContainingModel) {
-        ensureAcyclicModel(notContainingModel);
+        //ensureAcyclicModel(notContainingModel);
 
         // get containing automaton
         Automaton notContaining = getAutomatonFromAcyclicModel(notContainingModel);
@@ -245,7 +245,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 
     @Override
     public Model_Acyclic_Inverse assertNotContainsOther(Model_Acyclic_Inverse notContainedModel) {
-        ensureAcyclicModel(notContainedModel);
+        //ensureAcyclicModel(notContainedModel);
 
         // get not contained automaton
         Automaton notContained = getAutomatonFromAcyclicModel(notContainedModel);
@@ -290,7 +290,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 
     @Override
     public Model_Acyclic_Inverse assertNotEndsOther(Model_Acyclic_Inverse notContainingModel) {
-        ensureAcyclicModel(notContainingModel);
+        //ensureAcyclicModel(notContainingModel);
 
         // get containing automaton
         Automaton notContaining = getAutomatonFromAcyclicModel(notContainingModel);
@@ -322,7 +322,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 
     @Override
     public Model_Acyclic_Inverse assertNotEndsWith(Model_Acyclic_Inverse notEndingModel) {
-        ensureAcyclicModel(notEndingModel);
+        //ensureAcyclicModel(notEndingModel);
 
         Automaton notEnding = getAutomatonFromAcyclicModel(notEndingModel);
 
@@ -354,7 +354,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 
     @Override
     public Model_Acyclic_Inverse assertNotEquals(Model_Acyclic_Inverse notEqualModel) {
-        ensureAcyclicModel(notEqualModel);
+        //ensureAcyclicModel(notEqualModel);
 
         // get not equal automaton
         Automaton notEqual = getAutomatonFromAcyclicModel(notEqualModel);
@@ -377,7 +377,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 
     @Override
     public Model_Acyclic_Inverse assertNotEqualsIgnoreCase(Model_Acyclic_Inverse notEqualModel) {
-        ensureAcyclicModel(notEqualModel);
+        //ensureAcyclicModel(notEqualModel);
 
         // get not equal automaton
         Automaton notEqual = getAutomatonFromAcyclicModel(notEqualModel);
@@ -404,7 +404,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 
     @Override
     public Model_Acyclic_Inverse assertNotStartsOther(Model_Acyclic_Inverse notContainingModel) {
-        ensureAcyclicModel(notContainingModel);
+        //ensureAcyclicModel(notContainingModel);
 
         // get containing automaton
         Automaton notContaining = getAutomatonFromAcyclicModel(notContainingModel);
@@ -436,7 +436,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 
     @Override
     public Model_Acyclic_Inverse assertNotStartsWith(Model_Acyclic_Inverse notStartsModel) {
-        ensureAcyclicModel(notStartsModel);
+        //ensureAcyclicModel(notStartsModel);
 
         Automaton notStarting = getAutomatonFromAcyclicModel(notStartsModel);
 
@@ -467,7 +467,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 
     @Override
     public Model_Acyclic_Inverse assertStartsOther(Model_Acyclic_Inverse containingModel) {
-        ensureAcyclicModel(containingModel);
+        //ensureAcyclicModel(containingModel);
 
         // get containing automaton
         Automaton containing = getAutomatonFromAcyclicModel(containingModel);
@@ -490,7 +490,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 
     @Override
     public Model_Acyclic_Inverse assertStartsWith(Model_Acyclic_Inverse startingModel) {
-        ensureAcyclicModel(startingModel);
+        //ensureAcyclicModel(startingModel);
 
         // create any string automata
         Automaton anyString =
@@ -520,7 +520,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 
     @Override
     public Model_Acyclic_Inverse concatenate(Model_Acyclic_Inverse argModel) {
-        ensureAcyclicModel(argModel);
+        //ensureAcyclicModel(argModel);
 
         // get arg automaton
         Automaton arg = getAutomatonFromAcyclicModel(argModel);
@@ -568,17 +568,22 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
     @Override
     public boolean equals(Model_Acyclic_Inverse arg) {
 
-        // check if arg model is bounded automaton model
-        if (arg instanceof Model_Acyclic_Inverse) {
-
-            // cast arg model
-            Model_Acyclic_Inverse argModel = (Model_Acyclic_Inverse) arg;
-
-            // check underlying automaton models for equality
-            return this.automaton.equals(argModel.automaton);
-        }
-
-        return false;
+//        // check if arg model is bounded automaton model
+//        if (arg instanceof Model_Acyclic_Inverse) {
+//
+//            // cast arg model
+//            Model_Acyclic_Inverse argModel = (Model_Acyclic_Inverse) arg;
+//
+//            // check underlying automaton models for equality
+//            return this.automaton.equals(argModel.automaton);
+//        }
+//
+//        return false;
+        
+        // MJR casts are no longer needed...
+        return this.automaton.equals(arg.automaton);
+        
+        
     }
 
     @Override
@@ -595,7 +600,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 
     @Override
     public Model_Acyclic_Inverse insert(int offset, Model_Acyclic_Inverse argModel) {
-        ensureAcyclicModel(argModel);
+        //ensureAcyclicModel(argModel);
 
         // get automata for operations
         Automaton arg = getAutomatonFromAcyclicModel(argModel);
@@ -614,7 +619,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 
     @Override
     public Model_Acyclic_Inverse intersect(Model_Acyclic_Inverse arg) {
-        ensureAcyclicModel(arg);
+        //ensureAcyclicModel(arg);
 
         // cast arg model
         Model_Acyclic_Inverse argModel = (Model_Acyclic_Inverse) arg;
@@ -739,7 +744,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 
     @Override
     public Model_Acyclic_Inverse setCharAt(int offset, Model_Acyclic_Inverse argModel) {
-        ensureAcyclicModel(argModel);
+        //ensureAcyclicModel(argModel);
 
         // get automata for operations
         Automaton arg = getAutomatonFromAcyclicModel(argModel);
@@ -1211,8 +1216,12 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 
 	@Override
 	public Model_Acyclic_Inverse inv_trim() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Alphabet padAlphabet = new Alphabet(" ");
+		Model_Acyclic_Inverse_Manager manager = new Model_Acyclic_Inverse_Manager (padAlphabet, maxStringPadding);
+		Model_Acyclic_Inverse padModel = manager.createAnyString();
+		Model_Acyclic_Inverse resultModel = padModel.concatenate(this).concatenate(padModel);
+		return resultModel;
 	}
 	
 	
@@ -1233,7 +1242,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 		
 	}
 
-    private void ensureAcyclicModel(Model_Acyclic_Inverse arg) {
+//    private void ensureAcyclicModel(Model_Acyclic_Inverse arg) {
         // check if automaton model is bounded
 //        if (!(arg instanceof Model_Acyclic_Inverse)) {
 //
@@ -1241,10 +1250,10 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 //                    "The Acyclic Automaton Model only supports binary " +
 //                    "operations with other Acyclic Automaton Models.");
 //        }
-    }
+//    }
     
     public Model_Acyclic_Inverse union (Model_Acyclic_Inverse argModel) {
-      	 ensureAcyclicModel(argModel);
+      	 //ensureAcyclicModel(argModel);
       	 Automaton arg = getAutomatonFromAcyclicModel(argModel);
       	 Automaton result = this.automaton.union(arg);
       	 result.minimize();

@@ -27,7 +27,7 @@ public interface I_Solver_Inverse<T extends A_Model_Inverse<T>> {
 
 	T inv_delete(T input, int start, int end);
 
-	void inv_insert(int id, int base, int arg, int offset);
+	T inv_insert(T input, int start, int end);
 
 	void inv_insert(int id, int base, int arg, int offset, int start, int end);
 
@@ -57,7 +57,7 @@ public interface I_Solver_Inverse<T extends A_Model_Inverse<T>> {
 
 	T inv_toUpperCase(T input);
 
-	void inv_trim(int id, int base);
+	T inv_trim(T input);
 
 	/**
 	 * Performs base.inv_concatenate(arg), stores result as symbolic string id

@@ -143,15 +143,22 @@ public class Solver_Inverse<T extends A_Model_Inverse<T>> extends Solver_Count<T
 		
 	}
 
+	/**
+	 * R3 Version 
+	 * Returns result T
+	 * 
+	 * 03/18/2021 MJR
+	 */
 	@Override
-	public void inv_insert(int id, int base, int arg, int offset) {
-		// TODO REPLACE with r3 model
+	public T inv_insert(T input, int start, int end){
+		T resModel = input.delete(start, end);
+		return resModel;
 		
 	}
 
 	@Override 
 	public void inv_insert(int id, int base, int arg, int offset, int start, int end) {
-		// TODO Auto-generated method stub
+		// TODO remove
 		
 	}
 
@@ -278,9 +285,17 @@ public class Solver_Inverse<T extends A_Model_Inverse<T>> extends Solver_Count<T
 		
 	}
 
+	/**
+	 * R3 Version Performs base.inv_trim
+	 * Returns result T
+	 * 
+	 * 06/21/2021 MJR
+	 */
 	@Override
-	public void inv_trim(int id, int base) {
-		// TODO REPLACE with r3 model
+	public T inv_trim(T input) {
+
+		T resModel = input.inv_trim();
+		return resModel;
 		
 	}
 	
