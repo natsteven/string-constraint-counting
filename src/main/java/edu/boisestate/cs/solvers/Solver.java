@@ -384,7 +384,7 @@ public class Solver<T extends A_Model<T>> extends A_Solver_Extended<T> implement
 
         // get model
         T model = this.symbolicStringMap.get(id);
-        System.out.println(model);
+        //System.out.println(model);
 
         // return singleton status
         return model.containsString(actualValue) && model.isSingleton();

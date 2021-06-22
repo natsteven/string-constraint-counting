@@ -8,6 +8,8 @@ package edu.boisestate.cs.graph;
 
 import java.io.Serializable;
 import java.util.*;
+import edu.boisestate.cs.graph.Operation;
+import static edu.boisestate.cs.graph.Operation.*;
 
 public class PrintConstraint implements Serializable,
                                         Comparable<PrintConstraint> {
@@ -16,12 +18,19 @@ public class PrintConstraint implements Serializable,
     private static int globalNum = 0;
     private String value;
     private String actualVal;
-    private List<PrintConstraint> sourceConstraints;
+    //MJR
+    //private List<PrintConstraint> sourceConstraints;
+    public List<PrintConstraint> sourceConstraints;
     private int type;
     private int num;
     private int id;
     private long timeStamp;
     private HashMap<String, Integer> sourceMap;
+    
+    //MJR enumeration of operation
+    private Operation op;
+    //MJR list of arguments for re-use during inverse operations
+    private List<Integer> argList = new ArrayList<>();
 
     /**
      * @param value     The name of the vertex (e.g., the symbolic value or
@@ -38,6 +47,7 @@ public class PrintConstraint implements Serializable,
         id = globalNum++;
         this.actualVal = actualVal;
         timeStamp = System.nanoTime();
+        this.op = UNDEFINED;
     }
 
     /**
@@ -60,6 +70,7 @@ public class PrintConstraint implements Serializable,
         //sourceConstraints.removeFirst();
         //sourceConstraints.add(this);
         sourceConstraints.add(0, this);
+        this.op = oldConstraint.getOp();
 //			if(oldConstraint.type==0&&oldConstraint.sourceConstraints.size()
 // >1){
 //				sourceConstraints.add(oldConstraint.getSource(id));
@@ -80,6 +91,7 @@ public class PrintConstraint implements Serializable,
         this.value = value;
         sourceConstraints = new ArrayList<PrintConstraint>();
         sourceConstraints.add(this);
+        this.op = UNDEFINED;
     }
     
     
@@ -131,6 +143,40 @@ public class PrintConstraint implements Serializable,
         return value + "(" + num + ")" + "-" + id;
     }
 
+    
+    /**
+     * @return The vertex's id.
+     */
+    public int getBase() {
+    	
+    	if (sourceMap.containsKey("t")) {
+    		return sourceMap.get("t");
+    	} else {
+    		return -1;
+    	}
+
+    }
+    
+    public Operation getOp() {
+    	return this.op;
+    }
+    
+    public void setOp(Operation op) {
+    	this.op = op;
+    }
+    
+    public void addArg (int arg) {
+    	argList.add(arg);
+    }
+    
+    public int getArg (int index) {
+    	return argList.get(index);
+    }
+    
+    public List<Integer> getArgList () {
+    	return argList;
+    }
+    
     /**
      * @return The vertex's id.
      */

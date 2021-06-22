@@ -65,7 +65,18 @@ abstract public class Reporter {
                 maxId = constraint.getId();
             }
         }
-
+        
+        
+        // MJR
+//        for (PrintConstraint pc : roots) {
+//        	System.out.println("reporter-root: " + pc.getValue());
+//        }
+//        
+//        for (PrintConstraint pc : ends) {
+//        	System.out.println("reporter-end: " + pc.getValue());
+//        }
+        
+        
         // set max id in parser
         this.parser.setMaxGraphId(maxId);
 
@@ -198,11 +209,13 @@ abstract public class Reporter {
             }
         }
 
+        
+        
         // shut down solver
         solver.shutDown();
     }
 
-    private void finishEdges(Map<PrintConstraint, Set<PrintConstraint>> inEdges,
+    protected void finishEdges(Map<PrintConstraint, Set<PrintConstraint>> inEdges,
                              Map<PrintConstraint, Set<PrintConstraint>> outEdges,
                              PrintConstraint vertex) {
         Set<PrintConstraint> parents = inEdges.get(vertex);
@@ -216,7 +229,7 @@ abstract public class Reporter {
                 siblings.remove(vertex);
                 if (siblings.isEmpty()) {
                     siblings.remove(parent);
-                    solver.remove(parent.getId());
+                   //solver.remove(parent.getId());
                 }
             }
         }
