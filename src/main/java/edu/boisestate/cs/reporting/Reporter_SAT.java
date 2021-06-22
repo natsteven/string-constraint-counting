@@ -15,9 +15,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class Reporter_SAT_2<T extends A_Model<T>> extends A_Reporter_2<T> {
+public class Reporter_SAT<T extends A_Model<T>> extends A_Reporter<T> {
 
-    public Reporter_SAT_2(DirectedGraph<PrintConstraint, SymbolicEdge> graph,
+    public Reporter_SAT(DirectedGraph<PrintConstraint, SymbolicEdge> graph,
                        Parser_2<T> parser,
                        Solver<T> solver,
                        boolean debug) {

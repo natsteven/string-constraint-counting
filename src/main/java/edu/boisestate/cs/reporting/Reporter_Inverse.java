@@ -42,7 +42,7 @@ import java.util.concurrent.TimeUnit;
  * @param <T> - Automata model that implements inverse operations.
  */
 @SuppressWarnings("unused")
-public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter_2<T> {
+public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T> {
 
     private final Solver_Inverse<T> invSolver;
 	protected Map<Integer,PrintConstraint> allConstraints = new HashMap<>();

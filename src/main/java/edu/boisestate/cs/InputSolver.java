@@ -25,10 +25,10 @@ import edu.boisestate.cs.graph.PrintConstraint;
 import edu.boisestate.cs.graph.SymbolicEdge;
 import edu.boisestate.cs.reporting.MCReporter;
 import edu.boisestate.cs.reporting.Reporter;
-import edu.boisestate.cs.reporting.Reporter_Count_2;
+import edu.boisestate.cs.reporting.Reporter_Count;
 import edu.boisestate.cs.reporting.Reporter_Inverse;
 //import edu.boisestate.cs.reporting.Reporter_Inverse;
-import edu.boisestate.cs.reporting.Reporter_SAT_2;
+import edu.boisestate.cs.reporting.Reporter_SAT;
 import edu.boisestate.cs.reporting.SATReporter;
 import edu.boisestate.cs.solvers.AutomatonModelSolver;
 import edu.boisestate.cs.solvers.BlankSolver;
@@ -89,7 +89,7 @@ public class InputSolver {
 		Model_Bounded_Manager mFactory = new Model_Bounded_Manager(alpha, initialBound);
 		Solver_Count<Model_Bounded> mSolver = new Solver_Count<Model_Bounded>(mFactory, initialBound);
 		Parser_2<Model_Bounded> mParser = new Parser_2<Model_Bounded>(mSolver, debug);
-		Reporter_Count_2<Model_Bounded> mReporter = new Reporter_Count_2<Model_Bounded>(graph, mParser, mSolver, debug);
+		Reporter_Count<Model_Bounded> mReporter = new Reporter_Count<Model_Bounded>(graph, mParser, mSolver, debug);
 		mReporter.run();
 	}
 
@@ -97,7 +97,7 @@ public class InputSolver {
 		Model_Bounded_Manager mFactory = new Model_Bounded_Manager(alpha, initialBound);
 		Solver<Model_Bounded> mSolver = new Solver<Model_Bounded>(mFactory, initialBound);
 		Parser_2<Model_Bounded> mParser = new Parser_2<Model_Bounded>(mSolver, debug);
-		Reporter_SAT_2<Model_Bounded> mReporter = new Reporter_SAT_2<Model_Bounded>(graph, mParser, mSolver, debug);
+		Reporter_SAT<Model_Bounded> mReporter = new Reporter_SAT<Model_Bounded>(graph, mParser, mSolver, debug);
 		mReporter.run();
 	}
 
@@ -105,7 +105,7 @@ public class InputSolver {
 //		Model_Acyclic_Manager mFactory = new Model_Acyclic_Manager(alpha, initialBound);
 //		Solver_Count<Model_Acyclic> mSolver = new Solver_Count<Model_Acyclic>(mFactory, initialBound);
 //		Parser_2<Model_Acyclic> mParser = new Parser_2<Model_Acyclic>(mSolver, debug);
-//		Reporter_Count_2<Model_Acyclic> mReporter = new Reporter_Count_2<Model_Acyclic>(graph, mParser, mSolver, debug);
+//		Reporter_Count<Model_Acyclic> mReporter = new Reporter_Count<Model_Acyclic>(graph, mParser, mSolver, debug);
 //		mReporter.run();
 //	}
 

@@ -16,7 +16,7 @@ import java.util.*;
  *
  * @param <T>
  */
-public class Reporter_Count_2<T extends A_Model<T>> extends A_Reporter_2<T> {
+public class Reporter_Count<T extends A_Model<T>> extends A_Reporter<T> {
 
     private final Solver_Count<T> countSolver;
 
@@ -27,7 +27,7 @@ public class Reporter_Count_2<T extends A_Model<T>> extends A_Reporter_2<T> {
      * @param countSolver
      * @param debug
      */
-    public Reporter_Count_2 (DirectedGraph <PrintConstraint, SymbolicEdge> 	graph,
+    public Reporter_Count (DirectedGraph <PrintConstraint, SymbolicEdge> 	graph,
                       		 Parser_2<T> 									parser,
                       		 Solver_Count<T> 								countSolver,
                       		 boolean 										debug) {

@@ -21,7 +21,7 @@ import java.util.*;
  *
  * @param <T>
  */
-abstract public class A_Reporter_2 <T extends A_Model<T>> {
+abstract public class A_Reporter <T extends A_Model<T>> {
 
     protected final DirectedGraph<PrintConstraint, SymbolicEdge> graph;
     protected final Parser_2<T> parser;
@@ -37,7 +37,7 @@ abstract public class A_Reporter_2 <T extends A_Model<T>> {
      * @param solver
      * @param debug
      */
-    protected A_Reporter_2 (DirectedGraph<PrintConstraint, SymbolicEdge> 	graph,
+    protected A_Reporter (DirectedGraph<PrintConstraint, SymbolicEdge> 	graph,
                        	   	Parser_2<T> 									parser,
                        	   	Solver<T> 										solver,
                        	   	boolean 										debug) {
