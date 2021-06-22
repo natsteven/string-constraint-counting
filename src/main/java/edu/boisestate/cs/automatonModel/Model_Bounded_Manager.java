@@ -68,12 +68,17 @@ public class Model_Bounded_Manager extends A_Model_Manager<Model_Bounded> {
 	 * @param regex - Regular expression to be used
 	 * @return Model_Bounded containing the resulting automaton
 	 */
-	public Model_Bounded createFromRegex(String regex) {
+	public Model_Bounded createFromRegex(String regexString) {
 		// save the regular expression as a RexExp object
-		RegExp regexp = new RegExp(regex);
+		RegExp regex = new RegExp(regexString);
 		// convert the RegExp to an automaton
-		Automaton regexAutomaton = regexp.toAutomaton();
+		Automaton regexAutomaton = regex.toAutomaton();
 		// return model from automaton
 		return new Model_Bounded(regexAutomaton, this.alphabet, this.boundLength);
+	}
+	
+	public boolean matches(String regexString) {
+		RegExp regex = new RegExp(regexString);
+		return false;
 	}
 }
