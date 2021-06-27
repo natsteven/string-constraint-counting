@@ -23,7 +23,7 @@ public interface I_Solver_Inverse<T extends A_Model_Inverse<T>> {
 
 	void inv_contains(boolean result, int base, int arg);
 
-	void inv_deleteCharAt(int id, int base, int loc);
+//	void inv_deleteCharAt(int id, int base, int loc);
 
 	T inv_delete(T input, int start, int end);
 

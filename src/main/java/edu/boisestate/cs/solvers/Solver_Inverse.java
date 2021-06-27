@@ -121,11 +121,11 @@ public class Solver_Inverse<T extends A_Model_Inverse<T>> extends Solver_Count<T
 		
 	}
 
-	@Override
-	public void inv_deleteCharAt(int id, int base, int loc) {
+//	@Override
+//	public void inv_deleteCharAt(int id, int base, int loc) {
 		// TODO Auto-generated method stub
 		
-	}
+//	}
 
 	/**
 	 * R3 Version 
