@@ -67,7 +67,8 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 	}
 
 	private static Automaton getAutomatonFromUnboundedModel(Model_Bounded model) {
-		return ((Model_Bounded) model).automaton;
+		//return ((Model_Bounded) model).automaton;
+		return model.automaton;
 	}
 
 	private void ensureUnboundedModel(Model_Bounded arg) {
