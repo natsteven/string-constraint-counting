@@ -808,4 +808,25 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 		// return if the automaton are subsets of each other
 		return regexAutomaton.subsetOf(this.automaton) && this.automaton.subsetOf(regexAutomaton);
 	}
+	
+	/**
+	 * Replaces all strings in automaton accepted by the regex with replacement.
+	 * @param regexString - Regex to be found in our automaton
+	 * @param replacement - String to replace all occurrences of regex
+	 * @return Model of automaton with replaced strings
+	 */
+	public Model_Bounded replaceAll(String regexString, String replacement) {
+		// instantiate a new Model_Bounded
+		Model_Bounded model = new Model_Bounded(this.automaton, this.alphabet, this.boundLength);
+		// instantiate regex to an automaton
+		RegExp regex = new RegExp(regexString);
+		Automaton regexAutomaton = regex.toAutomaton();
+		// get set of accepted strings
+		Set<String> acceptedStrings = regexAutomaton.getFiniteStrings();
+		// for each accepted string in the regex, replace it with replacement in the output model
+		for (String str : acceptedStrings) {
+			model.replace(str, replacement);
+		}
+		return model;
+	}
 }
