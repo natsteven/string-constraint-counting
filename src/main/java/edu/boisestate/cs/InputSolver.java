@@ -21,6 +21,8 @@ import edu.boisestate.cs.automatonModel.Model_Acyclic_Inverse_Manager;
 import edu.boisestate.cs.automatonModel.Model_Acyclic_Manager;
 import edu.boisestate.cs.automatonModel.Model_Bounded;
 import edu.boisestate.cs.automatonModel.Model_Bounded_Manager;
+import edu.boisestate.cs.automatonModel.Model_Weighted;
+import edu.boisestate.cs.automatonModel.Model_Weighted_Manager;
 import edu.boisestate.cs.graph.PrintConstraint;
 import edu.boisestate.cs.graph.SymbolicEdge;
 import edu.boisestate.cs.reporting.MCReporter;
@@ -68,7 +70,14 @@ public class InputSolver {
 		}
 		reduce = true;
 		DirectedGraph<PrintConstraint, SymbolicEdge> graph = loadGraph(inputFile);
-//		run_Acyclic_Inverse_r3(graph);
+		
+		//run_Bounded_Count(graph);
+		//run_Bounded_SAT(graph);
+		//run_Acyclic_Inverse_r3(graph); 
+		//run_Acyclic_Count(graph);
+		//run_Acyclic_SAT(graph);
+		run_Weighted_Count(graph);
+		
 	}
 
 	// TODO: create Model_Bounded_Inverse
@@ -101,13 +110,29 @@ public class InputSolver {
 		mReporter.run();
 	}
 
-//	public static void run_Acyclic_Count(DirectedGraph<PrintConstraint, SymbolicEdge> graph) {
-//		Model_Acyclic_Manager mFactory = new Model_Acyclic_Manager(alpha, initialBound);
-//		Solver_Count<Model_Acyclic> mSolver = new Solver_Count<Model_Acyclic>(mFactory, initialBound);
-//		Parser_2<Model_Acyclic> mParser = new Parser_2<Model_Acyclic>(mSolver, debug);
-//		Reporter_Count<Model_Acyclic> mReporter = new Reporter_Count<Model_Acyclic>(graph, mParser, mSolver, debug);
-//		mReporter.run();
-//	}
+	public static void run_Acyclic_Count(DirectedGraph<PrintConstraint, SymbolicEdge> graph) {
+		Model_Acyclic_Manager mFactory = new Model_Acyclic_Manager(alpha, initialBound);
+		Solver_Count<Model_Acyclic> mSolver = new Solver_Count<Model_Acyclic>(mFactory, initialBound);
+		Parser_2<Model_Acyclic> mParser = new Parser_2<Model_Acyclic>(mSolver, debug);
+		Reporter_Count<Model_Acyclic> mReporter = new Reporter_Count<Model_Acyclic>(graph, mParser, mSolver, debug);
+		mReporter.run();
+	}
+	
+	public static void run_Acyclic_SAT(DirectedGraph<PrintConstraint, SymbolicEdge> graph) {
+		Model_Acyclic_Manager mFactory = new Model_Acyclic_Manager(alpha, initialBound);
+		Solver<Model_Acyclic> mSolver = new Solver<Model_Acyclic>(mFactory, initialBound);
+		Parser_2<Model_Acyclic> mParser = new Parser_2<Model_Acyclic>(mSolver, debug);
+		Reporter_SAT<Model_Acyclic> mReporter = new Reporter_SAT<Model_Acyclic>(graph, mParser, mSolver, debug);
+		mReporter.run();
+	}
+	
+	public static void run_Weighted_Count(DirectedGraph<PrintConstraint, SymbolicEdge> graph) {
+		Model_Weighted_Manager mFactory = new Model_Weighted_Manager(alpha, initialBound);
+		Solver_Count<Model_Weighted> mSolver = new Solver_Count<Model_Weighted>(mFactory, initialBound);
+		Parser_2<Model_Weighted> mParser = new Parser_2<Model_Weighted>(mSolver, debug);
+		Reporter_Count<Model_Weighted> mReporter = new Reporter_Count<Model_Weighted>(graph, mParser, mSolver, debug);
+		mReporter.run();
+	}
 
 	// TODO: create Model_Acyclic_Inverse_Manager
 	// TODO: create Model_Acyclic_Inverse
