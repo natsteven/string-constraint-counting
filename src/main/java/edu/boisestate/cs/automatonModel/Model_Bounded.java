@@ -796,8 +796,8 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 	}
 
 	/**
-	 * Checks if the given regexString is the same as the Automaton contained
-	 * in this object.
+	 * Checks if the automaton contained in this object is a subset of
+	 * the provided regex.
 	 * @param regexString - Regular expression to be checked
 	 * @return True if they match, false if otherwise.
 	 */
@@ -806,7 +806,7 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 		RegExp regex = new RegExp(regexString);
 		Automaton regexAutomaton = regex.toAutomaton();
 		// return if the automaton are subsets of each other
-		return regexAutomaton.subsetOf(this.automaton) && this.automaton.subsetOf(regexAutomaton);
+		return this.automaton.subsetOf(regexAutomaton);
 	}
 	
 	/**
