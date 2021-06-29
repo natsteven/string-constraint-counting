@@ -29,7 +29,8 @@ public class MCAutomatonModelSolver
      * @return a set of all possible string values represented by the symbolic
      * string
      */
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public Set<String> getAllVales(int id) {
 
         // get model from id

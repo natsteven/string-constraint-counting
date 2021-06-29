@@ -2,8 +2,8 @@ package edu.boisestate.cs.reporting;
 
 import edu.boisestate.cs.BasicTimer;
 import edu.boisestate.cs.Parser;
-import edu.boisestate.cs.automatonModel.AcyclicWeightedAutomatonModel;
-import edu.boisestate.cs.automatonModel.WeightedAutomatonModel;
+//import edu.boisestate.cs.automatonModel.AcyclicWeightedAutomatonModel;
+//import edu.boisestate.cs.automatonModel.WeightedAutomatonModel;
 import edu.boisestate.cs.graph.PrintConstraint;
 import edu.boisestate.cs.graph.SymbolicEdge;
 import edu.boisestate.cs.solvers.ExtendedSolver;

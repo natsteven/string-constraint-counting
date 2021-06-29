@@ -6,7 +6,7 @@ import edu.boisestate.cs.automatonModel.AutomatonModel;
 import edu.boisestate.cs.automatonModel.AutomatonModelManager;
 import edu.boisestate.cs.util.DotToGraph;
 import edu.boisestate.cs.util.Tuple;
-
+@SuppressWarnings("unchecked")
 public class AutomatonModelSolver
         extends ExtendedSolver<AutomatonModel> {
 
@@ -27,7 +27,8 @@ public class AutomatonModelSolver
         this.modelManager = modelManager;
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public void append(int id, int base, int arg, int start, int end) {
 
         // get models
@@ -50,7 +51,8 @@ public class AutomatonModelSolver
         this.symbolicStringMap.put(id, baseModel);
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public void append(int id, int base, int arg) {
 
 //    	System.out.println(id + " " + base + " " + arg);
@@ -74,7 +76,8 @@ public class AutomatonModelSolver
         this.symbolicStringMap.put(id, baseModel);
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public void contains(boolean result, int base, int arg) {
 
         // get models

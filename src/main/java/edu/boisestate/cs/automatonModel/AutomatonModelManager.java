@@ -16,20 +16,20 @@ public abstract class AutomatonModelManager {
                                                     int initialBoundLength) {
 
         if (modelVersion == 1) {
-            UnboundedAutomatonModelManager.setInstance(alphabet,
-                                                       initialBoundLength);
+//            UnboundedAutomatonModelManager.setInstance(alphabet,
+//                                                       initialBoundLength);
         } else if (modelVersion == 2) {
-            BoundedAutomatonModelManager.setInstance(alphabet,
-                                                     initialBoundLength);
+//            BoundedAutomatonModelManager.setInstance(alphabet,
+//                                                     initialBoundLength);
         } else if (modelVersion == 3) {
-            AggregateAutomatonModelManager.setInstance(alphabet,
-                                                       initialBoundLength);
+//            AggregateAutomatonModelManager.setInstance(alphabet,
+//                                                       initialBoundLength);
         } else if (modelVersion == 4) {
-            WeightedAutomatonModelManager.setInstance(alphabet,
-                                                      initialBoundLength);
+//            WeightedAutomatonModelManager.setInstance(alphabet,
+//                                                      initialBoundLength);
         } else if (modelVersion == 5) {
-        	AcyclicWeightedAutomatonModelManager.setInstance(alphabet, 
-        											initialBoundLength);
+//        	AcyclicWeightedAutomatonModelManager.setInstance(alphabet, 
+//        											initialBoundLength);
         }
 
         return instance;
