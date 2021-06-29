@@ -1,5 +1,5 @@
 /**
- * The processor. Traverses the inputted flow graph using a temporal depth first
+ * The processor. Traverses the inputed flow graph using a temporal depth first
  * search to create PCs and pass them to the constraint solvers using the
  * argument.
  *
@@ -9,15 +9,24 @@ package edu.boisestate.cs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import edu.boisestate.cs.Settings.ReportType;
 import edu.boisestate.cs.Settings.SolverType;
 import edu.boisestate.cs.automatonModel.AutomatonModelManager;
+import edu.boisestate.cs.automatonModel.Model_Acyclic;
 import edu.boisestate.cs.automatonModel.Model_Acyclic_Inverse;
 import edu.boisestate.cs.automatonModel.Model_Acyclic_Inverse_Manager;
+import edu.boisestate.cs.automatonModel.Model_Acyclic_Manager;
+import edu.boisestate.cs.automatonModel.Model_Acyclic_Weighted;
+import edu.boisestate.cs.automatonModel.Model_Acyclic_Weighted_Manager;
+import edu.boisestate.cs.automatonModel.Model_Bounded;
+import edu.boisestate.cs.automatonModel.Model_Bounded_Manager;
 import edu.boisestate.cs.graph.PrintConstraint;
 import edu.boisestate.cs.graph.SymbolicEdge;
 import edu.boisestate.cs.reporting.MCReporter;
 import edu.boisestate.cs.reporting.Reporter;
+import edu.boisestate.cs.reporting.Reporter_Count;
 import edu.boisestate.cs.reporting.Reporter_Inverse;
+import edu.boisestate.cs.reporting.Reporter_SAT;
 import edu.boisestate.cs.reporting.SATReporter;
 import edu.boisestate.cs.solvers.*;
 import edu.boisestate.cs.util.LambdaVoid1;
@@ -28,15 +37,16 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-import javax.swing.plaf.synth.SynthSeparatorUI;
+//import javax.swing.plaf.synth.SynthSeparatorUI;
 
-@SuppressWarnings({ "Duplicates", "unchecked" })
+@SuppressWarnings({ "unchecked" })
 public class SolveMain {
 	private static int initialBound = 0;
 	private static int defaultBound = 3;
 
 	private static boolean reduce = false;
 	private static boolean debug = false;
+	private static boolean header = true;
 
 	private static String inputFile;
 	private static Alphabet alpha;
@@ -50,55 +60,132 @@ public class SolveMain {
 			return;
 		}
 			
+		inputFile = settings.getGraphFilePath();
+		initialBound = settings.getInitialBoundingLength();
+		
+		/*
+		 * If solver is inverse, we can ignore the reporter and automata types, load the 
+		 * graph and run the acyclic inverse method. 
+		 */
 		if (settings.getSolverType() == SolverType.INVERSE) {
 
-			inputFile = settings.getGraphFilePath();
-			initialBound = settings.getInitialBoundingLength();
-			
-			System.out.println("[IGEN] Using input graph : " + inputFile);
-			System.out.println("[IGEN] Using input length : " + initialBound);
-			
+			printHeader(inputFile, initialBound, "Inverse", "Inverse", "Acyclic");
+
 			reduce = true;
 			DirectedGraph<PrintConstraint, SymbolicEdge> graph = loadGraph(inputFile);
 			run_Acyclic_Inverse_r3(graph);
-			
+
+
+		/*
+		 * If solver is jsa, we need to run the correct method based on the reporter and automata types.
+		 */
+		} else if (settings.getSolverType() == SolverType.JSA) {
+
+			if (settings.getReportType() == ReportType.MODEL_COUNT) {
+
+				if (settings.getAutomatonModelVersion() == 1) {
+					// jsa, bounded, count
+					printHeader(inputFile, initialBound, "JSA", "Model Count", "Bounded");
+
+					DirectedGraph<PrintConstraint, SymbolicEdge> graph = loadGraph(inputFile);
+					run_Bounded_Count(graph);
+
+				}
+
+				if (settings.getAutomatonModelVersion() == 2) {
+					// jsa, acyclic, count
+					printHeader(inputFile, initialBound, "JSA", "Model Count", "Acyclic");
+
+					DirectedGraph<PrintConstraint, SymbolicEdge> graph = loadGraph(inputFile);
+					run_Acyclic_Count(graph);
+
+				}
+
+				if (settings.getAutomatonModelVersion() == 3) {
+					// jsa, weighted, count
+					printHeader(inputFile, initialBound, "JSA", "Model Count", "Acyclic Weighted");
+
+					DirectedGraph<PrintConstraint, SymbolicEdge> graph = loadGraph(inputFile);
+					run_Weighted_Count(graph);
+
+				}
+
+			}
+
+			if (settings.getReportType() == ReportType.SAT) {
+
+				if (settings.getAutomatonModelVersion() == 1) {
+					// jsa, bounded, sat
+					printHeader(inputFile, initialBound, "JSA", "SAT", "Bounded");
+
+					DirectedGraph<PrintConstraint, SymbolicEdge> graph = loadGraph(inputFile);
+					run_Bounded_SAT(graph);
+
+				}
+
+				if (settings.getAutomatonModelVersion() == 2) {
+					// jsa, acyclic, sat
+					printHeader(inputFile, initialBound, "JSA", "SAT", "Acyclic");
+
+					DirectedGraph<PrintConstraint, SymbolicEdge> graph = loadGraph(inputFile);
+					run_Acyclic_SAT(graph);
+
+				}
+
+				if (settings.getAutomatonModelVersion() == 3) {
+					// jsa, weighted, sat
+					printHeader(inputFile, initialBound, "JSA", "SAT", "Acyclic Weighted");
+
+					DirectedGraph<PrintConstraint, SymbolicEdge> graph = loadGraph(inputFile);
+					run_Weighted_SAT(graph);
+
+				}
+
+			}
+
+		/*
+		 * The remaining types are the concrete and blank solvers, which currently use the non-typed classes.
+		 */
 		} else {
-		
-		// initialize components object
-		Components components = new Components();
 
-		// load constraint graph
-		loadGraph(components, settings);
+			// initialize components object
+			Components components = new Components();
 
-		// load alphabet
-		loadAlphabet(components, settings);
+			// load constraint graph
+			loadGraph(components, settings);
 
-		// load solver
-		loadSolver(components, settings);
+			// load alphabet
+			loadAlphabet(components, settings);
 
-		// if graph or parser not loaded, abort program
-		if (components.getGraph() == null || components.getSolver() == null) {
-			return;
-		}
+			// load solver
+			loadSolver(components, settings);
 
-		// load parser
-		loadParser(components, settings);
+			// if graph or parser not loaded, abort program
+			if (components.getGraph() == null || components.getSolver() == null) {
+				return;
+			}
 
-		// load reporter
-		loadReporter(components, settings);
+			// load parser
+			loadParser(components, settings);
 
-		// if reporter not loaded, abort program
-		if (components.getReporter() == null) {
-			return;
-		}
+			// load reporter
+			loadReporter(components, settings);
 
-		// run reporter
-		components.getReporter().run();
-		
+			// if reporter not loaded, abort program
+			if (components.getReporter() == null) {
+				return;
+			}
+
+			// run reporter
+			components.getReporter().run();
+
 		} // end other solver type
-		
+
 	}
 
+	/*
+	 * loadAlphabet for concrete and blank solvers.
+	 */
 	private static void loadAlphabet(Components components, Settings settings) {
 
 		// declare alphabet variable
@@ -141,6 +228,9 @@ public class SolveMain {
 		components.setGraph(loadGraph(settings.getGraphFilePath(), setMinAlphabet));
 	}
 
+	/*
+	 * loadGraph for the concrete and blank solvers, needs to be public for dotgenerator, methodcount and cleargraph classes
+	 */
 	public static DirectedGraph<PrintConstraint, SymbolicEdge> loadGraph(String graphPath,
 			LambdaVoid1<String> setMinAlphabet) {
 
@@ -248,6 +338,9 @@ public class SolveMain {
 		return graph;
 	}
 
+	/*
+	 * loadParser for the concrete and blank solvers
+	 */
 	private static void loadParser(Components components, Settings settings) {
 
 		// create and store parser as component
@@ -255,6 +348,9 @@ public class SolveMain {
 
 	}
 
+	/*
+	 * loadReporter for the concrete and blank solvers
+	 */
 	private static void loadReporter(Components components, Settings settings) {
 
 		// get values from settings
@@ -289,6 +385,9 @@ public class SolveMain {
 		components.setReporter(reporter);
 	}
 
+	/*
+	 * loadSolver for use with concrete and blank solvers
+	 */
 	private static void loadSolver(Components components, Settings settings) {
 
 		// get needed info from settings object
@@ -331,9 +430,10 @@ public class SolveMain {
 		components.setSolver(solver);
 	}
 
-	// loadgraph version for use with input generation.
-	@SuppressWarnings("unchecked")
-	public static DirectedGraph<PrintConstraint, SymbolicEdge> loadGraph(String graphPath) {
+	/*
+	 * loadGraph for jsa and inverse solvers
+	 */
+	private static DirectedGraph<PrintConstraint, SymbolicEdge> loadGraph(String graphPath) {
 		// initialize variables
 
 		// init null graph object
@@ -447,8 +547,10 @@ public class SolveMain {
 		return graph;
 	} // end loadGraph
 	
-	
-	public static void run_Acyclic_Inverse_r3(DirectedGraph<PrintConstraint, SymbolicEdge> graph) {
+	/*
+	 * Run inverse solver
+	 */
+	private static void run_Acyclic_Inverse_r3(DirectedGraph<PrintConstraint, SymbolicEdge> graph) {
 		Model_Acyclic_Inverse_Manager mFactory 					= new Model_Acyclic_Inverse_Manager(alpha, initialBound);
 		Solver_Inverse<Model_Acyclic_Inverse> mSolver 		= new Solver_Inverse<Model_Acyclic_Inverse>(mFactory,	initialBound);
 		Parser_2<Model_Acyclic_Inverse> mParser 				= new Parser_2<Model_Acyclic_Inverse>(mSolver, debug);
@@ -457,6 +559,81 @@ public class SolveMain {
 		mReporter.run();
 	}
 	
+	/*
+	 * Solver = jsa, Automata = bounded, Reporter = model count
+	 */
+	private static void run_Bounded_Count(DirectedGraph<PrintConstraint, SymbolicEdge> graph) {
+		Model_Bounded_Manager mFactory = new Model_Bounded_Manager(alpha, initialBound);
+		Solver_Count<Model_Bounded> mSolver = new Solver_Count<Model_Bounded>(mFactory, initialBound);
+		Parser_2<Model_Bounded> mParser = new Parser_2<Model_Bounded>(mSolver, debug);
+		Reporter_Count<Model_Bounded> mReporter = new Reporter_Count<Model_Bounded>(graph, mParser, mSolver, debug);
+		mReporter.run();
+	}
+
+	/*
+	 * Solver = jsa, Automata = bounded, Reporter = sat
+	 */
+	private static void run_Bounded_SAT(DirectedGraph<PrintConstraint, SymbolicEdge> graph) {
+		Model_Bounded_Manager mFactory = new Model_Bounded_Manager(alpha, initialBound);
+		Solver<Model_Bounded> mSolver = new Solver<Model_Bounded>(mFactory, initialBound);
+		Parser_2<Model_Bounded> mParser = new Parser_2<Model_Bounded>(mSolver, debug);
+		Reporter_SAT<Model_Bounded> mReporter = new Reporter_SAT<Model_Bounded>(graph, mParser, mSolver, debug);
+		mReporter.run();
+	}
+
+	/*
+	 * Solver = jsa, Automata = acyclic, Reporter = model count
+	 */
+	private static void run_Acyclic_Count(DirectedGraph<PrintConstraint, SymbolicEdge> graph) {
+		Model_Acyclic_Manager mFactory = new Model_Acyclic_Manager(alpha, initialBound);
+		Solver_Count<Model_Acyclic> mSolver = new Solver_Count<Model_Acyclic>(mFactory, initialBound);
+		Parser_2<Model_Acyclic> mParser = new Parser_2<Model_Acyclic>(mSolver, debug);
+		Reporter_Count<Model_Acyclic> mReporter = new Reporter_Count<Model_Acyclic>(graph, mParser, mSolver, debug);
+		mReporter.run();
+	}
 	
+	/*
+	 * Solver = jsa, Automata = acyclic, Reporter = sat
+	 */
+	private static void run_Acyclic_SAT(DirectedGraph<PrintConstraint, SymbolicEdge> graph) {
+		Model_Acyclic_Manager mFactory = new Model_Acyclic_Manager(alpha, initialBound);
+		Solver<Model_Acyclic> mSolver = new Solver<Model_Acyclic>(mFactory, initialBound);
+		Parser_2<Model_Acyclic> mParser = new Parser_2<Model_Acyclic>(mSolver, debug);
+		Reporter_SAT<Model_Acyclic> mReporter = new Reporter_SAT<Model_Acyclic>(graph, mParser, mSolver, debug);
+		mReporter.run();
+	}
 	
+	/*
+	 * Solver = jsa, Automata = acyclic weighted, Reporter = model count
+	 */
+	private static void run_Weighted_Count(DirectedGraph<PrintConstraint, SymbolicEdge> graph) {
+		Model_Acyclic_Weighted_Manager mFactory = new Model_Acyclic_Weighted_Manager(alpha, initialBound);
+		Solver_Count<Model_Acyclic_Weighted> mSolver = new Solver_Count<Model_Acyclic_Weighted>(mFactory, initialBound);
+		Parser_2<Model_Acyclic_Weighted> mParser = new Parser_2<Model_Acyclic_Weighted>(mSolver, debug);
+		Reporter_Count<Model_Acyclic_Weighted> mReporter = new Reporter_Count<Model_Acyclic_Weighted>(graph, mParser, mSolver, debug);
+		mReporter.run();
+	}
+	
+	/*
+	 * Solver = jsa, Automata = acyclic weighted, Reporter = sat
+	 */
+	private static void run_Weighted_SAT(DirectedGraph<PrintConstraint, SymbolicEdge> graph) {
+		Model_Acyclic_Weighted_Manager mFactory = new Model_Acyclic_Weighted_Manager(alpha, initialBound);
+		Solver_Count<Model_Acyclic_Weighted> mSolver = new Solver_Count<Model_Acyclic_Weighted>(mFactory, initialBound);
+		Parser_2<Model_Acyclic_Weighted> mParser = new Parser_2<Model_Acyclic_Weighted>(mSolver, debug);
+		Reporter_SAT<Model_Acyclic_Weighted> mReporter = new Reporter_SAT<Model_Acyclic_Weighted>(graph, mParser, mSolver, debug);
+		mReporter.run();
+	}
+	
+	private static void printHeader (String graph, int length, String solver, String reporter, String automata) {
+		
+		if (header) {
+		System.out.println("Using input graph.... : " + graph);
+		System.out.println("Using input length... : " + length);
+		System.out.println("Using solver......... : " + solver);
+		System.out.println("Using reporter....... : " + reporter);
+		System.out.println("Using automata....... : " + automata + "\n");
+		}
+		
+	}
 }

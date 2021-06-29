@@ -98,10 +98,6 @@ class CommandLine {
                 settings.setSolverType(Settings.SolverType.CONCRETE);
             } else if (choice.equals("jsa")) {
                 settings.setSolverType(Settings.SolverType.JSA);
-            } else if (choice.equals("stranger")) {
-                settings.setSolverType(Settings.SolverType.STRANGER);
-            } else if (choice.equals("z3")) {
-                settings.setSolverType(Settings.SolverType.Z3);
             } else if (choice.equals("inverse")) { 
                	settings.setSolverType(Settings.SolverType.INVERSE);
             } else {
@@ -114,9 +110,20 @@ class CommandLine {
                 return null;
             }
 
-            if (commandLine.hasOption("o")) {
-                settings.setOld();
-            }
+//            if (commandLine.hasOption("o")) {
+//                settings.setOld();
+//            }
+        }
+        
+        if (commandLine.hasOption("v")) {
+        	if (settings.getAutomatonModelVersion() > 3 || settings.getAutomatonModelVersion() < 1) {
+                String errorMessage = String.format(
+                        "The specified automata type is invalid " +
+                        "Please use the -h or --help option to see " +
+                        "the valid types");
+                System.err.println(errorMessage);
+                return null;
+        	}
         }
 
         // process reporter option
@@ -133,7 +140,7 @@ class CommandLine {
             } else {
 
                 String errorMessage = String.format(
-                        "The specified solver \"%s\" is not a recognized " +
+                        "The specified reporter \"%s\" is not a recognized " +
                         "reporter, please use the -h or --help option to see " +
                         "the valid reporters",
                         choice);
@@ -189,7 +196,7 @@ class CommandLine {
 
         // first example explanation
         footer.append("\n\nRun sat reporter for the iText02.json constraint")
-              .append(" graph file using the JSA solver with unbounded")
+              .append(" graph file using the JSA solver with bounded")
               .append(" automata and an initial bounding length of 10.");
 
         // second example
@@ -211,7 +218,7 @@ class CommandLine {
 
         // additional information description
         footer.append("\n\nSee the code repository at https://github.com/")
-              .append("BoiseState/string-constraint-solvers for more ")
+              .append("BoiseState/string-constraint-counting for more ")
               .append("details.\n");
 
         formatter.printHelp(appClass + " <Graph File>",
@@ -239,7 +246,7 @@ class CommandLine {
         Option solver = Option.builder("s")
                               .longOpt("solver")
                               .desc("The solver that will be used to solve " +
-                                    "string constraints:\n" +
+                                    "string constraints:\n\n" +
                                     Settings.SolverType.BLANK +
                                     " - The blank solver used for testing" +
                                     ".\n" +
@@ -249,13 +256,11 @@ class CommandLine {
                                     Settings.SolverType.JSA +
                                     " - The Java String Analyzer solver which" +
                                     " comes from the dk.brics automaton and " +
-                                    "string libraries.\n" +
-                                    Settings.SolverType.STRANGER +
-                                    " - The STRANGER string constraint solver" +
-                                    ".\n" +
-                                    Settings.SolverType.Z3 +
-                                    " - The Z3 rule based string constraint " +
-                                    "solver.\n\nThe default solver is " +
+                                    "string libraries.\n" + 
+                                    Settings.SolverType.INVERSE +
+                                    " - Input generation solver. Reporter and" +
+                                    " automata types are ignored with this solver.\n" +
+                                    " \nThe default solver is " +
                                     Settings.SolverType.DEFAULT +
                                     "\n")
                               .hasArg()
@@ -305,8 +310,8 @@ class CommandLine {
                               .longOpt("length")
                               .desc("Initial bounding length of the " +
                                     "underlying symbolic string, used with " +
-                                    "JSA ans Concrete solvers. Default value " +
-                                    "is " +
+                                    "JSA, inverse and Concrete solvers. " +
+                                    "Default value is " +
                                     Settings.DEFAULT_BOUNDING_LENGTH + ".")
                               .hasArg()
                               .numberOfArgs(1)
@@ -318,20 +323,18 @@ class CommandLine {
                                     .longOpt("model-version")
                                     .desc("The version of the automaton model" +
                                           " used by the JSA string constraint" +
-                                          " solver:\n1 - Unbounded Automaton" +
-                                          " Model\n2 - Bounded Automaton" +
-                                          " Model\n3 - Aggregate Bounded" +
-                                          " Automata Model\n4 - Weighted" +
-                                          " Bounded Automaton Model")
+                                          " solver:\n1 - Bounded Automaton" +
+                                          " Model\n2 - Acyclic Automaton" +
+                                          " Model\n3 - Acyclic Weighted Automaton")
                                     .hasArg()
                                     .numberOfArgs(1)
                                     .argName("version")
                                     .build();
 
-        Option old = Option.builder("o")
-                           .longOpt("old")
-                           .desc("Runs older version of jsa solver")
-                           .build();
+//        Option old = Option.builder("o")
+//                           .longOpt("old")
+//                           .desc("Runs older version of jsa solver")
+//                           .build();
 
         // add each option to options collection
         Options options = new Options();
@@ -341,7 +344,7 @@ class CommandLine {
         options.addOption(modelVersion);
         options.addOption(solver);
         options.addOption(reporter);
-        options.addOption(old);
+//        options.addOption(old);
 
         // return options
         return options;

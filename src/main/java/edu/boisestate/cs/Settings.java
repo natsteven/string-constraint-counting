@@ -15,7 +15,7 @@ public class Settings {
     private String graphFilePath;
     private int initialBoundingLength;
     private String minAlphabet;
-    private boolean old;
+    private boolean old = false;
     private ReportType reportType;
     private SolverType solverType;
 
@@ -126,8 +126,8 @@ public class Settings {
         BLANK("Blank"),
         CONCRETE("Concrete"),
         JSA("JSA"),
-        STRANGER("Stranger"),
-        Z3("Z3"),
+//        STRANGER("Stranger"),
+//        Z3("Z3"),
         INVERSE("Inverse");
         
         public static SolverType DEFAULT = SolverType.JSA;
