@@ -851,18 +851,30 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 	 * Steps through individual states and transitions in both model and regex
 	 * automaton to find matches between the two and account for transition ranges.
 	 * 
-	 * Initial call MUST start with str = "" and visitedStates as an empty HashMap.
+	 * Initial call MUST start with str = "", solutionUpstream = false, and
+	 * visitedStates as an empty HashMap.
 	 * 
-	 * @param targetState   - Current state of target automata
-	 * @param regexState    - Current state of regex automata
-	 * @param str           - Current accepted string value
-	 * @param visitedStates - HashMap of all visited states in the current iteration
-	 *                      or branch
+	 * @param targetState      - Current state of target automata
+	 * @param regexState       - Current state of regex automata
+	 * @param str              - Current accepted string value
+	 * @param visitedStates    - HashMap of all visited states in the current
+	 *                         iteration or branch
+	 * @param solutionUpstream - True ifan upstream iteration has already reached an
+	 *                         accepted regex state. Used to avoid loops
 	 * @return - Concrete string value which is both found in the target automata
 	 *         and satisfies the regex. Otherwise, null if there is no solution
 	 */
 	public String findConcreteString(State targetState, State regexState, String str,
-			HashMap<Integer, Integer> visitedStates) {
+			HashMap<Integer, Integer> visitedStates, boolean solutionUpstream) {
+		// if targetState has already been visited once and a solution has been found
+		// upstream, this means a loop has been found which contains a solution. return
+		// null to avoid looping more than necessary
+		if (solutionUpstream && visitedStates.get(targetState.hashCode()) != null
+				&& visitedStates.get(targetState.hashCode()) == 1)
+			if (regexState.isAccept())
+				return str;
+			else
+				return null;
 		// for each transition, check if its destination state has been visited,
 		// or if it has already been visited twice
 		for (Transition targetTrans : targetState.getTransitions()) {
@@ -877,7 +889,7 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 					if (sharedTransition != null) {
 						// call method on itself for next iteration
 						String downstreamResult = findConcreteString(targetTrans.getDest(), regexTrans.getDest(),
-								str + sharedTransition, visitState(targetState, visitedStates));
+								str + sharedTransition, visitState(targetState, visitedStates), regexState.isAccept());
 						// if recursive call returns a value, then a solution has been found. Return
 						// this solution to the top
 						if (downstreamResult != null)
@@ -899,7 +911,7 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 		// for each possible transition, recursively call this method on the next state
 		for (Transition targetTrans : targetState.getTransitions()) {
 			String downstreamResult = findConcreteString(targetTrans.getDest(), regexState, str,
-					visitState(targetState, visitedStates));
+					visitState(targetState, visitedStates), regexState.isAccept());
 			// if recursive call returns a value, then a solution has been found. Return
 			// this solution to the top
 			if (downstreamResult != null)

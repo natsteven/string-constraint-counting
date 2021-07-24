@@ -17,9 +17,9 @@ public class DebugMain {
 		// create manager with given alphabet and an initial bound of 5
 		Model_Bounded_Manager mFactory = new Model_Bounded_Manager(alpha, 5);
 		Model_Bounded model = mFactory.createFromRegex(regex);
-		Automaton a1 = new RegExp("a(b|c)deeef").toAutomaton();
-		Automaton a2 = new RegExp("(cde|(e)*)").toAutomaton();
-		System.out.println(model.findConcreteString(a1.getInitialState(), a2.getInitialState(), "", new HashMap<Integer, Integer>()));
+		Automaton a1 = new RegExp("ab(defb)*c").toAutomaton();
+		Automaton a2 = new RegExp("(bdef)*").toAutomaton();
+		System.out.println(model.findConcreteString(a1.getInitialState(), a2.getInitialState(), "", new HashMap<Integer, Integer>(), false));
 	}
 
 }
