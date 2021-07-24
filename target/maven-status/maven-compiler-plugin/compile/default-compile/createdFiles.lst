@@ -33,7 +33,6 @@ edu\boisestate\cs\automatonModel\AcyclicWeightedAutomatonModelManager.class
 edu\boisestate\cs\automatonModel\AggregateAutomataModel.class
 edu\boisestate\cs\automatonModel\operations\weighted\UnaryWeightedOperation.class
 edu\boisestate\cs\automatonModel\AggregateAutomataModel$5.class
-edu\boisestate\cs\automatonModel\BoundedAutomatonModel.class
 edu\boisestate\cs\graph\generator\Node$1.class
 edu\boisestate\cs\util\Testing.class
 edu\boisestate\cs\automatonModel\AggregateAutomatonModelManager.class
@@ -46,6 +45,7 @@ edu\boisestate\cs\automatonModel\operations\PreciseSetCharAt.class
 edu\boisestate\cs\stringRandom\RandomString.class
 edu\boisestate\cs\solvers\Solver_Inverse.class
 edu\boisestate\cs\util\Testing$sortByStringName.class
+edu\boisestate\cs\automatonModel\operations\Replace7$StateTransitionPair.class
 edu\boisestate\cs\reporting\SATReporter.class
 edu\boisestate\cs\graph\InvConstraintPredicate.class
 edu\boisestate\cs\automatonModel\operations\weighted\WeightedPreciseSetCharAt.class
@@ -74,6 +74,7 @@ edu\boisestate\cs\automatonModel\operations\BinaryAutomatonOp.class
 edu\boisestate\cs\Parser_2.class
 edu\boisestate\cs\automatonModel\UnboundedAutomatonModelManager.class
 edu\boisestate\cs\graph\generator\GenerateConstraint.class
+edu\boisestate\cs\automatonModel\operations\Replace7.class
 edu\boisestate\cs\automaton\RegExp$Kind.class
 edu\boisestate\cs\solvers\ConcreteSolver.class
 edu\boisestate\cs\solvers\MCAutomatonModelSolver.class
@@ -116,6 +117,7 @@ edu\boisestate\cs\solvers\A_Solver_Extended.class
 edu\boisestate\cs\util\Testing$2.class
 edu\boisestate\cs\Components.class
 edu\boisestate\cs\automatonModel\I_Model_Inverse.class
+edu\boisestate\cs\automatonModel\operations\Replace7$ConstrainedEpsilon.class
 edu\boisestate\cs\automaton\ShuffleOperations.class
 edu\boisestate\cs\automatonModel\A_Model.class
 edu\boisestate\cs\automatonModel\I_Model.class
