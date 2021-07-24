@@ -859,7 +859,7 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 	 * @param str              - Current accepted string value
 	 * @param visitedStates    - HashMap of all visited states in the current
 	 *                         iteration or branch
-	 * @param solutionUpstream - True ifan upstream iteration has already reached an
+	 * @param solutionUpstream - True if an upstream iteration has already reached an
 	 *                         accepted regex state. Used to avoid loops
 	 * @return - Concrete string value which is both found in the target automata
 	 *         and satisfies the regex. Otherwise, null if there is no solution
