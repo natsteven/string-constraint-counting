@@ -1027,6 +1027,7 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 			else
 				result = result.union(a);
 		}
+		result.minimize();
 		// return the result automaton in a Model_Bounded wrapper
 		return new Model_Bounded(result, this.alphabet, this.boundLength);
 	}
