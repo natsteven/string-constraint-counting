@@ -817,31 +817,37 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 	}
 
 	/**
-	 * Replaces all strings in automaton accepted by the regex with replacement.
+	 * Given a regex and a replacement String, iterate through all possible
+	 * solutions of the target automaton. For each solution, run
+	 * String.replaceAll(regex, String). Convert this String into an automaton,
+	 * then union said automaton with the result automaton. Return the final
+	 * automaton.
 	 * 
-	 * @param regexString - Regex to be found in our automaton
-	 * @param replacement - String to replace all occurrences of regex
-	 * @return Model of automaton with replaced strings
+	 * @param regexString - String storing the regex to be used
+	 * @param replacement - String to replace occurrences of the regex
+	 * @return - Model_Bounded object containing the resulting automaton
 	 */
-//	public Model_Bounded replaceAll(String regexString, String replacement) {
-//		// instantiate a new Model_Bounded
-//		Model_Bounded model = new Model_Bounded(this.automaton, this.alphabet, this.boundLength);
-//		// instantiate regex to an automaton
-//		RegExp regex = new RegExp(regexString);
-//		Automaton regexAutomaton = regex.toAutomaton();
-//		do {
-//			// check if the regex is contained inside the mode automaton
-//			String concreteString = findConcreteString(model, regexAutomaton, "");
-//			// if it isn't end the loop
-//			if (concreteString.equals(""))
-//				break;
-//			else
-//				// if it is, replace it, then check again
-//				model = replace(concreteString, replacement);
-//		} while (true);
-//		// NOTE: this method does not account for the possibility of an infinite loop
-//		return model;
-//	}
+	public Model_Bounded replaceAll(String regexString, String replacement) {
+		// get the set of all possible finite solutions for the automaton
+		Set<String> solutions = this.automaton.getFiniteStrings();
+		// if the automaton as an infinite language, return the unmodified automaton
+		if (solutions == null)
+			return new Model_Bounded(this.automaton, this.alphabet, this.boundLength);
+		// start with an empty automaton
+		Automaton result = Automaton.makeEmpty();
+		// for each solution, replace all occurrence of the regex and concatenate
+		// it with the result automaton
+		for (String str : solutions) {
+			Automaton a = BasicAutomata.makeString(str.replaceAll(regexString, replacement));
+			if (result.isEmpty())
+				result = a;
+			else
+				result = result.union(a);
+		}
+		result.minimize();
+		// return the result automaton in a Model_Bounded wrapper
+		return new Model_Bounded(result, this.alphabet, this.boundLength);
+	}
 
 	/**
 	 * Finds a concrete string which matches the regex. In essence, finds a symbolic
@@ -859,151 +865,171 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 	 * @param str              - Current accepted string value
 	 * @param visitedStates    - HashMap of all visited states in the current
 	 *                         iteration or branch
-	 * @param solutionUpstream - True if an upstream iteration has already reached an
-	 *                         accepted regex state. Used to avoid loops
+	 * @param solutionUpstream - True if an upstream iteration has already reached
+	 *                         an accepted regex state. Used to avoid loops
 	 * @return - Concrete string value which is both found in the target automata
 	 *         and satisfies the regex. Otherwise, null if there is no solution
 	 */
-	public String findConcreteString(State targetState, State regexState, String str,
-			HashMap<Integer, Integer> visitedStates, boolean solutionUpstream) {
-		// if targetState has already been visited once and a solution has been found
-		// upstream, this means a loop has been found which contains a solution. return
-		// null to avoid looping more than necessary
-		if (solutionUpstream && visitedStates.get(targetState.hashCode()) != null
-				&& visitedStates.get(targetState.hashCode()) == 1)
-			if (regexState.isAccept())
-				return str;
-			else
-				return null;
-		// for each transition, check if its destination state has been visited,
-		// or if it has already been visited twice
-		for (Transition targetTrans : targetState.getTransitions()) {
-			int targetHashCode = targetTrans.getDest().hashCode();
-			Integer value = visitedStates.get(targetHashCode);
-			if (value == null || value != 2) {
-				// for each next regex transition, if the target transition is a subset of the
-				// regex transition
-				for (Transition regexTrans : regexState.getTransitions()) {
-					// if there exists a transition value shared between the two transitions
-					String sharedTransition = getSharedTransition(targetTrans, regexTrans);
-					if (sharedTransition != null) {
-						// call method on itself for next iteration
-						String downstreamResult = findConcreteString(targetTrans.getDest(), regexTrans.getDest(),
-								str + sharedTransition, visitState(targetState, visitedStates), regexState.isAccept());
-						// if recursive call returns a value, then a solution has been found. Return
-						// this solution to the top
-						if (downstreamResult != null)
-							return downstreamResult;
-					}
-				}
-			}
-		}
-		// does the current str satisfy the regex?
-		if (!str.equals("") && regexState.isAccept())
-			return str;
-		// at this point in the method, all satisfactory transitions have been explored.
-		// Getting this far means that there is no solution downstream with the current
-		// value of str
-		// If str is not null, then return null, as the current path is dead
-		if (!str.equals(""))
-			return null;
-		// if str is null, keep exploring any possibilities
-		// for each possible transition, recursively call this method on the next state
-		for (Transition targetTrans : targetState.getTransitions()) {
-			String downstreamResult = findConcreteString(targetTrans.getDest(), regexState, str,
-					visitState(targetState, visitedStates), regexState.isAccept());
-			// if recursive call returns a value, then a solution has been found. Return
-			// this solution to the top
-			if (downstreamResult != null)
-				return downstreamResult;
-		}
-		// If this point has been reached in the method, it means there are no possible
-		// solutions downstream from the current state. Return null to signify that this
-		// path is dead
-		return null;
-	}
-
-	/**
-	 * Checks if the two transitions have any shared character in their ranges. If
-	 * they do, the first shared character is returned as a String.
-	 * 
-	 * @param trans1 - First transition to be checked
-	 * @param trans2 - Second transition to be checked
-	 * @return - Shared character if it exists. Otherwise, null
-	 */
-	private String getSharedTransition(Transition trans1, Transition trans2) {
-		// get range of each transition as a String
-		String range1 = getCharRange(trans1.getMin(), trans1.getMax());
-		String range2 = getCharRange(trans2.getMin(), trans2.getMax());
-		if (range1 == null || range2 == null)
-			return null;
-		// for each character in range 1, check if it is also contained in range2
-		for (int i = 0; i < range1.length(); i++)
-			if (range2.contains(range1.substring(i, i + 1)))
-				// if the character at index i is contained in both strings, then return the
-				// character
-				return range1.substring(i, i + 1);
-		// if the transitions have no shared characters, return null
-		return null;
-	}
-
-	/**
-	 * Gets the range between the min and max characters and returns it as a String.
-	 * 
-	 * @param min - Minimum char value
-	 * @param max - Maximum char value
-	 * @return - Range in String form if possible, otherwise null
-	 */
-	private String getCharRange(char min, char max) {
-		if (min > max)
-			return null;
-		String result = "";
-		while (min <= max)
-			result += min++;
-		return result;
-	}
-
-	/**
-	 * Returns an updates version of visitedStates to reflect visiting the current
-	 * state. Returns null if the current state has already been visited twice.
-	 * 
-	 * @param state         - State to be visited
-	 * @param visitedStates - HashMap of already visited states to be updated
-	 * @return - Updated HashMap of visited states
-	 */
-	private static HashMap<Integer, Integer> visitState(State state, HashMap<Integer, Integer> visitedStates) {
-		// if state has not already been visited twice
-		if (visitedStates.get(state.hashCode()) == null || visitedStates.get(state.hashCode()) < 2) {
-			// copy all entries from visitedStates to updatedVisitedStates
-			HashMap<Integer, Integer> updatedVisitedStates = new HashMap<Integer, Integer>();
-			Set<Entry<Integer, Integer>> entries = visitedStates.entrySet();
-			for (Entry<Integer, Integer> entry : entries) {
-				updatedVisitedStates.put(entry.getKey(), entry.getValue());
-			}
-			// add/increment state to be visited in the updated hash map
-			if (updatedVisitedStates.get(state.hashCode()) == null)
-				updatedVisitedStates.put(state.hashCode(), 1);
-			else
-				updatedVisitedStates.put(state.hashCode(), 2);
-			return updatedVisitedStates;
-		} else {
-			// if the state has already been visited twice, it cannot be visited again.
-			// return null
-			return null;
-		}
-	}
-
-//	public Model_Bounded replaceFirst(String regexString, String replacement) {
-//		// instantiate automaton
-//		Model_Bounded model = new Model_Bounded(this.automaton, this.alphabet, this.boundLength);
-//		RegExp regex = new RegExp(regexString);
-//		Automaton regexAutomaton = regex.toAutomaton();
-//		String concreteString = findConcreteString(model, regexAutomaton, "");
-//		// if desired regex is not contained in model, return model as is
-//		if (concreteString.equals(""))
-//			return model;
-//		return model.replace(concreteString, replacement);
+//	public String findConcreteString(State targetState, State regexState, String str,
+//			HashMap<Integer, Integer> visitedStates, boolean solutionUpstream) {
+//		// if targetState has already been visited once and a solution has been found
+//		// upstream, this means a loop has been found which contains a solution. return
+//		// null to avoid looping more than necessary
+//		if (solutionUpstream && visitedStates.get(targetState.hashCode()) != null
+//				&& visitedStates.get(targetState.hashCode()) == 1)
+//			if (regexState.isAccept())
+//				return str;
+//			else
+//				return null;
+//		// for each transition, check if its destination state has been visited,
+//		// or if it has already been visited twice
+//		for (Transition targetTrans : targetState.getTransitions()) {
+//			int targetHashCode = targetTrans.getDest().hashCode();
+//			Integer value = visitedStates.get(targetHashCode);
+//			if (value == null || value != 2) {
+//				// for each next regex transition, if the target transition is a subset of the
+//				// regex transition
+//				for (Transition regexTrans : regexState.getTransitions()) {
+//					// if there exists a transition value shared between the two transitions
+//					String sharedTransition = getSharedTransition(targetTrans, regexTrans);
+//					if (sharedTransition != null) {
+//						// call method on itself for next iteration
+//						String downstreamResult = findConcreteString(targetTrans.getDest(), regexTrans.getDest(),
+//								str + sharedTransition, visitState(targetState, visitedStates), regexState.isAccept());
+//						// if recursive call returns a value, then a solution has been found. Return
+//						// this solution to the top
+//						if (downstreamResult != null)
+//							return downstreamResult;
+//					}
+//				}
+//			}
+//		}
+//		// does the current str satisfy the regex?
+//		if (!str.equals("") && regexState.isAccept())
+//			return str;
+//		// at this point in the method, all satisfactory transitions have been explored.
+//		// Getting this far means that there is no solution downstream with the current
+//		// value of str
+//		// If str is not null, then return null, as the current path is dead
+//		if (!str.equals(""))
+//			return null;
+//		// if str is null, keep exploring any possibilities
+//		// for each possible transition, recursively call this method on the next state
+//		for (Transition targetTrans : targetState.getTransitions()) {
+//			String downstreamResult = findConcreteString(targetTrans.getDest(), regexState, str,
+//					visitState(targetState, visitedStates), regexState.isAccept());
+//			// if recursive call returns a value, then a solution has been found. Return
+//			// this solution to the top
+//			if (downstreamResult != null)
+//				return downstreamResult;
+//		}
+//		// If this point has been reached in the method, it means there are no possible
+//		// solutions downstream from the current state. Return null to signify that this
+//		// path is dead
+//		return null;
 //	}
+//
+//	/**
+//	 * Checks if the two transitions have any shared character in their ranges. If
+//	 * they do, the first shared character is returned as a String.
+//	 * 
+//	 * @param trans1 - First transition to be checked
+//	 * @param trans2 - Second transition to be checked
+//	 * @return - Shared character if it exists. Otherwise, null
+//	 */
+//	private String getSharedTransition(Transition trans1, Transition trans2) {
+//		// get range of each transition as a String
+//		String range1 = getCharRange(trans1.getMin(), trans1.getMax());
+//		String range2 = getCharRange(trans2.getMin(), trans2.getMax());
+//		if (range1 == null || range2 == null)
+//			return null;
+//		// for each character in range 1, check if it is also contained in range2
+//		for (int i = 0; i < range1.length(); i++)
+//			if (range2.contains(range1.substring(i, i + 1)))
+//				// if the character at index i is contained in both strings, then return the
+//				// character
+//				return range1.substring(i, i + 1);
+//		// if the transitions have no shared characters, return null
+//		return null;
+//	}
+//
+//	/**
+//	 * Gets the range between the min and max characters and returns it as a String.
+//	 * 
+//	 * @param min - Minimum char value
+//	 * @param max - Maximum char value
+//	 * @return - Range in String form if possible, otherwise null
+//	 */
+//	private String getCharRange(char min, char max) {
+//		if (min > max)
+//			return null;
+//		String result = "";
+//		while (min <= max)
+//			result += min++;
+//		return result;
+//	}
+//
+//	/**
+//	 * Returns an updates version of visitedStates to reflect visiting the current
+//	 * state. Returns null if the current state has already been visited twice.
+//	 * 
+//	 * @param state         - State to be visited
+//	 * @param visitedStates - HashMap of already visited states to be updated
+//	 * @return - Updated HashMap of visited states
+//	 */
+//	private static HashMap<Integer, Integer> visitState(State state, HashMap<Integer, Integer> visitedStates) {
+//		// if state has not already been visited twice
+//		if (visitedStates.get(state.hashCode()) == null || visitedStates.get(state.hashCode()) < 2) {
+//			// copy all entries from visitedStates to updatedVisitedStates
+//			HashMap<Integer, Integer> updatedVisitedStates = new HashMap<Integer, Integer>();
+//			Set<Entry<Integer, Integer>> entries = visitedStates.entrySet();
+//			for (Entry<Integer, Integer> entry : entries) {
+//				updatedVisitedStates.put(entry.getKey(), entry.getValue());
+//			}
+//			// add/increment state to be visited in the updated hash map
+//			if (updatedVisitedStates.get(state.hashCode()) == null)
+//				updatedVisitedStates.put(state.hashCode(), 1);
+//			else
+//				updatedVisitedStates.put(state.hashCode(), 2);
+//			return updatedVisitedStates;
+//		} else {
+//			// if the state has already been visited twice, it cannot be visited again.
+//			// return null
+//			return null;
+//		}
+//	}
+
+	/**
+	 * Given a regex and a replacement String, iterate through all possible
+	 * solutions of the target automaton. For each solution, run
+	 * String.replaceFirst(regex, String). Convert this String into an automaton,
+	 * then union said automaton with the result automaton. Return the final
+	 * automaton.
+	 * 
+	 * @param regexString - String storing the regex to be used
+	 * @param replacement - String to replace occurrences of the regex
+	 * @return - Model_Bounded object containing the resulting automaton
+	 */
+	public Model_Bounded replaceFirst(String regexString, String replacement) {
+		// get the set of all possible finite solutions for the automaton
+		Set<String> solutions = this.automaton.getFiniteStrings();
+		// if the automaton as an infinite language, return the unmodified automaton
+		if (solutions == null)
+			return new Model_Bounded(this.automaton, this.alphabet, this.boundLength);
+		// start with an empty automaton
+		Automaton result = Automaton.makeEmpty();
+		// for each solution, replace the first occurrence of the regex and concatenate
+		// it with the result automaton
+		for (String str : solutions) {
+			Automaton a = BasicAutomata.makeString(str.replaceFirst(regexString, replacement));
+			if (result.isEmpty())
+				result = a;
+			else
+				result = result.union(a);
+		}
+		// return the result automaton in a Model_Bounded wrapper
+		return new Model_Bounded(result, this.alphabet, this.boundLength);
+	}
 
 //	private Model_Bounded replaceFirstString(String find, String replace) {
 //
