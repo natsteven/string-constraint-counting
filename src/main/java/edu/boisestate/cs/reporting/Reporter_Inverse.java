@@ -47,7 +47,8 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
     private final Solver_Inverse<T> invSolver;
 	protected Map<Integer,PrintConstraint> allConstraints = new HashMap<>();
 	protected Map<Integer,I_Inv_Constraint<T>> allInverseConstraints = new HashMap<>();
-	protected Map<Integer,SolutionSet<T>> inputSolutions = new HashMap<>();
+	//protected Map<Integer,SolutionSet<T>> inputSolutions = new HashMap<>();
+	protected Map<Integer,T> inputSolution = new HashMap<>();
 	protected Map<Integer,Integer> inputIndexes = new HashMap<>();
 	protected List<Integer> predicateIDs = new ArrayList<>();
 	private boolean saveResults = false;
@@ -288,6 +289,8 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 
         // build the transposed graph of inverse constraints
         buildICG_r3();
+        
+        solveInputs();
 
         // output finalized inverse constraints for debug
 //        if (true) {
@@ -325,10 +328,17 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         	SPFInputs.SAT = true;
 
         	// for every solutionset, get possible strings, select one, add it to SPFInputSet
-        	for (SolutionSet<T> ss : inputSolutions.values()) {
+//        	for (SolutionSet<T> ss : inputSolutions.values()) {
+//        		SPFInput SPFInput = new SPFInput();
+//        		SPFInput.ID = ss.getID();
+//        		SPFInput.input = ss.getSolution().getShortestExampleString();
+//        		SPFInputs.inputSet.add(SPFInput);
+//        	}
+        	
+        	for (Integer i : inputSolution.keySet()) {
         		SPFInput SPFInput = new SPFInput();
-        		SPFInput.ID = ss.getID();
-        		SPFInput.input = ss.getSolution().getShortestExampleString();
+        		SPFInput.ID = i;
+        		SPFInput.input = inputSolution.get(i).getShortestExampleString();
         		SPFInputs.inputSet.add(SPFInput);
         	}
 
@@ -621,6 +631,9 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         for (I_Inv_Constraint<T> i : allInverseConstraints.values()) {
         	if (i.getOp() == Operation.INIT_SYM) {
         		T solution = i.getSolution();
+        		
+        		// populate map for output to file/SPF
+        		inputSolution.put(i.getID(), solution);
         		
         		System.out.print("INPUT ID: " + i.getID() + "  COUNT: " + solution.modelCount() + "  VALUE(S): ");
         		BigInteger limit = new BigInteger("300");

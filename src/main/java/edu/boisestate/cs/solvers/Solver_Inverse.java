@@ -121,11 +121,11 @@ public class Solver_Inverse<T extends A_Model_Inverse<T>> extends Solver_Count<T
 		
 	}
 
-	@Override
-	public void inv_deleteCharAt(int id, int base, int loc) {
+//	@Override
+//	public void inv_deleteCharAt(int id, int base, int loc) {
 		// TODO Auto-generated method stub
 		
-	}
+//	}
 
 	/**
 	 * R3 Version 
@@ -212,12 +212,18 @@ public class Solver_Inverse<T extends A_Model_Inverse<T>> extends Solver_Count<T
 		
 	}
 
-	@Override // TODO REPLACE with r3 model
-	public void inv_reverse(int id, int base) {
+	
+	/**
+	 * R3 Version 
+	 * Returns result T
+	 * 
+	 * 03/18/2021 MJR
+	 */
+	@Override 
+	public T inv_reverse(T input) {
 		
-		T baseModel = invStringMap.get(base);
-		T resultModel = baseModel.inv_reverse();
-		invStringMap.put(id, resultModel);
+		T resultModel = input.reverse();
+		return resultModel;
 		
 	}
 
