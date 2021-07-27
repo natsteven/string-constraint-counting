@@ -73,11 +73,11 @@ public class InputSolver {
 		
 		//run_Bounded_Count(graph);
 		//run_Bounded_SAT(graph);
-		//run_Acyclic_Inverse_r3(graph); 
+		run_Acyclic_Inverse_r3(graph); 
 		//run_Acyclic_Count(graph);
 		//run_Acyclic_SAT(graph);
 		//run_Weighted_Count(graph);
-		run_Weighted_SAT(graph);
+		//run_Weighted_SAT(graph);
 		
 	}
 

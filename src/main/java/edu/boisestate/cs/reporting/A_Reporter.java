@@ -218,7 +218,7 @@ abstract public class A_Reporter <T extends A_Model<T>> {
             }
         }
        
-        solveInputs();
+        //solveInputs();
         
         // shut down solver
         solver.shutDown();
