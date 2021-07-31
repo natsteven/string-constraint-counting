@@ -20,6 +20,7 @@ import edu.boisestate.cs.automatonModel.Model_Acyclic_Weighted;
 import edu.boisestate.cs.automatonModel.Model_Acyclic_Weighted_Manager;
 import edu.boisestate.cs.automatonModel.Model_Bounded;
 import edu.boisestate.cs.automatonModel.Model_Bounded_Manager;
+import edu.boisestate.cs.graph.InvDefaultDirectedGraph;
 import edu.boisestate.cs.graph.PrintConstraint;
 import edu.boisestate.cs.graph.SymbolicEdge;
 import edu.boisestate.cs.reporting.MCReporter;
@@ -438,6 +439,8 @@ public class SolveMain {
 
 		// init null graph object
 		DirectedGraph<PrintConstraint, SymbolicEdge> graph = new DefaultDirectedGraph<>(SymbolicEdge.class);
+		//eas just a shadow graph for now
+		InvDefaultDirectedGraph graphExtra = new InvDefaultDirectedGraph(SymbolicEdge.class);
 
 		// create json object mapper
 		ObjectMapper mapper = new ObjectMapper();
@@ -525,6 +528,8 @@ public class SolveMain {
 				}
 				// add constraint to graph
 				graph.addVertex(constraint);
+				graphExtra.addVertex(constraint);
+				
 			} // end sourceConstraint for loop
 
 			// create edges in graph from edgeData
@@ -539,12 +544,20 @@ public class SolveMain {
 				// create symbolic edge in graph from data
 				SymbolicEdge edge = graph.addEdge(source, target);
 				edge.setType(type);
+				SymbolicEdge edgeExtra = graphExtra.addEdge(source, target);
+				edgeExtra.setType(type);
 			} // end edgeData for loop
 		} catch (IOException i) {
 			i.printStackTrace();
 		}
 
-		return graph;
+		//eas for efficient processing several predicates, we
+		//create a dependency map that indicate on which predicates a predicate is dependent
+		//we say that two predicates are dependent if there is a symbolic node among their common ancestors
+		
+		graphExtra.computePredicateDependencies();
+		//System.exit(1);
+		return graphExtra;
 	} // end loadGraph
 	
 	/*

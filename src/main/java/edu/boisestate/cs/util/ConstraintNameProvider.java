@@ -11,6 +11,11 @@ public class ConstraintNameProvider implements
         String value = constraint.getValue();
         value = value.replace("\\\"", "\"").replace("\"", "\\\"");
 //        value = value.replaceAll("[^\\\\]\\\\\"", "\\\"");
+        if(constraint.getActualVal().equals("false")) {
+        	value="F:"+value;
+        } else if (constraint.getActualVal().equals("true")){
+        	value = "T:" + value;
+        }
         return String.format("%s!-!%d", value, constraint.getId());
     }
 }
