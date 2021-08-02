@@ -132,7 +132,8 @@ public class SolveMain {
 					run_Acyclic_SAT(graph);
 
 				}
-
+				//eas: there is not point of having acyclic weighted for SAT - it will have the same
+				//precision as Acyclic but would take much more time - only use for testing purposes
 				if (settings.getAutomatonModelVersion() == 3) {
 					// jsa, weighted, sat
 					printHeader(inputFile, initialBound, "JSA", "SAT", "Acyclic Weighted");
@@ -144,9 +145,32 @@ public class SolveMain {
 
 			}
 
-		/*
-		 * The remaining types are the concrete and blank solvers, which currently use the non-typed classes.
-		 */
+		} else if (settings.getSolverType() == SolverType.CONCRETE) {
+			if (settings.getReportType() == ReportType.SAT) {
+				if(settings.getAutomatonModelVersion() == 1) {
+					//explicitly encodes sets of strings as an acyclic automaton would
+					printHeader(inputFile, initialBound, "Concrete", "SAT", "Acyclic");
+					DirectedGraph<PrintConstraint, SymbolicEdge> graph = loadGraph(inputFile);
+					//run_Concrete_Acyclic_SAT(graph);
+				} else if (settings.getAutomatonModelVersion() == 2) {
+					printHeader(inputFile, initialBound, "Concrete", "SAT", "Singleton");
+					DirectedGraph<PrintConstraint, SymbolicEdge> graph = loadGraph(inputFile);
+					run_Concrete_Singleton_SAT(graph);
+				}
+			} else if (settings.getReportType() == ReportType.MODEL_COUNT) {
+				if(settings.getAutomatonModelVersion() == 1) {
+					//explicitly encodes sets of strings as an acyclic automaton would
+					printHeader(inputFile, initialBound, "Concrete", "SAT", "Acyclic");
+					DirectedGraph<PrintConstraint, SymbolicEdge> graph = loadGraph(inputFile);
+					//run_Concrete_Acyclic_MC(graph);
+				} else if (settings.getAutomatonModelVersion() == 2) {
+					printHeader(inputFile, initialBound, "Concrete", "SAT", "Singleton");
+				}
+			}
+			
+			/*
+			 * The remaining types are the concrete and blank solvers, which currently use the non-typed classes.
+			 */
 		} else {
 
 			// initialize components object
@@ -183,6 +207,7 @@ public class SolveMain {
 		} // end other solver type
 
 	}
+
 
 	/*
 	 * loadAlphabet for concrete and blank solvers.
@@ -636,6 +661,17 @@ public class SolveMain {
 		Parser_2<Model_Acyclic_Weighted> mParser = new Parser_2<Model_Acyclic_Weighted>(mSolver, debug);
 		Reporter_SAT<Model_Acyclic_Weighted> mReporter = new Reporter_SAT<Model_Acyclic_Weighted>(graph, mParser, mSolver, debug);
 		mReporter.run();
+	}
+	
+	
+	/**
+	 * Solver = concrete, Automata = singleton, Reporter = sat
+	 * @param graph
+	 */
+	private static void run_Concrete_Singleton_SAT(DirectedGraph<PrintConstraint, SymbolicEdge> graph) {
+		//TODO: for eas
+		//the input values will be obtained from the graph itself
+		
 	}
 	
 	private static void printHeader (String graph, int length, String solver, String reporter, String automata) {
