@@ -20,6 +20,7 @@ import edu.boisestate.cs.automatonModel.Model_Acyclic_Weighted;
 import edu.boisestate.cs.automatonModel.Model_Acyclic_Weighted_Manager;
 import edu.boisestate.cs.automatonModel.Model_Bounded;
 import edu.boisestate.cs.automatonModel.Model_Bounded_Manager;
+import edu.boisestate.cs.automatonModel.Model_Concrete_Singleton_Manager;
 import edu.boisestate.cs.graph.InvDefaultDirectedGraph;
 import edu.boisestate.cs.graph.PrintConstraint;
 import edu.boisestate.cs.graph.SymbolicEdge;
@@ -671,6 +672,7 @@ public class SolveMain {
 	private static void run_Concrete_Singleton_SAT(DirectedGraph<PrintConstraint, SymbolicEdge> graph) {
 		//TODO: for eas
 		//the input values will be obtained from the graph itself
+		Model_Concrete_Singleton_Manager mFactory = new Model_Concrete_Singleton_Manager(alpha, initialBound);
 		
 	}
 	
