@@ -8,7 +8,7 @@ import edu.boisestate.cs.util.Tuple;
 
 public class Solver<T extends A_Model<T>> extends A_Solver_Extended<T> implements I_Solver<T> {
 
-    protected final A_Model_Manager<T> modelManager;
+    public final A_Model_Manager<T> modelManager;
 
     public Solver(A_Model_Manager<T> modelManager) {
         super();
@@ -80,7 +80,7 @@ public class Solver<T extends A_Model<T>> extends A_Solver_Extended<T> implement
         T argModel = this.symbolicStringMap.get(arg);
 
        // System.out.println("base " + base + " m\t" + baseModel + "\tresult " + result);
-        //System.out.println("arg " + arg + " m\t "  + argModel);
+       // System.out.println("arg " + arg + " m\t "  + argModel);
         // true branch
         if (result) {
 
@@ -374,7 +374,7 @@ public class Solver<T extends A_Model<T>> extends A_Solver_Extended<T> implement
 
         // get model
         T model = this.symbolicStringMap.get(id);
-
+        //System.out.println("model " + model + " id " + id);
         // return true if not empty
         return !model.isEmpty();
     }
@@ -384,7 +384,8 @@ public class Solver<T extends A_Model<T>> extends A_Solver_Extended<T> implement
 
         // get model
         T model = this.symbolicStringMap.get(id);
-        //System.out.println(model);
+        //System.out.println("model " + model + " id " + id);
+        //System.out.println(model.getAutomaton() + " val " + actualValue);
 
         // return singleton status
         return model.containsString(actualValue) && model.isSingleton();
@@ -392,7 +393,7 @@ public class Solver<T extends A_Model<T>> extends A_Solver_Extended<T> implement
 
     @Override
     public boolean isSingleton(int id) {
-
+    	// System.out.println("singleton " + id);
         // get model
         T model = this.symbolicStringMap.get(id);
 

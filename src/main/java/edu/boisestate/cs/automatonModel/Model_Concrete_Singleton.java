@@ -15,7 +15,7 @@ public class Model_Concrete_Singleton extends A_Model<Model_Concrete_Singleton >
 	}
 	
 	protected Model_Concrete_Singleton(String string) {
-		super(new Alphabet(string), string==null?0:string.length());
+		super(new Alphabet(string==null?"": string), string==null?0:string.length());
 		singleton = string;
 		
 	}
@@ -47,19 +47,19 @@ public class Model_Concrete_Singleton extends A_Model<Model_Concrete_Singleton >
 	@Override
 	public boolean isSingleton() {
 		// Singleton solver always operates only on one single string
-		return singleton==null? false : true;
+		return true; //singleton==null? false : true;
 	}
 
 	@Override
 	public Model_Concrete_Singleton assertContainedInOther(Model_Concrete_Singleton containingModel) {
 	
-		return singleton.equals(containingModel.getAutomaton())? new Model_Concrete_Singleton(singleton): new Model_Concrete_Singleton(null);
+		return containingModel.singleton!=null && containingModel.singleton.contains(singleton)? new Model_Concrete_Singleton(singleton): new Model_Concrete_Singleton(null);
 	}
 
 	@Override
 	public Model_Concrete_Singleton assertContainsOther(Model_Concrete_Singleton containedModel) {
 		
-		return singleton.equals(containedModel.getAutomaton())? new Model_Concrete_Singleton(singleton): new Model_Concrete_Singleton(null);
+		return singleton != null && singleton.contains(containedModel.getAutomaton())? new Model_Concrete_Singleton(singleton): new Model_Concrete_Singleton(null);
 	}
 
 	@Override
@@ -99,14 +99,14 @@ public class Model_Concrete_Singleton extends A_Model<Model_Concrete_Singleton >
 
 	@Override
 	public Model_Concrete_Singleton assertNotContainedInOther(Model_Concrete_Singleton notContainingModel) {
-		// TODO Auto-generated method stub
-		return null;
+		//System.out.println("notContaining");
+		return notContainingModel.singleton!=null && !notContainingModel.singleton.contains(singleton)? new Model_Concrete_Singleton(singleton): new Model_Concrete_Singleton(null);
 	}
 
 	@Override
 	public Model_Concrete_Singleton assertNotContainsOther(Model_Concrete_Singleton notContainedModel) {
-		// TODO Auto-generated method stub
-		return null;
+		//System.out.println("notContains");
+		return singleton!=null && !singleton.contains(notContainedModel.getAutomaton())? new Model_Concrete_Singleton(singleton): new Model_Concrete_Singleton(null);
 	}
 
 	@Override
@@ -165,8 +165,8 @@ public class Model_Concrete_Singleton extends A_Model<Model_Concrete_Singleton >
 
 	@Override
 	public Model_Concrete_Singleton concatenate(Model_Concrete_Singleton arg) {
-		// TODO Auto-generated method stub
-		return null;
+		//System.out.println("concat");
+		return new Model_Concrete_Singleton(singleton.concat(arg.singleton));
 	}
 
 	@Override
@@ -267,8 +267,8 @@ public class Model_Concrete_Singleton extends A_Model<Model_Concrete_Singleton >
 
 	@Override
 	public Model_Concrete_Singleton toLowercase() {
-		// TODO Auto-generated method stub
-		return null;
+		//System.out.println("toLowerCase");
+		return new Model_Concrete_Singleton(singleton.toLowerCase());
 	}
 
 	@Override

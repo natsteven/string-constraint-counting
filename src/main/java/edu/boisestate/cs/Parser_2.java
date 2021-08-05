@@ -1,6 +1,8 @@
 package edu.boisestate.cs;
 
 import edu.boisestate.cs.automatonModel.A_Model;
+import edu.boisestate.cs.automatonModel.Model_Concrete_Singleton;
+import edu.boisestate.cs.automatonModel.Model_Concrete_Singleton_Manager;
 import edu.boisestate.cs.graph.PrintConstraint;
 import edu.boisestate.cs.solvers.Solver;
 import static edu.boisestate.cs.graph.Operation.*;
@@ -1097,9 +1099,15 @@ public class Parser_2<T extends A_Model<T>> {
         if (value.startsWith("r") || value.startsWith("$r")) {
         	
         	constraint.setOp(INIT_SYM);
-        	//System.out.println("init..... " + id);
+        	//System.out.println("init..... " + id + " " + solver.getClass());
             // create new symbolic string for id
-            solver.newSymbolicString(id);
+        	if(solver.modelManager instanceof Model_Concrete_Singleton_Manager) {
+        		//singleton solver should look up its value in the graph
+        		solver.newConcreteString(id, actualValue);
+        		//System.out.println("setting value of " + id + " to " + actualValue);
+        	} else {
+        		solver.newSymbolicString(id);
+        	}
             return String.format("<S:%d> = <init>", id);
         }
 

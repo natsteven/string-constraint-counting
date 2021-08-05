@@ -3,6 +3,7 @@ package edu.boisestate.cs.reporting;
 //import edu.boisestate.cs.Parser;
 import edu.boisestate.cs.Parser_2;
 import edu.boisestate.cs.automatonModel.A_Model;
+import edu.boisestate.cs.automatonModel.Model_Concrete_Singleton_Manager;
 import edu.boisestate.cs.graph.PrintConstraint;
 import edu.boisestate.cs.graph.SymbolicEdge;
 //import edu.boisestate.cs.solvers.ExtendedSolver;
@@ -63,23 +64,12 @@ public class Reporter_SAT<T extends A_Model<T>> extends A_Reporter<T> {
         boolean trueSat = false;
         boolean falseSat = false;
 
-        // determine if symbolic strings are singletons
         
-        boolean argIsSingleton = false;
-        
-        // determine if symbolic strings are singletons
-        
-        if (arg != -1) {
-        	argIsSingleton = solver.isSingleton(sourceMap.get("s1"));
-        }
-        
-        if (solver.isSingleton(base, actualVal) &&
-            (sourceMap.get("s1") == null || argIsSingleton)) {
-            isSingleton = true;
-        }
 
         // store symbolic string values
         solver.setLast(base, arg);
+        
+ 
 
         // test if true branch is SAT
         parser.assertBooleanConstraint(true, constraint);
@@ -129,9 +119,31 @@ public class Reporter_SAT<T extends A_Model<T>> extends A_Reporter<T> {
         if (solver.isSatisfiable(base)) {
             disjoint = "no";
         }
-
+        
         // revert symbolic string values
         solver.revertLastPredicate();
+// determine if symbolic strings are singletons
+        
+        boolean argIsSingleton = false;
+  // determine if symbolic strings are singletons
+        
+        if (arg != -1) {
+        	argIsSingleton = solver.isSingleton(sourceMap.get("s1"));
+        }
+        
+        
+        //base would have a string value, which is not actualVal
+      
+        if (solver.isSingleton(base) &&
+            (sourceMap.get("s1") == null || argIsSingleton)) {
+            isSingleton = true;
+        }
+
+  
+        
+
+      
+     
 
         // get constraint function name
         String constName = constraint.getSplitValue().split("!!")[0];
@@ -150,9 +162,17 @@ public class Reporter_SAT<T extends A_Model<T>> extends A_Reporter<T> {
         // is singleton?
         columns.add(String.valueOf(isSingleton));
         // true sat?
-        columns.add(String.valueOf(trueSat));
+        String trueSatPrint = String.valueOf(trueSat);
+        if(solver.modelManager instanceof Model_Concrete_Singleton_Manager && actualVal.equals("true")) {
+        	trueSatPrint+="*";
+        }
+        columns.add(trueSatPrint);
         // false sat?
-        columns.add(String.valueOf(falseSat));
+        String falseSatPrint = String.valueOf(falseSat);
+        if(solver.modelManager instanceof Model_Concrete_Singleton_Manager && actualVal.equals("false")) {
+        	falseSatPrint+="*";
+        }
+        columns.add(falseSatPrint);
         // disjoint?
         columns.add(String.valueOf(disjoint));
         // previous operations

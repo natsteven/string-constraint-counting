@@ -20,6 +20,7 @@ import edu.boisestate.cs.automatonModel.Model_Acyclic_Weighted;
 import edu.boisestate.cs.automatonModel.Model_Acyclic_Weighted_Manager;
 import edu.boisestate.cs.automatonModel.Model_Bounded;
 import edu.boisestate.cs.automatonModel.Model_Bounded_Manager;
+import edu.boisestate.cs.automatonModel.Model_Concrete_Singleton;
 import edu.boisestate.cs.automatonModel.Model_Concrete_Singleton_Manager;
 import edu.boisestate.cs.graph.InvDefaultDirectedGraph;
 import edu.boisestate.cs.graph.PrintConstraint;
@@ -153,7 +154,7 @@ public class SolveMain {
 					printHeader(inputFile, initialBound, "Concrete", "SAT", "Acyclic");
 					DirectedGraph<PrintConstraint, SymbolicEdge> graph = loadGraph(inputFile);
 					//run_Concrete_Acyclic_SAT(graph);
-				} else if (settings.getAutomatonModelVersion() == 2) {
+				} else if (settings.getAutomatonModelVersion() == 2) {//eas: only this one is supported for now to do the testing
 					printHeader(inputFile, initialBound, "Concrete", "SAT", "Singleton");
 					DirectedGraph<PrintConstraint, SymbolicEdge> graph = loadGraph(inputFile);
 					run_Concrete_Singleton_SAT(graph);
@@ -673,6 +674,10 @@ public class SolveMain {
 		//TODO: for eas
 		//the input values will be obtained from the graph itself
 		Model_Concrete_Singleton_Manager mFactory = new Model_Concrete_Singleton_Manager(alpha, initialBound);
+		Solver<Model_Concrete_Singleton> mSolver = new Solver<Model_Concrete_Singleton>(mFactory, initialBound);
+		Parser_2<Model_Concrete_Singleton> mParser = new Parser_2<Model_Concrete_Singleton>(mSolver, debug);
+		Reporter_SAT<Model_Concrete_Singleton> mReporter = new Reporter_SAT<Model_Concrete_Singleton>(graph, mParser, mSolver, debug);
+		mReporter.run();
 		
 	}
 	
