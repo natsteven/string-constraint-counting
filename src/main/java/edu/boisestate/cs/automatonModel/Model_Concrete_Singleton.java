@@ -81,8 +81,7 @@ public class Model_Concrete_Singleton extends A_Model<Model_Concrete_Singleton >
 
 	@Override
 	public Model_Concrete_Singleton assertEquals(Model_Concrete_Singleton equalModel) {
-		// TODO Auto-generated method stub
-		return null;
+		return singleton.equals(equalModel.singleton)? new Model_Concrete_Singleton(singleton): new Model_Concrete_Singleton(null);
 	}
 
 	@Override
@@ -130,7 +129,7 @@ public class Model_Concrete_Singleton extends A_Model<Model_Concrete_Singleton >
 	@Override
 	public Model_Concrete_Singleton assertNotEquals(Model_Concrete_Singleton notEqualModel) {
 		// TODO Auto-generated method stub
-		return null;
+		return !singleton.equals(notEqualModel.singleton)? new Model_Concrete_Singleton(singleton): new Model_Concrete_Singleton(null);
 	}
 
 	@Override
@@ -183,8 +182,7 @@ public class Model_Concrete_Singleton extends A_Model<Model_Concrete_Singleton >
 
 	@Override
 	public boolean equals(Model_Concrete_Singleton arg) {
-		// TODO Auto-generated method stub
-		return false;
+		return singleton.equals(arg.singleton);
 	}
 
 	@Override
@@ -273,8 +271,7 @@ public class Model_Concrete_Singleton extends A_Model<Model_Concrete_Singleton >
 
 	@Override
 	public Model_Concrete_Singleton toUppercase() {
-		// TODO Auto-generated method stub
-		return null;
+		return new Model_Concrete_Singleton(singleton.toUpperCase());
 	}
 
 	@Override
