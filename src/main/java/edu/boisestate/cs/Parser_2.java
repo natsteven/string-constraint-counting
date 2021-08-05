@@ -1104,7 +1104,7 @@ public class Parser_2<T extends A_Model<T>> {
         	if(solver.modelManager instanceof Model_Concrete_Singleton_Manager) {
         		//singleton solver should look up its value in the graph
         		solver.newConcreteString(id, actualValue);
-        		//System.out.println("setting value of " + id + " to " + actualValue);
+        		System.out.println("setting value of " + id + " to " + actualValue);
         	} else {
         		solver.newSymbolicString(id);
         	}
