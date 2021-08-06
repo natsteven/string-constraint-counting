@@ -48,11 +48,11 @@
 			"actualValue": "true",
 			"incomingEdges": [
 				{
-					"source": 17,
+					"source": 30,
 					"type": "t"
 				},
 				{
-					"source": 30,
+					"source": 17,
 					"type": "s1"
 				}
 			],

@@ -64,7 +64,7 @@ public class Model_Concrete_Singleton extends A_Model<Model_Concrete_Singleton >
 
 	@Override
 	public Model_Concrete_Singleton assertEmpty() {
-		return singleton.isEmpty()? new Model_Concrete_Singleton(singleton): new Model_Concrete_Singleton(null);
+		return singleton != null && singleton.isEmpty()? new Model_Concrete_Singleton(singleton): new Model_Concrete_Singleton(null);
 	}
 
 	@Override
@@ -110,8 +110,7 @@ public class Model_Concrete_Singleton extends A_Model<Model_Concrete_Singleton >
 
 	@Override
 	public Model_Concrete_Singleton assertNotEmpty() {
-		// TODO Auto-generated method stub
-		return null;
+		return singleton != null && !singleton.isEmpty()? new Model_Concrete_Singleton(singleton): new Model_Concrete_Singleton(null);
 	}
 
 	@Override
@@ -241,8 +240,8 @@ public class Model_Concrete_Singleton extends A_Model<Model_Concrete_Singleton >
 
 	@Override
 	public Model_Concrete_Singleton substring(int start, int end) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return new Model_Concrete_Singleton(singleton.substring(start, end));
 	}
 
 	@Override

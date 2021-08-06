@@ -85,6 +85,7 @@ public class Reporter_SAT<T extends A_Model<T>> extends A_Reporter<T> {
 
         // test if false branch is SAT
         parser.assertBooleanConstraint(false, constraint);
+        //System.out.println("base " + base + " " + constraint);
         if (solver.isSatisfiable(base)) {
             falseSat = true;
         }
