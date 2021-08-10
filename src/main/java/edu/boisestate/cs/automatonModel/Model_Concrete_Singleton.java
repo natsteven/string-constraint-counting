@@ -81,7 +81,7 @@ public class Model_Concrete_Singleton extends A_Model<Model_Concrete_Singleton >
 
 	@Override
 	public Model_Concrete_Singleton assertEquals(Model_Concrete_Singleton equalModel) {
-		return singleton.equals(equalModel.singleton)? new Model_Concrete_Singleton(singleton): new Model_Concrete_Singleton(null);
+		return singleton != null && equalModel.singleton != null && singleton.equals(equalModel.singleton)? new Model_Concrete_Singleton(singleton): new Model_Concrete_Singleton(null);
 	}
 
 	@Override
@@ -128,7 +128,7 @@ public class Model_Concrete_Singleton extends A_Model<Model_Concrete_Singleton >
 	@Override
 	public Model_Concrete_Singleton assertNotEquals(Model_Concrete_Singleton notEqualModel) {
 		// TODO Auto-generated method stub
-		return !singleton.equals(notEqualModel.singleton)? new Model_Concrete_Singleton(singleton): new Model_Concrete_Singleton(null);
+		return singleton!=null && notEqualModel.singleton != null && !singleton.equals(notEqualModel.singleton)? new Model_Concrete_Singleton(singleton): new Model_Concrete_Singleton(null);
 	}
 
 	@Override
@@ -164,25 +164,25 @@ public class Model_Concrete_Singleton extends A_Model<Model_Concrete_Singleton >
 	@Override
 	public Model_Concrete_Singleton concatenate(Model_Concrete_Singleton arg) {
 		//System.out.println("concat");
-		return new Model_Concrete_Singleton(singleton.concat(arg.singleton));
+		return singleton == null || arg.singleton == null ? new Model_Concrete_Singleton(null) :new Model_Concrete_Singleton(singleton.concat(arg.singleton));
 	}
 
 	@Override
 	public boolean containsString(String actualValue) {
 		// TODO Auto-generated method stub
-		return singleton.contains(actualValue);
+		return singleton == null || actualValue == null ? false :singleton.contains(actualValue);
 	}
 
 	@Override
 	public Model_Concrete_Singleton delete(int start, int end) {
 		// TODO Auto-generated method stub
 		StringBuffer strB = new StringBuffer(singleton);
-		return new Model_Concrete_Singleton(strB.delete(start, end).toString());
+		return singleton == null ? new Model_Concrete_Singleton(null) :new Model_Concrete_Singleton(strB.delete(start, end).toString());
 	}
 
 	@Override
 	public boolean equals(Model_Concrete_Singleton arg) {
-		return singleton.equals(arg.singleton);
+		return singleton == null || arg == null? false :singleton.equals(arg.singleton);
 	}
 
 	@Override
@@ -206,7 +206,7 @@ public class Model_Concrete_Singleton extends A_Model<Model_Concrete_Singleton >
 	@Override
 	public Model_Concrete_Singleton replace(char find, char replace) {
 		// TODO Auto-generated method stub
-		return null;
+		return singleton == null ? new Model_Concrete_Singleton(null) : new Model_Concrete_Singleton(singleton.replace(find, replace));
 	}
 
 	@Override
@@ -242,7 +242,7 @@ public class Model_Concrete_Singleton extends A_Model<Model_Concrete_Singleton >
 	@Override
 	public Model_Concrete_Singleton substring(int start, int end) {
 		
-		return new Model_Concrete_Singleton(singleton.substring(start, end));
+		return singleton == null ? new Model_Concrete_Singleton(null) :new Model_Concrete_Singleton(singleton.substring(start, end));
 	}
 
 	@Override
@@ -258,23 +258,23 @@ public class Model_Concrete_Singleton extends A_Model<Model_Concrete_Singleton >
 
 	@Override
 	public Model_Concrete_Singleton suffix(int start) {
-		return new Model_Concrete_Singleton(singleton.substring(start));
+		return singleton == null ? new Model_Concrete_Singleton(null) :new Model_Concrete_Singleton(singleton.substring(start));
 	}
 
 	@Override
 	public Model_Concrete_Singleton toLowercase() {
 		//System.out.println("toLowerCase");
-		return new Model_Concrete_Singleton(singleton.toLowerCase());
+		return singleton == null ? new Model_Concrete_Singleton(null) :new Model_Concrete_Singleton(singleton.toLowerCase());
 	}
 
 	@Override
 	public Model_Concrete_Singleton toUppercase() {
-		return new Model_Concrete_Singleton(singleton.toUpperCase());
+		return singleton == null ? new Model_Concrete_Singleton(null) :new Model_Concrete_Singleton(singleton.toUpperCase());
 	}
 
 	@Override
 	public Model_Concrete_Singleton trim() {
-		return new Model_Concrete_Singleton(singleton.trim());
+		return singleton == null ? new Model_Concrete_Singleton(null) :new Model_Concrete_Singleton(singleton.trim());
 	}
 
 	@Override
