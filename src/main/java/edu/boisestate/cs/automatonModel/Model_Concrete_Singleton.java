@@ -170,13 +170,14 @@ public class Model_Concrete_Singleton extends A_Model<Model_Concrete_Singleton >
 	@Override
 	public boolean containsString(String actualValue) {
 		// TODO Auto-generated method stub
-		return false;
+		return singleton.contains(actualValue);
 	}
 
 	@Override
 	public Model_Concrete_Singleton delete(int start, int end) {
 		// TODO Auto-generated method stub
-		return null;
+		StringBuffer strB = new StringBuffer(singleton);
+		return new Model_Concrete_Singleton(strB.delete(start, end).toString());
 	}
 
 	@Override
@@ -234,8 +235,8 @@ public class Model_Concrete_Singleton extends A_Model<Model_Concrete_Singleton >
 
 	@Override
 	public Model_Concrete_Singleton reverse() {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuffer strB = new StringBuffer(singleton);
+		return new Model_Concrete_Singleton(strB.reverse().toString());
 	}
 
 	@Override
@@ -246,7 +247,6 @@ public class Model_Concrete_Singleton extends A_Model<Model_Concrete_Singleton >
 
 	@Override
 	public Model_Concrete_Singleton setCharAt(int offset, Model_Concrete_Singleton argModel) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -258,8 +258,7 @@ public class Model_Concrete_Singleton extends A_Model<Model_Concrete_Singleton >
 
 	@Override
 	public Model_Concrete_Singleton suffix(int start) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Model_Concrete_Singleton(singleton.substring(start));
 	}
 
 	@Override
