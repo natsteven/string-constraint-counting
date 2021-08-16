@@ -4,6 +4,8 @@
 package edu.boisestate.cs.graph;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import edu.boisestate.cs.automatonModel.A_Model_Inverse;
@@ -57,7 +59,7 @@ public class InvConstraintConcreteValue<T extends A_Model_Inverse<T>>  extends A
 		this.argString = "[NONE]";
 		//this.solutionSet = solutionSet;
 		this.nextID = base;
-		this.prevID = input;
+		this.prevIDs = new HashSet<Integer>(); prevIDs.add(input);
 		solver.duplicateString(args.get(0), ID);
 	}
 	
@@ -75,6 +77,29 @@ public class InvConstraintConcreteValue<T extends A_Model_Inverse<T>>  extends A
 		}
 		
 		return false;
+	}
+	
+	@Override
+	public boolean evaluate() {
+		System.out.format("EVALUATE CONCRETE VALUE %d ...\n",ID);
+		
+		T concrete = solver.getSymbolicModel(ID);
+		String test = concrete.getShortestExampleString();
+		Iterator<I_Inv_Constraint<T>> iter = prevConstraint.iterator();
+		I_Inv_Constraint<T> prev = iter.next();
+		System.out.println("prev " + prev);
+		T inputs = prev.output(this);
+		
+		while(iter.hasNext()) {
+				inputs = inputs.intersect(iter.next().output(this));
+		}
+		
+		//eas: sanity check mare sure the inputs is the
+		//actual concrete value - add || inputs.getFiniteStrings().size() != 1
+		if (!inputs.containsString(test) ) {
+			System.out.format("ERROR IN EVALUATE CONCRETE VALUE %d ...\n",ID);
+		}
+		return true;
 	}
 
 

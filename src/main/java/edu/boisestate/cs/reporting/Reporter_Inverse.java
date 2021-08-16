@@ -44,7 +44,7 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("unused")
 public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T> {
 
-    private final Solver_Inverse<T> invSolver;
+    protected final Solver_Inverse<T> invSolver;
 	protected Map<Integer,PrintConstraint> allConstraints = new HashMap<>();
 	protected Map<Integer,I_Inv_Constraint<T>> allInverseConstraints = new HashMap<>();
 	//protected Map<Integer,SolutionSet<T>> inputSolutions = new HashMap<>();
@@ -59,7 +59,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 	public String solutionFile = "";
 	
 	// prefix for output when running inside SPF
-	private static String cid = "[IGEN] ";
+	protected static String cid = "[IGEN] ";
 
     /**
      * Constructor for inverse reporter. Keeps a reference to the given solver as an inverse solver.
@@ -572,6 +572,26 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
     		} // end if
     		
     	}  // end for each printconstraint
+    	
+    	//populate previous constraints -- need for BFS
+    	//get all parents for the particular node
+    	for(I_Inv_Constraint<T> p : allInverseConstraints.values()) {
+    		
+    		HashSet<I_Inv_Constraint<T>> invParents = new HashSet<I_Inv_Constraint<T>>();
+    		for(SymbolicEdge e : graph.outgoingEdgesOf(allConstraints.get(p.getID()))) {
+    			PrintConstraint source  = (PrintConstraint)e.getATarget();
+    			//add to p's incoming set
+    			I_Inv_Constraint<T> invSource = allInverseConstraints.get(source.getId());
+    			//it could be null since it has not been processed yet
+    			if(invSource != null) {
+    				invParents.add(allInverseConstraints.get(source.getId()));
+    			}
+    			
+    		}
+    		System.out.println("Parents  "  + p + " are " + invParents);
+    		I_Inv_Constraint<T> invP = allInverseConstraints.get(p.getID());
+    		invP.setPrev(invParents);
+    	}
     	
     } // end buildICG_r3
     

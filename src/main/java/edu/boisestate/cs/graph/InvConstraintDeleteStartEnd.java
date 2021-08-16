@@ -53,7 +53,7 @@ public class InvConstraintDeleteStartEnd<T extends A_Model_Inverse<T>> extends A
 		this.start = argList.get(0);
 		this.end = argList.get(1);
 		this.nextID = base;
-		this.prevID = input;
+		this.prevIDs.add(input);
 	}
 	
 	

@@ -1,6 +1,7 @@
 package edu.boisestate.cs.graph;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import edu.boisestate.cs.automatonModel.A_Model_Inverse;
@@ -39,7 +40,8 @@ public class InvConstraintInsert<T extends A_Model_Inverse<T>> extends A_Inv_Con
 		this.start = argList.get(0);
 		this.end = argList.get(1);
 		this.nextID = base;
-		this.prevID = input;
+		this.nextID = base;
+		this.prevIDs = new HashSet<Integer>(); this.prevIDs.add(input);
 	}
 	
 	

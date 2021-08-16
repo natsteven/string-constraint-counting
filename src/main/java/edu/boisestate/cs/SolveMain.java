@@ -29,6 +29,7 @@ import edu.boisestate.cs.reporting.MCReporter;
 import edu.boisestate.cs.reporting.Reporter;
 import edu.boisestate.cs.reporting.Reporter_Count;
 import edu.boisestate.cs.reporting.Reporter_Inverse;
+import edu.boisestate.cs.reporting.Reporter_Inverse_BFS;
 import edu.boisestate.cs.reporting.Reporter_SAT;
 import edu.boisestate.cs.reporting.SATReporter;
 import edu.boisestate.cs.solvers.*;
@@ -594,7 +595,8 @@ public class SolveMain {
 		Model_Acyclic_Inverse_Manager mFactory 					= new Model_Acyclic_Inverse_Manager(alpha, initialBound);
 		Solver_Inverse<Model_Acyclic_Inverse> mSolver 		= new Solver_Inverse<Model_Acyclic_Inverse>(mFactory,	initialBound);
 		Parser_2<Model_Acyclic_Inverse> mParser 				= new Parser_2<Model_Acyclic_Inverse>(mSolver, debug);
-		Reporter_Inverse<Model_Acyclic_Inverse> mReporter 	= new Reporter_Inverse<Model_Acyclic_Inverse>(graph, mParser, mSolver, debug);
+		Reporter_Inverse<Model_Acyclic_Inverse> mReporter 	= new Reporter_Inverse_BFS<Model_Acyclic_Inverse>(graph, mParser, mSolver, debug); //new Reporter_Inverse<Model_Acyclic_Inverse>(graph, mParser, mSolver, debug);
+		//Reporter_Inverse<Model_Acyclic_Inverse> mReporter 	= new Reporter_Inverse<Model_Acyclic_Inverse>(graph, mParser, mSolver, debug);
 		mSolver.setReduce(reduce);
 		mReporter.run();
 	}

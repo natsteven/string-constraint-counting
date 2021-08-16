@@ -5,6 +5,8 @@ package edu.boisestate.cs.graph;
 
 import java.math.BigInteger;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import edu.boisestate.cs.automatonModel.A_Model_Inverse;
@@ -58,7 +60,8 @@ public class InvConstraintInput<T extends A_Model_Inverse<T>>  extends A_Inv_Con
 		this.argString = "[NONE]";
 		//this.solutionSet = solutionSet;
 		this.nextID = base;
-		this.prevID = input;
+		this.prevIDs = new HashSet<Integer>(); prevIDs.add(input);
+		solver.duplicateString(args.get(0), ID);
 		solver.duplicateString(args.get(0), ID);
 	}
 	
@@ -115,6 +118,42 @@ public class InvConstraintInput<T extends A_Model_Inverse<T>>  extends A_Inv_Con
 		//}
 		
 		return true;
+	}
+	
+	@Override
+	public boolean evaluate() {
+		boolean ret = true; //don't backtrack
+		System.out.format("EVALUATE INPUT %d ...\n",ID);
+		Iterator<I_Inv_Constraint<T>> iter = prevConstraint.iterator();
+		T inputs = iter.next().output(this);
+		while(iter.hasNext()) {
+				inputs = inputs.intersect(iter.next().output(this));
+		}
+		
+		//if consistent
+		if(!inputs.isEmpty()) {
+		
+			System.out.print("DEBUG " + op.toString() + " " + ID);
+			System.out.print(" solutions .... ");
+			
+    		BigInteger oneHundred = new BigInteger("300");
+    		
+    		if (inputs.modelCount().compareTo(oneHundred) > 0) {
+    			System.out.print("Too many values to output,  " + inputs.modelCount() + "  example: ");
+    			System.out.println(inputs.getShortestExampleString());
+    		} else {
+    			for (String s : inputs.getFiniteStrings()) {
+    				System.out.print(s + " ");
+    			}
+    		System.out.println();
+    		}
+    		this.outputSet.put(0, inputs);
+		} else {
+			//solution not consistent, then backtrack
+			ret = false;
+			System.out.println("      solution set " + this.ID + " not consistent, falling back ...");
+		}
+		return ret;//never backtrack here
 	}
 
 

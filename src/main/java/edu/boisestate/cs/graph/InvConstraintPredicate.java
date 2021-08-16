@@ -31,6 +31,7 @@ public class InvConstraintPredicate<T extends A_Model_Inverse<T>> extends A_Inv_
 	
 	//private String argString;
 	
+	
 	public InvConstraintPredicate (int ID, Solver_Inverse<T> solver) {
 		
 		// Store reference to solver
@@ -99,6 +100,27 @@ public class InvConstraintPredicate<T extends A_Model_Inverse<T>> extends A_Inv_
 
 	}
 
+@Override
+	public boolean evaluate() {
+	System.out.format("\nBFS EVALUATE PREDICATE %d ...\n",ID);
+	//T predicateResult = solver.getSymbolicModel(ID);
+	T predicateResult = solver.getSymbolicModel(nextConstraint.getID());
+//	System.out.println("solver " + solver);
+//	System.out.println("nextConstr " + nextConstraint.getID());
+//	System.out.println("results " + predicateResult);
+	
+	if (!predicateResult.isEmpty()) {
+				
+		// place symbolic string from solver string table into output set, position 1
+		outputSet.put(1, predicateResult);
+		outputSet.put(2, solver.getSymbolicModel(argID));//the argument for now is concrete, so whatever is coming from it
+	} else {
+		System.out.println("ERROR: Predicate has no forward results, UNSAT");
+	}
+	
+	//predicate always get its results nothing has left to try
+		return true;
+	}
 
 	@Override
 	public void setOp(Operation op) {
@@ -123,5 +145,8 @@ public class InvConstraintPredicate<T extends A_Model_Inverse<T>> extends A_Inv_
 
 		return this.ID;
 	}
+
+
+	
 
 }

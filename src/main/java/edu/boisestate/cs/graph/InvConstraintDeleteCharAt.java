@@ -4,6 +4,7 @@
 package edu.boisestate.cs.graph;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import edu.boisestate.cs.automatonModel.A_Model_Inverse;
@@ -55,7 +56,8 @@ public class InvConstraintDeleteCharAt<T extends A_Model_Inverse<T>> extends A_I
 		this.argString = "0:LOCATION";
 		this.location = argList.get(0);
 		this.nextID = base;
-		this.prevID = input;
+		this.prevIDs = new HashSet<Integer>(); this.prevIDs.add(input);
+		solver.duplicateString(args.get(0), ID);
 	}
 	
 	

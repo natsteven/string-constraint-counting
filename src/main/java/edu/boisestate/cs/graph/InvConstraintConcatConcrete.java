@@ -3,6 +3,7 @@
  */
 package edu.boisestate.cs.graph;
 
+import java.util.HashSet;
 import java.util.List;
 
 import edu.boisestate.cs.automatonModel.A_Model_Inverse;
@@ -34,7 +35,7 @@ public class InvConstraintConcatConcrete<T extends A_Model_Inverse<T>> extends A
 		this.op = Operation.CONCAT_CON;
 		this.argString = "[" + argList.get(0) + "] SUFFIX";
 		this.nextID = base;
-		this.prevID = input;
+		this.prevIDs = new HashSet<Integer>(); prevIDs.add(input);
 	}
 	
 	
@@ -42,7 +43,7 @@ public class InvConstraintConcatConcrete<T extends A_Model_Inverse<T>> extends A
 	public boolean evaluate(I_Inv_Constraint<T> inputConstraint, int sourceIndex) {
 		
 		int arg = argList.get(0);
-		solver.inv_append(ID, prevConstraint.getID(), arg);
+		solver.inv_append(ID, prevConstraint.iterator().next().getID(), arg);
 		solver.intersectPrevious(ID, nextConstraint.getID());
 		
 		if (true) {

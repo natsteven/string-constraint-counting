@@ -4,8 +4,10 @@
 package edu.boisestate.cs.graph;
 
 import java.util.Formatter;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import edu.boisestate.cs.automatonModel.A_Model_Inverse;
 //import edu.boisestate.cs.solvers.Solver_Inverse;
@@ -24,7 +26,7 @@ public abstract class A_Inv_Constraint<T extends A_Model_Inverse<T>> implements 
 	protected int ID;
 	
 	protected int nextID = -1;
-	protected int prevID = -1;
+	protected Set<Integer> prevIDs = new HashSet<Integer>();
 	protected int argID = -1;
 	
 	public int fallbackCount = 0;
@@ -32,7 +34,7 @@ public abstract class A_Inv_Constraint<T extends A_Model_Inverse<T>> implements 
 	public int newConcatChoiceCount = 0;
 	public int newSplitOutputCount = 0;
 	
-	protected I_Inv_Constraint<T> prevConstraint;
+	protected Set<I_Inv_Constraint<T>> prevConstraint;
 	protected I_Inv_Constraint<T> nextConstraint;
 	protected I_Inv_Constraint<T> argConstraint;
 	
@@ -53,9 +55,25 @@ public abstract class A_Inv_Constraint<T extends A_Model_Inverse<T>> implements 
 		
 		return false;
 	}
+	
+	@Override
+	public boolean evaluate() {
+		return false;
+	}
 
 	@Override
 	public T output(Integer index) {
+		return outputSet.get(index);
+	}
+	
+	@Override
+	public T output(I_Inv_Constraint<T> childConstraint) {
+		int index = -1;
+		if(childConstraint.equals(nextConstraint)) {
+			index = 1;
+		} else if (childConstraint.equals(argConstraint)) {
+			index = 2;
+		}
 		return outputSet.get(index);
 	}
 	
@@ -85,10 +103,12 @@ public abstract class A_Inv_Constraint<T extends A_Model_Inverse<T>> implements 
 	}
 
 	@Override
-	public void setPrev(I_Inv_Constraint<T> constraint) {
+	public void setPrev(Set<I_Inv_Constraint<T>> constraints) {
 		
-		this.prevConstraint = constraint;
-		this.prevID = constraint.getID();
+		this.prevConstraint = constraints;
+		for(I_Inv_Constraint<T> c : constraints) {
+			prevIDs.add(c.getID());
+		}
 	}
 
 	@Override
@@ -128,9 +148,9 @@ public abstract class A_Inv_Constraint<T extends A_Model_Inverse<T>> implements 
 	}
 	
 	@Override
-	public int getPrevID() {
+	public Set<Integer> getPrevID() {
 
-		return this.prevID;
+		return this.prevIDs;
 	}
 	
 	
@@ -140,6 +160,7 @@ public abstract class A_Inv_Constraint<T extends A_Model_Inverse<T>> implements 
 		return solutionSet.getSolution();
 		
 	};
+	
 	
 //	@Override
 //	public void setNextID(int nextID) {
