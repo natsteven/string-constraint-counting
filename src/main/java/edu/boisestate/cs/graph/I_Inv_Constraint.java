@@ -3,6 +3,7 @@ package edu.boisestate.cs.graph;
 import java.util.Set;
 
 import edu.boisestate.cs.automatonModel.A_Model_Inverse;
+import edu.boisestate.cs.util.Tuple;
 //import edu.boisestate.cs.solvers.*;
 
 public interface I_Inv_Constraint<T extends A_Model_Inverse<T>> {
@@ -15,7 +16,7 @@ public interface I_Inv_Constraint<T extends A_Model_Inverse<T>> {
 	 * @param inputConstraint
 	 * @return true - don't backtrack, false - backtrack
 	 */
-	public boolean evaluate();
+	public Tuple<Boolean, Boolean> evaluate();
 	
 //	public boolean fallback();
 	
@@ -53,5 +54,9 @@ public interface I_Inv_Constraint<T extends A_Model_Inverse<T>> {
 	public void setID(int ID);
 	
 	public int getID();
+	
+	//resets computed values when the
+	//BFS algorithm backtracks
+	public void clear();
 	
 }

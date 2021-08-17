@@ -12,6 +12,7 @@ import java.util.List;
 import edu.boisestate.cs.automatonModel.A_Model_Inverse;
 //import edu.boisestate.cs.solvers.Solver_Inverse;
 import edu.boisestate.cs.solvers.Solver_Inverse;
+import edu.boisestate.cs.util.Tuple;
 
 
 /**
@@ -121,11 +122,12 @@ public class InvConstraintInput<T extends A_Model_Inverse<T>>  extends A_Inv_Con
 	}
 	
 	@Override
-	public boolean evaluate() {
-		boolean ret = true; //don't backtrack
+	public Tuple<Boolean, Boolean> evaluate() {
+		Tuple<Boolean, Boolean>  ret = new Tuple<Boolean, Boolean>(true, true) ; //don't backtrack
 		System.out.format("EVALUATE INPUT %d ...\n",ID);
 		Iterator<I_Inv_Constraint<T>> iter = prevConstraint.iterator();
 		T inputs = iter.next().output(this);
+		System.out.println("inputs " + inputs);
 		while(iter.hasNext()) {
 				inputs = inputs.intersect(iter.next().output(this));
 		}
@@ -150,7 +152,7 @@ public class InvConstraintInput<T extends A_Model_Inverse<T>>  extends A_Inv_Con
     		this.outputSet.put(0, inputs);
 		} else {
 			//solution not consistent, then backtrack
-			ret = false;
+			ret = new Tuple<Boolean, Boolean> (false, true);
 			System.out.println("      solution set " + this.ID + " not consistent, falling back ...");
 		}
 		return ret;//never backtrack here

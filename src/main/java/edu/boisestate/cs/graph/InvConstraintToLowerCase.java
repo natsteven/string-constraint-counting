@@ -5,20 +5,22 @@ package edu.boisestate.cs.graph;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import edu.boisestate.cs.automatonModel.A_Model_Inverse;
 import edu.boisestate.cs.solvers.*;
+import edu.boisestate.cs.util.Tuple;
 
 /**
  * @author Marlin Roberts, 2020-2021
  *
  */
 public class InvConstraintToLowerCase<T extends A_Model_Inverse<T>> extends A_Inv_Constraint<T> {
-	
-	
+
+
 	public InvConstraintToLowerCase (int ID, Solver_Inverse<T> solver) {
-		
+
 		// Store reference to solver
 		this.solver = solver;
 		this.ID = ID;
@@ -27,11 +29,11 @@ public class InvConstraintToLowerCase<T extends A_Model_Inverse<T>> extends A_In
 		this.solutionSet = new SolutionSetInternal<T>(ID);
 		this.argString = "[NONE]";
 	}
-	
-	
-	
+
+
+
 	public InvConstraintToLowerCase (int ID, Solver_Inverse<T> solver, List<Integer> args) {
-		
+
 		// Store reference to solver
 		this.solver = solver;
 		this.ID = ID;
@@ -39,9 +41,9 @@ public class InvConstraintToLowerCase<T extends A_Model_Inverse<T>> extends A_In
 		this.op  = Operation.TOLOWERCASE;
 		this.argString = "[NONE]";
 	}
-	
+
 	public InvConstraintToLowerCase (int ID, Solver_Inverse<T> solver, List<Integer> args, int base, int input) {
-		
+
 		// Store reference to solver
 		this.solver = solver;
 		this.ID = ID;
@@ -51,13 +53,13 @@ public class InvConstraintToLowerCase<T extends A_Model_Inverse<T>> extends A_In
 		this.nextID = base;
 		this.prevIDs = new HashSet<Integer>(); this.prevIDs.add(input);
 	}
-	
-	
+
+
 	@Override
 	public boolean evaluate(I_Inv_Constraint<T> inputConstraint, int sourceIndex) {
 
 		System.out.format("EVALUATE TOLOWER %d ...\n",ID);
-		
+
 		T inputModel = inputConstraint.output(sourceIndex);
 
 		// perform inverse function on output from the input constraint at given index
@@ -71,11 +73,11 @@ public class InvConstraintToLowerCase<T extends A_Model_Inverse<T>> extends A_In
 			solutionSet.setSolution(inputConstraint.getID(), resModel);
 
 			if (solutionSet.isConsistent()) {
-	
+
 				// store result in this constraints output set at index 1
 				outputSet.put(1, resModel);	
-	
-	
+
+
 				// we have values, so continue solving ...
 				return nextConstraint.evaluate(this, 1);
 			} else {
@@ -83,18 +85,41 @@ public class InvConstraintToLowerCase<T extends A_Model_Inverse<T>> extends A_In
 				solutionSet.remSolution(inputConstraint.getID());
 				return false;
 			}
-			
+
 		} else {
 			System.out.println("TOLOWER RESULT MODEL EMPTY...");
 			// halt solving, fallback
 			return false;
 		}
+	}
+
+	@Override
+	public Tuple<Boolean, Boolean> evaluate(){
+		Tuple<Boolean,Boolean> ret = new Tuple<Boolean,Boolean>(true, true);
+		System.out.format("EVALUATE TOLOWER %d ...\n",ID);
+		T inputs = incoming();
+		if(inputs.isEmpty()) {
+			System.out.println("TOLOWER INCOMING SET INCONSISTENT...");
+			ret = new Tuple<Boolean,Boolean>(false, true);
+		} else {
+			//done perfroming intersection 
+			// perform inverse function on output from the input constraint at given index
+			T resModel = solver.inv_toLowerCase(inputs);
+
+			// intersect result with forward analysis results from previous constraint
+			resModel = solver.intersect(resModel, nextConstraint.getID());
 
 
+			if (resModel.isEmpty()) {
+				System.out.println("TOLOWER RESULT MODEL EMPTY...");
+				// halt solving, fallback
+				ret = new Tuple<Boolean,Boolean>(false, true);
+			} else {
+				outputSet.put(1, resModel);	
+			}
+		}
 
-
-
-
+		return ret;
 	}
 
 

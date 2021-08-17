@@ -5,6 +5,7 @@ package edu.boisestate.cs.graph;
 
 import java.util.Formatter;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -12,6 +13,7 @@ import java.util.Set;
 import edu.boisestate.cs.automatonModel.A_Model_Inverse;
 //import edu.boisestate.cs.solvers.Solver_Inverse;
 import edu.boisestate.cs.solvers.Solver_Inverse;
+import edu.boisestate.cs.util.Tuple;
 
 /**
  * @author marli
@@ -51,20 +53,45 @@ public abstract class A_Inv_Constraint<T extends A_Model_Inverse<T>> implements 
 	protected boolean debug = false;
 	
 	@Override
+	public void clear() {
+		outputSet.clear();
+	}
+	
+	@Override
 	public boolean evaluate(I_Inv_Constraint<T> inputConstraint, int sourceIndex) {
 		
 		return false;
 	}
 	
 	@Override
-	public boolean evaluate() {
-		return false;
+	public Tuple<Boolean,Boolean> evaluate() {
+		Tuple<Boolean,Boolean> ret = new Tuple<Boolean,Boolean>(true, true);
+		T inputs = incoming();
+
+		if(inputs.isEmpty()) {
+			System.out.println("TOLOWER INCOMING SET INCONSISTENT...");
+			ret = new Tuple<Boolean,Boolean>(false, true);
+		}
+		return ret;
+	}
+	
+	protected T incoming() {
+		Iterator<I_Inv_Constraint<T>> iter = prevConstraint.iterator();
+		I_Inv_Constraint<T> prev = iter.next();
+		//System.out.println("prev " + prev);
+		T inputs = prev.output(this);
+
+		while(iter.hasNext()) {
+			inputs = inputs.intersect(iter.next().output(this));
+		}
+		return inputs;
 	}
 
 	@Override
 	public T output(Integer index) {
 		return outputSet.get(index);
 	}
+	
 	
 	@Override
 	public T output(I_Inv_Constraint<T> childConstraint) {

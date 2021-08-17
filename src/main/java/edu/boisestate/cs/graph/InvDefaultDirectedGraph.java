@@ -1,6 +1,8 @@
 package edu.boisestate.cs.graph;
 
 import org.jgrapht.graph.DefaultDirectedGraph;
+import org.jgrapht.graph.EdgeReversedGraph;
+import org.jgrapht.traverse.BreadthFirstIterator;
 import org.jgrapht.traverse.DepthFirstIterator;
 
 import java.util.ArrayList;
@@ -90,6 +92,18 @@ public class InvDefaultDirectedGraph extends DefaultDirectedGraph<PrintConstrain
 	public Set<Integer> getDependedPredicates(Integer id){
 		Set<Integer> ret = new HashSet<Integer>();
 		ret.addAll(predDependID.get(id));
+		
+		return ret;
+	}
+	
+	public Set<Integer> getAncestors(PrintConstraint start){
+		Set<Integer> ret = new HashSet<Integer>();	
+		EdgeReversedGraph<PrintConstraint, SymbolicEdge> reversedGraph = new EdgeReversedGraph<PrintConstraint, SymbolicEdge>(this);
+		BreadthFirstIterator<PrintConstraint, SymbolicEdge>breadthFirstIterator =
+				new BreadthFirstIterator<PrintConstraint, SymbolicEdge>(reversedGraph, start);
+		while (breadthFirstIterator.hasNext()) {
+			ret.add(breadthFirstIterator.next().getId());
+		}
 		
 		return ret;
 	}

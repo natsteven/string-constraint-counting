@@ -102,20 +102,24 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 		return false;
 
 	}
+	
+	@Override
+	public void clear() {
+		super.clear();
+		inputs = null;
+		mapInOut.clear();
+		
+	}
 
 	@Override
-	public boolean evaluate() {
-		boolean ret = true; //don't add to backtrack
+	public Tuple<Boolean, Boolean> evaluate() {
+		Tuple<Boolean, Boolean> ret = new Tuple<Boolean, Boolean>(true, true); //continue and don't add to backtrack
 		//compute the intersection of all incoming values
 
 		if(inputs == null) {
 			//the first time the node is evaluated
 			//do the intersection
-			Iterator<I_Inv_Constraint<T>> iter = prevConstraint.iterator();
-			inputs = iter.next().output(this);
-			while(iter.hasNext()) {
-					inputs = inputs.intersect(iter.next().output(this));
-			}
+			inputs = incoming();
 		}
 		
 		//remove one solution from the inputs
@@ -139,7 +143,8 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 					//more inputs left?
 					inputs.minus(input);
 					if(inputs.isEmpty()) {
-						return ret;//backtrack to previous nodes, no more inputs are left here
+						//backtrack to previous nodes, don't add to backtrack, no more inputs are left here
+						return new Tuple<Boolean, Boolean>(false, true);
 					}
 					//try them that
 					input = inputs.getShortestExampleModel();
@@ -165,7 +170,7 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 		//if there are more choices left in currOutput then 
 		//backtrack to it
 		if(!currOutput.isEmpty()) {
-			ret = false;//backtrack
+			ret = new Tuple<Boolean, Boolean>(true, false);//continue and add to backtrack
 		} else {
 			//this input has been processed
 			//remove from inputs and from the map
@@ -173,7 +178,7 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 			mapInOut.remove(input);
 			//check if more input left
 			if(!inputs.isEmpty()) {
-				ret = false;//backtrack there are more inputs
+				ret = new Tuple<Boolean, Boolean>(true, false);//continue and add to backtrack since there are more inputs
 			}
 		}
 		

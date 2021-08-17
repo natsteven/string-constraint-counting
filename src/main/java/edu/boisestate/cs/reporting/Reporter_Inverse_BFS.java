@@ -2,7 +2,10 @@ package edu.boisestate.cs.reporting;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.jgrapht.DirectedGraph;
@@ -15,6 +18,7 @@ import edu.boisestate.cs.graph.Operation;
 import edu.boisestate.cs.graph.PrintConstraint;
 import edu.boisestate.cs.graph.SymbolicEdge;
 import edu.boisestate.cs.solvers.Solver_Inverse;
+import edu.boisestate.cs.util.Tuple;
 
 public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter_Inverse<T> {
 	//this class should also remember all previous constraints, it might be in
@@ -62,13 +66,52 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 			q.add(allInverseConstraints.get(val));
 		}
 		
+		//backtrack map - records the current current queue for the backtracked id
+		Map<Integer, List<Integer>> backtrackMap = new HashMap<Integer, List<Integer>>();
+		
+		//processed elements -- it an acyclic graph, so we just need those for efficiency
+		List<Integer> processedID = new ArrayList<Integer>();
+		
 		//now q contains depended predicates
 		while(!qID.isEmpty()) {
-			I_Inv_Constraint<T> curr = allInverseConstraints.get(qID.remove(0));
+			int currID = qID.remove(0);
+			processedID.add(currID);
+			I_Inv_Constraint<T> curr = allInverseConstraints.get(currID);
 			System.out.println("node: " + curr);
 			System.out.println("parents are: " + curr.getPrevID());
-			boolean result = curr.evaluate();
-			System.out.println("don't backtrack? " + result);
+			//1st true - continue, false - backtrack
+			//2nd true - don't add to the backtrack map, false do
+			Tuple<Boolean, Boolean> result = curr.evaluate();
+			if(result.get1() && !result.get2()) {
+				//continue but add to the backtrack queue
+				List<Integer> backtrackQ = new ArrayList<Integer>();
+				backtrackQ.add(curr.getID());
+				backtrackQ.addAll(qID);
+			} else if (!result.get1()) {
+				//find the "closest" node to backtrack to curr
+				//in our case one that has smallest ID
+				//eas: need to use lambda-expression here
+				Integer backtrackID = Integer.MAX_VALUE;
+				for(Integer ids : backtrackMap.keySet()) {
+					if(backtrackID > ids) {
+						backtrackID = ids;
+					}
+				}
+				
+				//get the queue
+				qID = backtrackMap.get(backtrackID);
+				//remove backtrackID from the map
+				backtrackMap.remove(backtrackID);
+				//it should not contain backtrackID
+				Set<Integer> clearSet = eGraph.getAncestors(allConstraints.get(backtrackID));
+				clearSet.retainAll(processedID);//only keep those that have been computed
+				processedID.removeAll(clearSet);//now remove them from processed -- they will be added again
+				//iterate for the clearSet and call clear on each inverse constraint 
+				for(int nodeID : clearSet) {
+					allInverseConstraints.get(nodeID).clear();
+				}
+				
+			}
 			
 			//extend the queue
 			if(curr.getNextID() != -1 && !qID.contains(curr.getNextID())) {

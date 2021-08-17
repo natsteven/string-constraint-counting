@@ -9,6 +9,7 @@ import java.util.List;
 import edu.boisestate.cs.automatonModel.A_Model_Inverse;
 //import edu.boisestate.cs.solvers.Solver_Inverse;
 import edu.boisestate.cs.solvers.Solver_Inverse;
+import edu.boisestate.cs.util.Tuple;
 
 /**
  * @author Marlin Roberts, 2020-2021
@@ -101,8 +102,9 @@ public class InvConstraintPredicate<T extends A_Model_Inverse<T>> extends A_Inv_
 	}
 
 @Override
-	public boolean evaluate() {
+	public Tuple<Boolean, Boolean> evaluate() {
 	System.out.format("\nBFS EVALUATE PREDICATE %d ...\n",ID);
+	Tuple<Boolean, Boolean>  ret = new Tuple<Boolean,Boolean>(true, true);
 	//T predicateResult = solver.getSymbolicModel(ID);
 	T predicateResult = solver.getSymbolicModel(nextConstraint.getID());
 //	System.out.println("solver " + solver);
@@ -116,10 +118,11 @@ public class InvConstraintPredicate<T extends A_Model_Inverse<T>> extends A_Inv_
 		outputSet.put(2, solver.getSymbolicModel(argID));//the argument for now is concrete, so whatever is coming from it
 	} else {
 		System.out.println("ERROR: Predicate has no forward results, UNSAT");
+		ret = new Tuple<Boolean,Boolean>(false, true);
 	}
 	
 	//predicate always get its results nothing has left to try
-		return true;
+		return ret;
 	}
 
 	@Override
@@ -145,6 +148,7 @@ public class InvConstraintPredicate<T extends A_Model_Inverse<T>> extends A_Inv_
 
 		return this.ID;
 	}
+
 
 
 	

@@ -11,6 +11,7 @@ import java.util.List;
 import edu.boisestate.cs.automatonModel.A_Model_Inverse;
 //import edu.boisestate.cs.solvers.Solver_Inverse;
 import edu.boisestate.cs.solvers.Solver_Inverse;
+import edu.boisestate.cs.util.Tuple;
 
 
 /**
@@ -80,14 +81,14 @@ public class InvConstraintConcreteValue<T extends A_Model_Inverse<T>>  extends A
 	}
 	
 	@Override
-	public boolean evaluate() {
+	public Tuple<Boolean, Boolean> evaluate() {
 		System.out.format("EVALUATE CONCRETE VALUE %d ...\n",ID);
 		
 		T concrete = solver.getSymbolicModel(ID);
 		String test = concrete.getShortestExampleString();
 		Iterator<I_Inv_Constraint<T>> iter = prevConstraint.iterator();
 		I_Inv_Constraint<T> prev = iter.next();
-		System.out.println("prev " + prev);
+		//System.out.println("prev " + prev);
 		T inputs = prev.output(this);
 		
 		while(iter.hasNext()) {
@@ -99,7 +100,7 @@ public class InvConstraintConcreteValue<T extends A_Model_Inverse<T>>  extends A
 		if (!inputs.containsString(test) ) {
 			System.out.format("ERROR IN EVALUATE CONCRETE VALUE %d ...\n",ID);
 		}
-		return true;
+		return new Tuple<Boolean, Boolean>(true, true);
 	}
 
 
