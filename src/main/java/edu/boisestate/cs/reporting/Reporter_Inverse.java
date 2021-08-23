@@ -14,6 +14,7 @@ import edu.boisestate.cs.graph.InvConstraintReplaceCharChar;
 import edu.boisestate.cs.graph.InvConstraintSubStringStartEnd;
 import edu.boisestate.cs.graph.InvConstraintToLowerCase;
 import edu.boisestate.cs.graph.InvConstraintToUpperCase;
+import edu.boisestate.cs.graph.InvDefaultDirectedGraph;
 import edu.boisestate.cs.graph.Operation;
 import edu.boisestate.cs.graph.PrintConstraint;
 import edu.boisestate.cs.graph.SPFInput;

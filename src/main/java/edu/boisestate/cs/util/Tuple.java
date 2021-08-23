@@ -45,4 +45,11 @@ public class Tuple<TElement1, TElement2> {
         result = 31 * result + (element2 != null ? element2.hashCode() : 0);
         return result;
     }
+    
+    @Override
+    public String toString() {
+    	StringBuilder ret = new StringBuilder("[");
+    	ret.append(element1).append(",").append(element2).append("]");
+    	return ret.toString();
+    }
 }

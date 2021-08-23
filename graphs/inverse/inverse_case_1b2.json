@@ -6,7 +6,7 @@
 	"vertices": [
 		{
 			"num": 0,
-			"actualValue": "AA",
+			"actualValue": "aa",
 			"incomingEdges": [],
 			"sourceConstraints": [],
 			"timeStamp": 1482521433,
@@ -65,7 +65,7 @@
 		},
 		{
 			"num": 0,
-			"actualValue": "false",
+			"actualValue": "true",
 			"incomingEdges": [
 				{
 					"source": 17,

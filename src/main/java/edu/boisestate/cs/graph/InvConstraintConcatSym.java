@@ -125,7 +125,7 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 		//remove one solution from the inputs
 		T input = inputs.getShortestExampleModel();
 		List<Tuple<T,T>> currOutput = new ArrayList<Tuple<T,T>>();
-		System.out.println("mapInOut " + mapInOut);
+		//System.out.println("mapInOut " + mapInOut);
 		if(mapInOut.containsKey(input)) {
 			//already computed outputs before just get the next value
 			currOutput = mapInOut.get(input);
@@ -134,14 +134,17 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 			//compute outgoing solutions
 			T nextModel = solver.getSymbolicModel(nextConstraint.getID());
 			T argModel = solver.getSymbolicModel(argConstraint.getID());
-			System.out.println("nextM " + nextModel.getFiniteStrings());
-			System.out.println("argM " + argModel.getFiniteStrings());
+//			System.out.println("input " + input.getFiniteStrings());
+//			System.out.println("nextM " + nextModel.getFiniteStrings());
+//			System.out.println("argM " + argModel.getFiniteStrings());
 			//let's try this input
 			currOutput = input.inv_concatenate_sym_set(nextModel, argModel);
 			//if not a single split is produced then try another if some inputs are left
+			//System.out.println("currOutput " + currOutput);
 			while(currOutput.isEmpty()) {
 					//more inputs left?
 					inputs.minus(input);
+					System.out.println("inputs empty " + inputs.isEmpty());
 					if(inputs.isEmpty()) {
 						//backtrack to previous nodes, don't add to backtrack, no more inputs are left here
 						return new Tuple<Boolean, Boolean>(false, true);

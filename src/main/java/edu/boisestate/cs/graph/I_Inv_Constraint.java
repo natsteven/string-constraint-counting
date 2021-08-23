@@ -58,5 +58,9 @@ public interface I_Inv_Constraint<T extends A_Model_Inverse<T>> {
 	//resets computed values when the
 	//BFS algorithm backtracks
 	public void clear();
+	/**
+	 * synch prevIDs
+	 */
+	void update();
 	
 }

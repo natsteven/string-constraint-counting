@@ -108,8 +108,8 @@ public class InvConstraintPredicate<T extends A_Model_Inverse<T>> extends A_Inv_
 	//T predicateResult = solver.getSymbolicModel(ID);
 	T predicateResult = solver.getSymbolicModel(nextConstraint.getID());
 //	System.out.println("solver " + solver);
-//	System.out.println("nextConstr " + nextConstraint.getID());
-//	System.out.println("results " + predicateResult);
+	//System.out.println("nextConstr " + nextConstraint.getID());
+	//System.out.println("predicate " + predicateResult.getFiniteStrings());
 	
 	if (!predicateResult.isEmpty()) {
 				

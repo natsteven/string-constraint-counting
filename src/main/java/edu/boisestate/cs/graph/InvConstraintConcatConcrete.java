@@ -8,6 +8,7 @@ import java.util.List;
 
 import edu.boisestate.cs.automatonModel.A_Model_Inverse;
 import edu.boisestate.cs.solvers.Solver_Inverse;
+import edu.boisestate.cs.util.Tuple;
 
 /**
  * @author Marlin Roberts, 2020-2021
@@ -62,6 +63,16 @@ public class InvConstraintConcatConcrete<T extends A_Model_Inverse<T>> extends A
 			return false;
 		}
 
+	}
+	
+	//eas: not sure when this one is called, so not implemented so far
+	@Override
+	public Tuple<Boolean, Boolean> evaluate(){
+		Tuple<Boolean, Boolean> ret = new Tuple<Boolean, Boolean>(true, true); //continue and don't add to backtrack
+		T inputs = incoming();
+		int arg = argList.get(0);
+		System.out.println("calling InvConstraintConcrete");
+		return ret;
 	}
 
 

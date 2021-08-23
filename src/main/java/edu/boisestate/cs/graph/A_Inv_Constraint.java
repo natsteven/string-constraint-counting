@@ -78,12 +78,15 @@ public abstract class A_Inv_Constraint<T extends A_Model_Inverse<T>> implements 
 	protected T incoming() {
 		Iterator<I_Inv_Constraint<T>> iter = prevConstraint.iterator();
 		I_Inv_Constraint<T> prev = iter.next();
+		//System.out.println("incoming for " + this);
 		//System.out.println("prev " + prev);
 		T inputs = prev.output(this);
+		System.out.println(inputs.getFiniteStrings());
 
 		while(iter.hasNext()) {
 			inputs = inputs.intersect(iter.next().output(this));
 		}
+		System.out.println(inputs.getFiniteStrings());
 		return inputs;
 	}
 
@@ -187,6 +190,21 @@ public abstract class A_Inv_Constraint<T extends A_Model_Inverse<T>> implements 
 		return solutionSet.getSolution();
 		
 	};
+	
+	/**
+	 * synch prevIDs
+	 */
+	@Override
+	public void update() {
+		Set<I_Inv_Constraint<T>> remove = new HashSet<I_Inv_Constraint<T>>();
+		for(I_Inv_Constraint<T> c  : prevConstraint) {
+			if(!prevIDs.contains(c.getID())) {
+				remove.add(c);
+			}
+		}
+		//remove all those that are not in the set
+		prevConstraint.removeAll(remove);
+	}
 	
 	
 //	@Override

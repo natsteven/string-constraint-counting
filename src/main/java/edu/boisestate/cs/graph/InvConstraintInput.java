@@ -127,9 +127,11 @@ public class InvConstraintInput<T extends A_Model_Inverse<T>>  extends A_Inv_Con
 		System.out.format("EVALUATE INPUT %d ...\n",ID);
 		Iterator<I_Inv_Constraint<T>> iter = prevConstraint.iterator();
 		T inputs = iter.next().output(this);
-		System.out.println("inputs " + inputs);
+		System.out.println("prevConstraint " + prevConstraint);
 		while(iter.hasNext()) {
-				inputs = inputs.intersect(iter.next().output(this));
+				T nextInput = iter.next().output(this);
+				System.out.println("nextInput " + nextInput);
+				inputs = inputs.intersect(nextInput);
 		}
 		
 		//if consistent
