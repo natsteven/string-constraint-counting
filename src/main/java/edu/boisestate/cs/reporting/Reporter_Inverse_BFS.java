@@ -113,9 +113,16 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 				}
 				if(!result.get2()) {
 					//add to the backtrack queue
-					List<Integer> backtrackQ = new ArrayList<Integer>();
-					backtrackQ.add(curr.getID());
-					backtrackQ.addAll(qID);
+					TreeSet<Integer> backtrackQ = new TreeSet<Integer>();
+					//just for debuging -- check to make sure there is no
+					//curr.getID in the backtracking map
+					if(backtrackMap.containsKey(curr.getID())) {
+						System.out.println("ERRROR: adding the same id to the backtrack map " + curr.getID());
+					} else {
+						backtrackQ.add(curr.getID());
+						backtrackQ.addAll(qID);
+						backtrackMap.put(curr.getID(), backtrackQ);
+					}
 				}
 			} else {
 				//find the "closest" node to backtrack to curr
@@ -123,23 +130,25 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 				//the numbering go up as we go closer to the
 				//predicates
 				//eas: need to use lambda-expression here
-				System.out.println("BACKTRAKING");
-				Integer backtrackID = Integer.MAX_VALUE;
+				System.out.println("BACKTRAKING " + backtrackMap);
+				Integer backtrackID = -1; //all our nodes have positive ids
 				for(Integer ids : backtrackMap.keySet()) {
-					if(backtrackID > ids) {
+					if(backtrackID < ids) {
 						backtrackID = ids;
 					}
 				}
 				//case when nothing to backtrack to
-				if(backtrackID != Integer.MAX_VALUE) {
+				if(backtrackID != -1) {
 					//get the queue
 					qID = backtrackMap.get(backtrackID);
 					//remove backtrackID from the map
 					backtrackMap.remove(backtrackID);
 					//it should not contain backtrackID
 					Set<Integer> clearSet = eGraph.getAncestors(allConstraints.get(backtrackID));
+					clearSet.remove(backtrackID);//remove the node itself to make more choices
 					clearSet.retainAll(processedID);//only keep those that have been computed
 					processedID.removeAll(clearSet);//now remove them from processed -- they will be added again
+					System.out.println("clearing  " + clearSet);
 					//iterate for the clearSet and call clear on each inverse constraint 
 					for(int nodeID : clearSet) {
 						allInverseConstraints.get(nodeID).clear();

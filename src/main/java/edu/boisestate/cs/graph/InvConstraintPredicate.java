@@ -108,14 +108,23 @@ public class InvConstraintPredicate<T extends A_Model_Inverse<T>> extends A_Inv_
 	//T predicateResult = solver.getSymbolicModel(ID);
 	T predicateResult = solver.getSymbolicModel(nextConstraint.getID());
 //	System.out.println("solver " + solver);
-	//System.out.println("nextConstr " + nextConstraint.getID());
-	//System.out.println("predicate " + predicateResult.getFiniteStrings());
+	System.out.println("nextConstr " + nextConstraint.getID());
+	System.out.println("predicate " + predicateResult.getFiniteStrings());
 	
 	if (!predicateResult.isEmpty()) {
-				
+		//predicate result would go with non-concrete constratin, which
+		//could be target or a source
+		int indxSymb = 1;
+		int indxConcr = 2;
+		if(this.nextConstraint.getOp() == Operation.INIT_CON){
+			indxSymb = 2;
+			indxConcr = 1;
+		}
+		System.out.println("arg " + this.argConstraint.getOp());
+		System.out.println("oper " + this.nextConstraint.getOp());
 		// place symbolic string from solver string table into output set, position 1
-		outputSet.put(1, predicateResult);
-		outputSet.put(2, solver.getSymbolicModel(argID));//the argument for now is concrete, so whatever is coming from it
+		outputSet.put(indxSymb, predicateResult);
+		outputSet.put(indxConcr, solver.getSymbolicModel(argID));//the argument for now is concrete, so whatever is coming from it
 	} else {
 		System.out.println("ERROR: Predicate has no forward results, UNSAT");
 		ret = new Tuple<Boolean,Boolean>(false, true);

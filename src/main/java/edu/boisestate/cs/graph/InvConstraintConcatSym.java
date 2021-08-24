@@ -121,14 +121,28 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 			//do the intersection
 			inputs = incoming();
 		}
-		
+
+		System.out.println("inputs " + inputs.getFiniteStrings());
 		//remove one solution from the inputs
 		T input = inputs.getShortestExampleModel();
+		System.out.println("input " + input.getFiniteStrings() + " hash " + input.hashCode());
 		List<Tuple<T,T>> currOutput = new ArrayList<Tuple<T,T>>();
-		//System.out.println("mapInOut " + mapInOut);
+		//equals is implemented between two automata, but
+		//the hash functions is not, so in order to use hash map
+		//we just find the equal object use that's object hash value.
+		for(T in : mapInOut.keySet()) {
+			if(in.equals(input)) {
+				input = in;
+				break;
+			}
+		}
+		System.out.println("mapInOut " + mapInOut.containsKey(input));
+		
+		
 		if(mapInOut.containsKey(input)) {
 			//already computed outputs before just get the next value
 			currOutput = mapInOut.get(input);
+			System.out.println("Processed trying new valus");
 		} else {
 			//compute it fresh and add to the map
 			//compute outgoing solutions
@@ -156,6 +170,7 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 			mapInOut.put(input, currOutput);
 			
 		}
+		
 		for (Tuple<T,T> t : currOutput) {
 			System.out.format("RCVD:  P %4s  S %4s\n", t.get1().getShortestExampleString(),t.get2().getShortestExampleString());
 		}
