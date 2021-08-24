@@ -81,12 +81,12 @@ public abstract class A_Inv_Constraint<T extends A_Model_Inverse<T>> implements 
 		//System.out.println("incoming for " + this);
 		//System.out.println("prev " + prev);
 		T inputs = prev.output(this);
-		System.out.println(inputs.getFiniteStrings());
+		//System.out.println(inputs.getFiniteStrings());
 
 		while(iter.hasNext()) {
 			inputs = inputs.intersect(iter.next().output(this));
 		}
-		System.out.println(inputs.getFiniteStrings());
+		//System.out.println(inputs.getFiniteStrings());
 		return inputs;
 	}
 

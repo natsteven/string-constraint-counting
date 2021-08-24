@@ -144,7 +144,11 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 					//remove backtrackID from the map
 					backtrackMap.remove(backtrackID);
 					//it should not contain backtrackID
-					Set<Integer> clearSet = eGraph.getAncestors(allConstraints.get(backtrackID));
+					Set<Integer> clearSet = new HashSet<Integer>();
+					//include all descendants of the elements in qID
+					for(int clearEl : qID) {
+							clearSet.addAll(eGraph.getAncestors(allConstraints.get(clearEl)));
+					}
 					clearSet.remove(backtrackID);//remove the node itself to make more choices
 					clearSet.retainAll(processedID);//only keep those that have been computed
 					processedID.removeAll(clearSet);//now remove them from processed -- they will be added again
@@ -171,7 +175,10 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 
 		long durationInMillis = TimeUnit.NANOSECONDS.toMillis(durationInNano);
 
-		for (I_Inv_Constraint<T> i : allInverseConstraints.values())  {
+		//for (I_Inv_Constraint<T> i : allInverseConstraints.values())  {
+		//those inputs that have been processed
+		for(int id : processedID) {
+			I_Inv_Constraint<T> i = allInverseConstraints.get(id);
 			if (i.getOp() == Operation.INIT_SYM) {
 				if (i.output(0) == null || i.output(0).isEmpty()) {
 					System.out.println("\nFAILURE: Failed to get solution to one or more inputs...");
@@ -183,7 +190,9 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 
 		System.out.println("\nSOLUTION TIME ms: " + durationInMillis);
 
-		for (I_Inv_Constraint<T> i : allInverseConstraints.values()) {
+		//for (I_Inv_Constraint<T> i : allInverseConstraints.values()) {
+		for(int id : processedID) {
+			I_Inv_Constraint<T> i = allInverseConstraints.get(id);
 			if (i.getOp() == Operation.INIT_SYM) {
 				T solution = i.output(0);//symbolic nodes hold their solution in the output values
 

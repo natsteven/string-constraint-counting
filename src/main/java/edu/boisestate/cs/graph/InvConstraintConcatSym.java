@@ -102,13 +102,13 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 		return false;
 
 	}
-	
+
 	@Override
 	public void clear() {
 		super.clear();
 		inputs = null;
 		mapInOut.clear();
-		
+
 	}
 
 	@Override
@@ -121,41 +121,44 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 			//do the intersection
 			inputs = incoming();
 		}
-
-		System.out.println("inputs " + inputs.getFiniteStrings());
-		//remove one solution from the inputs
-		T input = inputs.getShortestExampleModel();
-		System.out.println("input " + input.getFiniteStrings() + " hash " + input.hashCode());
-		List<Tuple<T,T>> currOutput = new ArrayList<Tuple<T,T>>();
-		//equals is implemented between two automata, but
-		//the hash functions is not, so in order to use hash map
-		//we just find the equal object use that's object hash value.
-		for(T in : mapInOut.keySet()) {
-			if(in.equals(input)) {
-				input = in;
-				break;
-			}
-		}
-		System.out.println("mapInOut " + mapInOut.containsKey(input));
-		
-		
-		if(mapInOut.containsKey(input)) {
-			//already computed outputs before just get the next value
-			currOutput = mapInOut.get(input);
-			System.out.println("Processed trying new valus");
+		if(inputs.isEmpty()) {
+			System.out.println("CONCAT SYMV INCOMING SET INCONSISTENT...");
+			ret = new Tuple<Boolean,Boolean>(false, true);
 		} else {
-			//compute it fresh and add to the map
-			//compute outgoing solutions
-			T nextModel = solver.getSymbolicModel(nextConstraint.getID());
-			T argModel = solver.getSymbolicModel(argConstraint.getID());
-//			System.out.println("input " + input.getFiniteStrings());
-//			System.out.println("nextM " + nextModel.getFiniteStrings());
-//			System.out.println("argM " + argModel.getFiniteStrings());
-			//let's try this input
-			currOutput = input.inv_concatenate_sym_set(nextModel, argModel);
-			//if not a single split is produced then try another if some inputs are left
-			//System.out.println("currOutput " + currOutput);
-			while(currOutput.isEmpty()) {
+			System.out.println("inputs " + inputs.getFiniteStrings());
+			//remove one solution from the inputs
+			T input = inputs.getShortestExampleModel();
+			System.out.println("input " + input.getFiniteStrings() + " hash " + input.hashCode());
+			List<Tuple<T,T>> currOutput = new ArrayList<Tuple<T,T>>();
+			//equals is implemented between two automata, but
+			//the hash functions is not, so in order to use hash map
+			//we just find the equal object use that's object hash value.
+			for(T in : mapInOut.keySet()) {
+				if(in.equals(input)) {
+					input = in;
+					break;
+				}
+			}
+			System.out.println("mapInOut " + mapInOut.containsKey(input));
+
+
+			if(mapInOut.containsKey(input)) {
+				//already computed outputs before just get the next value
+				currOutput = mapInOut.get(input);
+				System.out.println("Processed trying new valus");
+			} else {
+				//compute it fresh and add to the map
+				//compute outgoing solutions
+				T nextModel = solver.getSymbolicModel(nextConstraint.getID());
+				T argModel = solver.getSymbolicModel(argConstraint.getID());
+				//			System.out.println("input " + input.getFiniteStrings());
+				//			System.out.println("nextM " + nextModel.getFiniteStrings());
+				//			System.out.println("argM " + argModel.getFiniteStrings());
+				//let's try this input
+				currOutput = input.inv_concatenate_sym_set(nextModel, argModel);
+				//if not a single split is produced then try another if some inputs are left
+				//System.out.println("currOutput " + currOutput);
+				while(currOutput.isEmpty()) {
 					//more inputs left?
 					inputs.minus(input);
 					System.out.println("inputs empty " + inputs.isEmpty());
@@ -166,42 +169,42 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 					//try them that
 					input = inputs.getShortestExampleModel();
 					currOutput = input.inv_concatenate_sym_set(nextModel, argModel);
+				}
+				mapInOut.put(input, currOutput);
+
 			}
-			mapInOut.put(input, currOutput);
-			
-		}
-		
-		for (Tuple<T,T> t : currOutput) {
-			System.out.format("RCVD:  P %4s  S %4s\n", t.get1().getShortestExampleString(),t.get2().getShortestExampleString());
-		}
-		
-		//recomputing new outgoing values and updating the 
-		//set of choices
-		Tuple<T,T> split = currOutput.remove(0);
 
-		T prefix = split.get1();
-		T suffix = split.get2();
-
-		outputSet.put(1, prefix);
-		outputSet.put(2, suffix);
-		
-		//if there are more choices left in currOutput then 
-		//backtrack to it
-		if(!currOutput.isEmpty()) {
-			ret = new Tuple<Boolean, Boolean>(true, false);//continue and add to backtrack
-		} else {
-			//this input has been processed
-			//remove from inputs and from the map
-			inputs.minus(input);
-			mapInOut.remove(input);
-			//check if more input left
-			if(!inputs.isEmpty()) {
-				ret = new Tuple<Boolean, Boolean>(true, false);//continue and add to backtrack since there are more inputs
+			for (Tuple<T,T> t : currOutput) {
+				System.out.format("RCVD:  P %4s  S %4s\n", t.get1().getShortestExampleString(),t.get2().getShortestExampleString());
 			}
-		}
-		
-		System.out.format("CHOSE: P %4s  S %4s\n", prefix.getShortestExampleString(), suffix.getShortestExampleString());
 
+			//recomputing new outgoing values and updating the 
+			//set of choices
+			Tuple<T,T> split = currOutput.remove(0);
+
+			T prefix = split.get1();
+			T suffix = split.get2();
+
+			outputSet.put(1, prefix);
+			outputSet.put(2, suffix);
+
+			//if there are more choices left in currOutput then 
+			//backtrack to it
+			if(!currOutput.isEmpty()) {
+				ret = new Tuple<Boolean, Boolean>(true, false);//continue and add to backtrack
+			} else {
+				//this input has been processed
+				//remove from inputs and from the map
+				inputs.minus(input);
+				mapInOut.remove(input);
+				//check if more input left
+				if(!inputs.isEmpty()) {
+					ret = new Tuple<Boolean, Boolean>(true, false);//continue and add to backtrack since there are more inputs
+				}
+			}
+
+			System.out.format("CHOSE: P %4s  S %4s\n", prefix.getShortestExampleString(), suffix.getShortestExampleString());
+		}
 
 		return ret;
 	}

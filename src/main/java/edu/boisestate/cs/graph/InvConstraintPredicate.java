@@ -108,8 +108,8 @@ public class InvConstraintPredicate<T extends A_Model_Inverse<T>> extends A_Inv_
 	//T predicateResult = solver.getSymbolicModel(ID);
 	T predicateResult = solver.getSymbolicModel(nextConstraint.getID());
 //	System.out.println("solver " + solver);
-	System.out.println("nextConstr " + nextConstraint.getID());
-	System.out.println("predicate " + predicateResult.getFiniteStrings());
+	//System.out.println("nextConstr " + nextConstraint.getID());
+	//System.out.println("predicate " + predicateResult.getFiniteStrings());
 	
 	if (!predicateResult.isEmpty()) {
 		//predicate result would go with non-concrete constratin, which
@@ -120,7 +120,7 @@ public class InvConstraintPredicate<T extends A_Model_Inverse<T>> extends A_Inv_
 			indxSymb = 2;
 			indxConcr = 1;
 		}
-		System.out.println("arg " + this.argConstraint.getOp());
+		System.out.println("arg " + (this.argConstraint==null? null : this.argConstraint.getOp()));
 		System.out.println("oper " + this.nextConstraint.getOp());
 		// place symbolic string from solver string table into output set, position 1
 		outputSet.put(indxSymb, predicateResult);
