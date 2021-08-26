@@ -69,7 +69,7 @@ public abstract class A_Inv_Constraint<T extends A_Model_Inverse<T>> implements 
 		T inputs = incoming();
 
 		if(inputs.isEmpty()) {
-			System.out.println("TOLOWER INCOMING SET INCONSISTENT...");
+			System.out.println("INCOMING SET INCONSISTENT...");
 			ret = new Tuple<Boolean,Boolean>(false, true);
 		}
 		return ret;
@@ -78,10 +78,10 @@ public abstract class A_Inv_Constraint<T extends A_Model_Inverse<T>> implements 
 	protected T incoming() {
 		Iterator<I_Inv_Constraint<T>> iter = prevConstraint.iterator();
 		I_Inv_Constraint<T> prev = iter.next();
-		//System.out.println("incoming for " + this);
-		//System.out.println("prev " + prev);
-		T inputs = prev.output(this);
-		//System.out.println(inputs.getFiniteStrings());
+		System.out.println("incoming for " + this);
+		System.out.println("prev " + prev);
+		T inputs = prev.output(this).clone(); //need to close otherwise work on the actual object?
+		System.out.println(inputs.isEmpty());
 
 		while(iter.hasNext()) {
 			inputs = inputs.intersect(iter.next().output(this));

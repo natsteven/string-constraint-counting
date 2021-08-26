@@ -131,14 +131,15 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 				//predicates
 				//eas: need to use lambda-expression here
 				System.out.println("BACKTRAKING " + backtrackMap);
-				Integer backtrackID = -1; //all our nodes have positive ids
+				Integer backtrackID = Integer.MAX_VALUE; //all our nodes have positive ids
 				for(Integer ids : backtrackMap.keySet()) {
-					if(backtrackID < ids) {
+					if(backtrackID > ids) {
 						backtrackID = ids;
 					}
 				}
+				System.out.println("backtrackID " + backtrackID);
 				//case when nothing to backtrack to
-				if(backtrackID != -1) {
+				if(backtrackID != Integer.MAX_VALUE) {
 					//get the queue
 					qID = backtrackMap.get(backtrackID);
 					//remove backtrackID from the map

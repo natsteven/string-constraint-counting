@@ -126,11 +126,14 @@ public class InvConstraintInput<T extends A_Model_Inverse<T>>  extends A_Inv_Con
 		Tuple<Boolean, Boolean>  ret = new Tuple<Boolean, Boolean>(true, true) ; //don't backtrack
 		System.out.format("EVALUATE INPUT %d ...\n",ID);
 		Iterator<I_Inv_Constraint<T>> iter = prevConstraint.iterator();
-		T inputs = iter.next().output(this);
-		System.out.println("prevConstraint " + prevConstraint);
+		I_Inv_Constraint<T> nextC = iter.next();
+		System.out.println("nextInput " + nextC);
+		T inputs = nextC.output(this);
+		System.out.println("prevConstraint " +(inputs==null? null : inputs.getFiniteStrings()));
 		while(iter.hasNext()) {
-				T nextInput = iter.next().output(this);
-				System.out.println("nextInput " + nextInput);
+			nextC = iter.next();
+			System.out.println("nextInput " + nextC);
+				T nextInput = nextC.output(this);
 				inputs = inputs.intersect(nextInput);
 		}
 		
