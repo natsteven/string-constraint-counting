@@ -9,6 +9,7 @@ import java.util.List;
 
 import edu.boisestate.cs.automatonModel.A_Model_Inverse;
 import edu.boisestate.cs.solvers.*;
+import edu.boisestate.cs.util.Tuple;
 
 /**
  * @author Marlin Roberts, 2020-2021
@@ -85,6 +86,38 @@ public class InvConstraintReplaceCharChar<T extends A_Model_Inverse<T>> extends 
 			return false;
 		}
 		
+	}
+	
+	@Override
+	public Tuple<Boolean, Boolean> evaluate(){
+		Tuple<Boolean,Boolean> ret = new Tuple<Boolean,Boolean>(true, true);
+		System.out.format("EVALUATE TREPLACE CHAR %d ...\n",ID);
+		T inputs = incoming();
+		
+		if(inputs.isEmpty()) {
+			System.out.println("REPLACE CHAR INCOMING SET INCONSISTENT...");
+			ret = new Tuple<Boolean,Boolean>(false, true);
+		} else {
+			//done performing intersection 
+			// perform inverse function on output from the input constraint at given index
+			T resModel = solver.inv_replaceCharKnown(inputs, (char) find, (char) replace);
+			System.out.println("resModel " + resModel.getFiniteStrings());
+			
+			// intersect result with forward analysis results from previous constraint
+			resModel = solver.intersect(resModel, nextConstraint.getID());
+			System.out.println("find " + (char) find + " replace " + (char)replace);
+			System.out.println("resModelInter " + resModel.getFiniteStrings());
+			
+			if (resModel.isEmpty()) {
+				System.out.println("REPLACE CHAR RESULT MODEL EMPTY...");
+				// halt solving, fallback
+				ret = new Tuple<Boolean,Boolean>(false, true);
+			} else {
+				outputSet.put(1, resModel);	
+			}
+		}
+
+		return ret;
 	}
 
 

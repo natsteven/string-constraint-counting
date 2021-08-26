@@ -57,7 +57,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 	private String saveFile = "src\\test\\automata\\";
 	
 	// temporary implementation of solution output to file
-	public String solutionFile = "";
+	public String solutionFile = "./temp/solutions.txt";
 	
 	// prefix for output when running inside SPF
 	protected static String cid = "[IGEN] ";
@@ -268,7 +268,6 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         // output row
         System.out.println(cid + row);
 
-        
         // --------------------------------------------------------------------------------------------
         // The process for solving the inputs needed to reach the current predicate location starts here.
         // --------------------------------------------------------------------------------------------       
@@ -520,7 +519,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
     			allInverseConstraints.put(ID, newConstraint);
     			
     			if (localDebug) {
-    				System.out.println("processed " + op.toString() + "  " + pc.getId());
+    				System.out.println("processed " + op.toString() + "  " + pc.getId() + " " + args);
     			}
     			
     			break; 
@@ -554,8 +553,8 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
     		
     		// get the arglist and check if not empty
     		List<Integer> argList = pc.getArgList();
-    		
-    		if (!argList.isEmpty() && pc.getOp() != Operation.SUBSTR_STRT_END) {
+    		//eas: replace arg list contains concrete values instead of node ids
+    		if (!argList.isEmpty() && pc.getOp() != Operation.SUBSTR_STRT_END && pc.getOp() != Operation.REPLACE_CHAR_CHAR) {
     				// argument present, set invConstraint argument reference.
     	 			int arg = argList.get(0);
     	 			if (arg != -1) {

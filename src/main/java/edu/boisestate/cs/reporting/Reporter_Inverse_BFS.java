@@ -1,5 +1,8 @@
 package edu.boisestate.cs.reporting;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,11 +29,19 @@ import edu.boisestate.cs.util.Tuple;
 public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter_Inverse<T> {
 	//this class should also remember all previous constraints, it might be in
 	//allConstraints
+	
+	//private BufferedWriter out;
 
 	public Reporter_Inverse_BFS(DirectedGraph<PrintConstraint, SymbolicEdge> graph, Parser_2<T> parser, 
 			Solver_Inverse<T> invSolver, boolean debug) {
 		super(graph, parser, invSolver, debug);
-		// TODO Auto-generated constructor stub
+//		// TODO Auto-generated constructor stub
+//		try {
+//			out = new BufferedWriter(new FileWriter("./temp/solutions.txt"));
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 
 	@Override
@@ -201,7 +212,7 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 				inputSolution.put(i.getID(), solution);
 
 				System.out.print("INPUT ID: " + i.getID() + "  COUNT: " + solution.modelCount() + "  VALUE(S): ");
-				BigInteger limit = new BigInteger("300");
+				BigInteger limit = new BigInteger("50");
 
 				if (solution.modelCount().compareTo(limit) > 0) {
 					System.out.print("Too many values to output,  " + solution.modelCount() + "  example: ");

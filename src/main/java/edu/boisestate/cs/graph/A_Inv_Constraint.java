@@ -78,13 +78,16 @@ public abstract class A_Inv_Constraint<T extends A_Model_Inverse<T>> implements 
 	protected T incoming() {
 		Iterator<I_Inv_Constraint<T>> iter = prevConstraint.iterator();
 		I_Inv_Constraint<T> prev = iter.next();
-		System.out.println("incoming for " + this);
-		System.out.println("prev " + prev);
+		//System.out.println("incoming for " + this);
+		//System.out.println("prev " + prev);
 		T inputs = prev.output(this).clone(); //need to close otherwise work on the actual object?
-		System.out.println(inputs.isEmpty());
+		//System.out.println("Inputs " + inputs.getFiniteStrings());
 
 		while(iter.hasNext()) {
-			inputs = inputs.intersect(iter.next().output(this));
+			T nextInput = iter.next().output(this);
+			//System.out.println("Next " + nextInput.getFiniteStrings());
+			inputs = inputs.intersect(nextInput);
+			//System.out.println("Inputs " + inputs.getFiniteStrings());
 		}
 		//System.out.println(inputs.getFiniteStrings());
 		return inputs;
