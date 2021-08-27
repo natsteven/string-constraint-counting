@@ -376,7 +376,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
      */
     protected void buildICG_r3 () {
 
-    	boolean localDebug = true;
+    	boolean localDebug = false;
     	
     	List<Integer> args;
     	
@@ -595,7 +595,11 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 
     		
     		// MJR some operations only have concrete arguments and the value in args are the actual values and NOT constraint IDs. 
-    		if (!argList.isEmpty() && pc.getOp() != Operation.SUBSTR_STRT_END && pc.getOp() != Operation.SUBSTRING_START && pc.getOp() != Operation.SET_LENGTH && pc.getOp() != Operation.REPLACE_CHAR_CHAR) {
+    		if (!argList.isEmpty() && pc.getOp() != Operation.SUBSTR_STRT_END && 
+    				pc.getOp() != Operation.SUBSTRING_START && 
+    				pc.getOp() != Operation.SET_LENGTH && 
+    				pc.getOp() != Operation.REPLACE_CHAR_CHAR &&
+    				pc.getOp() != Operation.DELETE_START_END) {
 
 
     				// argument present, set invConstraint argument reference.

@@ -5,6 +5,7 @@ import java.util.List;
 
 import edu.boisestate.cs.automatonModel.A_Model_Inverse;
 import edu.boisestate.cs.solvers.*;
+import edu.boisestate.cs.util.Tuple;
 
 /**
  * @author Marlin Roberts, 2020-2021
@@ -94,6 +95,34 @@ public class InvConstraintDeleteStartEnd<T extends A_Model_Inverse<T>> extends A
 			return false;
 		}
 		
+	}
+	
+	@Override
+	public Tuple<Boolean, Boolean> evaluate(){
+		System.out.format("EVALUATE DELETE %d ...\n",ID);
+		Tuple<Boolean, Boolean>  ret = new Tuple<Boolean,Boolean>(true, true);
+
+		T inputs = incoming();
+		if(inputs.isEmpty()) {
+			System.out.println("DELETE SOLUTION INCOMING SET INCONSISTENT...");
+			ret = new Tuple<Boolean,Boolean>(false, true);
+		} else {
+			// perform inverse function on output from the input constraint at given index
+			T resModel = solver.inv_delete(inputs, start, end);
+
+			// intersect result with forward analysis results from previous constraint
+			resModel = solver.intersect(resModel, nextConstraint.getID());
+
+			if(!resModel.isEmpty()) {
+				// store result in this constraints output set at index 1
+				outputSet.put(1, resModel);	
+			} else {
+				System.out.println("DELETE OUTPUT SET IS EMTPY...");
+				ret = new Tuple<Boolean,Boolean>(false, true);
+			}
+		}
+
+		return ret;
 	}
 
 

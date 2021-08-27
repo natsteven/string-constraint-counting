@@ -1,0 +1,100 @@
+{
+  "alphabet" : {
+    "size" : 6,
+    "declaration" : "A,B,C,a,b,c"
+  },
+  "vertices" : [ {
+    "num" : 0,
+    "actualValue" : "aa",
+    "incomingEdges" : [ ],
+    "sourceConstraints" : [ ],
+    "timeStamp" : 1482521433,
+    "type" : 0,
+    "id" : 5,
+    "value" : "r5!:!getStringValue!!"
+  }, {
+    "num" : 0,
+    "actualValue" : "aA",
+    "incomingEdges" : [ ],
+    "sourceConstraints" : [ ],
+    "timeStamp" : 1482521433,
+    "type" : 0,
+    "id" : 16,
+    "value" : "\"aA\"!:!<init>"
+  }, {
+    "num" : 0,
+    "actualValue" : "aaa",
+    "incomingEdges" : [ ],
+    "sourceConstraints" : [ ],
+    "timeStamp" : 1482521433,
+    "type" : 0,
+    "id" : 15,
+    "value" : "\"aaa\"!:!<init>"
+  }, {
+    "num" : 0,
+    "actualValue" : "aaaA",
+    "incomingEdges" : [ {
+      "source" : 5,
+      "type" : "t"
+    }, {
+      "source" : 16,
+      "type" : "s1"
+    } ],
+    "sourceConstraints" : [ ],
+    "timeStamp" : 1482521433,
+    "type" : 0,
+    "id" : 17,
+    "value" : "concat!!Ljava/lang/String;!:!0"
+  }, {
+    "num" : 0,
+    "actualValue" : "AA",
+    "incomingEdges" : [ ],
+    "sourceConstraints" : [ ],
+    "timeStamp" : 1482521433,
+    "type" : 0,
+    "id" : 31,
+    "value" : "\"AA\"!:!<init>"
+  }, {
+    "num" : 0,
+    "actualValue" : "true",
+    "incomingEdges" : [ {
+      "source" : 17,
+      "type" : "t"
+    }, {
+      "source" : 15,
+      "type" : "s1"
+    } ],
+    "sourceConstraints" : [ ],
+    "timeStamp" : 1482521433,
+    "type" : 0,
+    "id" : 32,
+    "value" : "contains!!Ljava/lang/CharSequence;!:!0"
+  }, {
+    "num" : 0,
+    "actualValue" : "true",
+    "incomingEdges" : [ {
+      "source" : 12,
+      "type" : "t"
+    }, {
+      "source" : 31,
+      "type" : "s1"
+    } ],
+    "sourceConstraints" : [ ],
+    "timeStamp" : 1482521433,
+    "type" : 0,
+    "id" : 33,
+    "value" : "contains!!Ljava/lang/CharSequence;!:!0"
+  }, {
+    "num" : 0,
+    "actualValue" : "AA",
+    "incomingEdges" : [ {
+      "source" : 5,
+      "type" : "t"
+    } ],
+    "sourceConstraints" : [ ],
+    "timeStamp" : 1482521433,
+    "type" : 0,
+    "id" : 12,
+    "value" : "toUpperCase!!!:!0"
+  } ]
+}

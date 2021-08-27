@@ -1,0 +1,88 @@
+{
+  "alphabet" : {
+    "size" : 6,
+    "declaration" : "A,B,C,a,b,c"
+  },
+  "vertices" : [ {
+    "num" : 0,
+    "actualValue" : "aaAB",
+    "incomingEdges" : [ {
+      "source" : 10,
+      "type" : "t"
+    }, {
+      "source" : 12,
+      "type" : "s1"
+    } ],
+    "sourceConstraints" : [ ],
+    "timeStamp" : 1482521433,
+    "type" : 0,
+    "id" : 17,
+    "value" : "concat!!Ljava/lang/String;!:!0"
+  }, {
+    "num" : 0,
+    "actualValue" : "A",
+    "incomingEdges" : [ ],
+    "sourceConstraints" : [ ],
+    "timeStamp" : 1482521433,
+    "type" : 0,
+    "id" : 5,
+    "value" : "r5!:!getStringValue!!"
+  }, {
+    "num" : 0,
+    "actualValue" : "A",
+    "incomingEdges" : [ ],
+    "sourceConstraints" : [ ],
+    "timeStamp" : 1482521433,
+    "type" : 0,
+    "id" : 6,
+    "value" : "r6!:!getStringValue!!"
+  }, {
+    "num" : 0,
+    "actualValue" : "aA",
+    "incomingEdges" : [ ],
+    "sourceConstraints" : [ ],
+    "timeStamp" : 1482521433,
+    "type" : 0,
+    "id" : 30,
+    "value" : "\"aA\"!:!<init>"
+  }, {
+    "num" : 0,
+    "actualValue" : "true",
+    "incomingEdges" : [ {
+      "source" : 17,
+      "type" : "t"
+    }, {
+      "source" : 30,
+      "type" : "s1"
+    } ],
+    "sourceConstraints" : [ ],
+    "timeStamp" : 1482521433,
+    "type" : 0,
+    "id" : 32,
+    "value" : "contains!!Ljava/lang/CharSequence;!:!0"
+  }, {
+    "num" : 0,
+    "actualValue" : "aa",
+    "incomingEdges" : [ {
+      "source" : 5,
+      "type" : "t"
+    } ],
+    "sourceConstraints" : [ ],
+    "timeStamp" : 1482521433,
+    "type" : 0,
+    "id" : 10,
+    "value" : "toLowerCase!!!:!0"
+  }, {
+    "num" : 0,
+    "actualValue" : "AA",
+    "incomingEdges" : [ {
+      "source" : 6,
+      "type" : "t"
+    } ],
+    "sourceConstraints" : [ ],
+    "timeStamp" : 1482521433,
+    "type" : 0,
+    "id" : 12,
+    "value" : "toUpperCase!!!:!0"
+  } ]
+}
