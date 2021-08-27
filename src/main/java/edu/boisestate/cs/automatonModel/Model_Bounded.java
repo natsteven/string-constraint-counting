@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.Stack;
 
 import dk.brics.automaton.Automaton;
 import dk.brics.automaton.BasicAutomata;
@@ -34,6 +35,7 @@ import edu.boisestate.cs.automatonModel.operations.PreciseSubstring;
 import edu.boisestate.cs.automatonModel.operations.PreciseSuffix;
 import edu.boisestate.cs.automatonModel.operations.PreciseTrim;
 import edu.boisestate.cs.automatonModel.operations.StringModelCounter;
+import edu.ucsb.cs.www.vlab.stranger.StrangerLibrary.transition;
 
 public class Model_Bounded extends A_Model<Model_Bounded> {
 
@@ -882,33 +884,102 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 		return new Model_Bounded(result, this.alphabet, this.boundLength);
 	}
 
-	public Model_Bounded replaceFirstOptimized(String regexString, String replacement) {
-		// initialize necessary automata
+	public Model_Bounded replaceFirstOptimized(String regexString, String replacementString) {
+		// start by minimizing target automaton to ensure there are no duplicate
+		// solutions for the same string
 		Automaton targetAutomaton = this.automaton.clone();
+		// initialize regex automaton
 		Automaton regexAutomaton = new RegExp(regexString).toAutomaton();
-
-		// set of all strings which have been removed and replaced
-		Set<String> replacedStrings = new HashSet<String>();
-		// set of all new strings after replacing old targets
-		Set<String> replacementStrings = new HashSet<String>();
-
-		// as long as the desired regex is found within the target automaton, keep
-		// looping to find more matches
-		while (true) {
-			// initialized temporary states as initial states
-			State targetState = targetAutomaton.getInitialState();
-			State regexState = regexAutomaton.getInitialState();
-			// if the desired regex is not found within the target automaton, break out of
-			// the loop
-			String solution = findConcreteString(targetState, regexState, "", new HashMap<Integer, Integer>(), false,
-					replacedStrings, replacementStrings);
+		// set of all strings previously replaced or solution strings
+		Set<String> stringsToIgnore = new HashSet<String>();
+		do {
+			// minimize the target automaton
+			targetAutomaton.minimize();
+			// find a string which contains a substring satisfying the regex
+			String solution = findConcreteString(targetAutomaton.getInitialState(), regexAutomaton.getInitialState(),
+					"", new HashMap<Integer, Integer>(), false, stringsToIgnore);
+			// if no solution is found, break out of the loop
 			if (solution == null)
 				break;
-			// if the desired regex is found within the target automaton, String solution is
-			// the String containing the substring which satisfies the regex
-
-		}
+			// add the solution string to stringsToIgnore for future loops
+			stringsToIgnore.add(solution);
+			// create singleton automaton from result of solution.replaceFirst
+			Automaton duplicateBranch = BasicAutomata.makeString(solution.replaceFirst(regexString, replacementString));
+			// remove solution string from original automaton
+		} while (true);
 		return new Model_Bounded(targetAutomaton, this.alphabet, this.boundLength);
+	}
+
+	/**
+	 * Removed the desired string from the target automaton. This method assumes
+	 * that targetString is contained in targetAutomaton.
+	 * 
+	 * @param targetAutomaton - automaton to be modified
+	 * @param targetString    - string to be removed
+	 * @return - modified version of targetAutomaton, or null if targetString is not
+	 *         contained in targetAutomaton
+	 */
+	private Automaton removeString(Automaton targetAutomaton, String targetString) {
+		// initialize targetState
+		State targetState = targetAutomaton.getInitialState();
+		Stack<Transition> transitionStack = new Stack<Transition>();
+		// iterate through each character in the target string
+		for (int i = 0; i < targetString.length(); i++) {
+			// true if the target character is found in a transition
+			boolean matchFound = false;
+			// compare transitions with the target string
+			for (Transition t : targetState.getTransitions()) {
+				// if a match is found, break out of the loop
+				if (getCharRange(t.getMin(), t.getMax()).indexOf(targetString.charAt(i)) != -1) {
+					targetState = t.getDest();
+					transitionStack.push(t);
+					matchFound = true;
+					break;
+				}
+			}
+			// if no match is found, then targetString is not contained in targetAutomaton
+			if (!matchFound)
+				return null;
+		}
+		// if the final target state is not an accept state, then targetString is not
+		// contained in targetAutomaton
+		if (!targetState.isAccept())
+			return null;
+		// start working backwards and removing states until one with multiple
+		// transitions is hit
+		Transition previousTransition = null;
+		Transition targetTransition = transitionStack.pop();
+		// if the final state contains further transitions, set the state to not accept
+		// and return the target automaton
+		if (targetTransition.getDest().getTransitions().size() > 0) {
+			targetTransition.getDest().setAccept(false);
+			return targetAutomaton;
+		} else {
+			// TODO: account for empty transitionStack (i.e. single-character solution strings)
+			previousTransition = targetTransition;
+			targetTransition = transitionStack.pop();
+		}
+		while (!transitionStack.empty()) {
+			// if the destination state is an accept state and has departing transitions,
+			// change it to a non-accept state and return the automaton
+			if (targetTransition.getDest().isAccept() && targetTransition.getDest().getTransitions().size() > 0) {
+				targetTransition.getDest().setAccept(false);
+				return targetAutomaton;
+			}
+			// if the destination state contains more than one departing transition, remove
+			// the previous transition and return the automaton
+			if (targetTransition.getDest().getTransitions().size() > 1) {
+				targetTransition.getDest().getTransitions().remove(previousTransition);
+				return targetAutomaton;
+			}
+			// if the destination state is not an accept state and contains exactly 1
+			// departing transition, remove the target transition and continue
+			previousTransition = targetTransition;
+			targetTransition = transitionStack.pop();
+			targetTransition.getDest().getTransitions().remove(previousTransition);
+		}
+		// figure out how to handle removing the beginning of the automaton
+		return targetAutomaton;
 	}
 
 	/**
@@ -939,8 +1010,8 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 	 *         solution. Returns null if there is no solution.
 	 */
 	public String findConcreteString(State targetState, State regexState, String str,
-			HashMap<Integer, Integer> visitedStates, boolean regexSolutionUpstream, Set<String> replacedStrings,
-			Set<String> replacementStrings) throws IllegalArgumentException {
+			HashMap<Integer, Integer> visitedStates, boolean regexSolutionUpstream, Set<String> stringsToIgnore)
+			throws IllegalArgumentException {
 		// if the targetState has been visited before, this means there is a cycle.
 		// Throw an exception.
 		if (visitedStates.get(targetState.hashCode()) != null && visitedStates.get(targetState.hashCode()) == 1)
@@ -964,16 +1035,15 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 						// call method on itself for next iteration
 						String downstreamResult = findConcreteString(targetTrans.getDest(), regexTrans.getDest(),
 								str + sharedTransition, visitState(targetState, visitedStates),
-								regexSolutionUpstream || regexTrans.getDest().isAccept(), replacedStrings,
-								replacementStrings);
+								regexSolutionUpstream || regexTrans.getDest().isAccept(), stringsToIgnore);
 						// if recursive call returns a value, then a solution has been found. Return
 						// the shared transition + this solution to the top
 						if (downstreamResult != null)
 							if (downstreamResult == ".") {
 								// if the current solution has already been found before, return null and ignore
 								// it
-								if (!replacedStrings.contains(str + sharedTransition)
-										&& !replacementStrings.contains(str + sharedTransition))
+								if (!stringsToIgnore.contains(str + sharedTransition)
+										&& !stringsToIgnore.contains(str + sharedTransition))
 									return str + sharedTransition + downstreamResult;
 							} else
 								return downstreamResult;
@@ -993,15 +1063,14 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 			for (char c = targetTrans.getMin(); c <= targetTrans.getMax(); c++) {
 				String downstreamResult = findConcreteString(targetTrans.getDest(), regexState, str + c,
 						visitState(targetState, visitedStates), regexSolutionUpstream || regexState.isAccept(),
-						replacedStrings, replacementStrings);
+						stringsToIgnore);
 				// if recursive call returns a value, then a solution has been found. Return
 				// this transition + this solution to the top
 				if (downstreamResult != null)
 					if (downstreamResult == ".") {
 						// if the current solution has already been found before, return null and ignore
 						// it
-						if (!replacedStrings.contains(str + c)
-								&& !replacementStrings.contains(str + c))
+						if (!stringsToIgnore.contains(str + c) && !stringsToIgnore.contains(str + c))
 							return str + c + downstreamResult;
 					} else
 						return downstreamResult;

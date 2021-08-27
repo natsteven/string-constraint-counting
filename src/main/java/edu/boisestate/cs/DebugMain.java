@@ -68,9 +68,9 @@ public class DebugMain {
 		Automaton regexAutomaton = new RegExp("bc").toAutomaton();
 		Set<String> s = new HashSet<String>();
 		s.add("abcd");
+//		s.add("abce");
 		System.out.println(independentSolutionExample.findConcreteString(targetAutomaton.getInitialState(),
-				regexAutomaton.getInitialState(), "", new HashMap<Integer, Integer>(), false, s,
-				new HashSet<String>()));
+				regexAutomaton.getInitialState(), "", new HashMap<Integer, Integer>(), false, s));
 	}
 
 	public static boolean remove(char targetTransition, State curr) {
