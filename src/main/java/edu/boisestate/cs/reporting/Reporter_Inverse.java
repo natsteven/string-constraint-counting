@@ -10,7 +10,10 @@ import edu.boisestate.cs.graph.InvConstraintDeleteCharAt;
 import edu.boisestate.cs.graph.InvConstraintDeleteStartEnd;
 import edu.boisestate.cs.graph.InvConstraintInput;
 import edu.boisestate.cs.graph.InvConstraintPredicate;
+import edu.boisestate.cs.graph.InvConstraintPropagation;
 import edu.boisestate.cs.graph.InvConstraintReplaceCharChar;
+import edu.boisestate.cs.graph.InvConstraintSetLength;
+import edu.boisestate.cs.graph.InvConstraintSubStringStart;
 import edu.boisestate.cs.graph.InvConstraintSubStringStartEnd;
 import edu.boisestate.cs.graph.InvConstraintToLowerCase;
 import edu.boisestate.cs.graph.InvConstraintToUpperCase;
@@ -374,7 +377,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
      */
     protected void buildICG_r3 () {
 
-    	boolean localDebug = false;
+    	boolean localDebug = true;
     	
     	List<Integer> args;
     	
@@ -423,6 +426,17 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
     		case PREDICATE:
 
     			newConstraint = new InvConstraintPredicate<T>(ID,invSolver);
+    			allInverseConstraints.put(ID, newConstraint);
+    			
+    			if (localDebug) {
+    				System.out.println("processed " + op.toString() + "  " + pc.getId());
+    			}
+
+    			break;
+    			
+    		case PROPAGATION:
+
+    			newConstraint = new InvConstraintPropagation<T>(ID,invSolver);
     			allInverseConstraints.put(ID, newConstraint);
     			
     			if (localDebug) {
@@ -488,7 +502,32 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
     			}
     			
     			break; 
+    			
+    		case SET_LENGTH:
+    			
+    			args = pc.getArgList();
+    			newConstraint = new InvConstraintSetLength<T>(ID,invSolver,args);
+    			allInverseConstraints.put(ID, newConstraint);
+    			
+    			if (localDebug) {
+    				System.out.println("processed " + op.toString() + "  " + pc.getId());
+    			}
+    			
+    			break; 
 
+    		case SUBSTRING_START:
+    			
+    			args = pc.getArgList();
+    			newConstraint = new InvConstraintSubStringStart<T>(ID,invSolver,args);
+    			allInverseConstraints.put(ID, newConstraint);
+    			
+    			if (localDebug) {
+    				System.out.println("processed " + op.toString() + "  " + pc.getId());
+    			}
+    			
+    			break; 
+    			
+    			
     		case DELETE_START_END:
     			
     			args = pc.getArgList();
@@ -555,7 +594,8 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
     		// get the arglist and check if not empty
     		List<Integer> argList = pc.getArgList();
     		
-    		if (!argList.isEmpty() && pc.getOp() != Operation.SUBSTR_STRT_END) {
+    		// MJR some operations only have concrete arguments and the value in args are the actual values and NOT constraint IDs. 
+    		if (!argList.isEmpty() && pc.getOp() != Operation.SUBSTR_STRT_END && pc.getOp() != Operation.SUBSTRING_START && pc.getOp() != Operation.SET_LENGTH && pc.getOp() != Operation.REPLACE_CHAR_CHAR) {
     				// argument present, set invConstraint argument reference.
     	 			int arg = argList.get(0);
     	 			if (arg != -1) {

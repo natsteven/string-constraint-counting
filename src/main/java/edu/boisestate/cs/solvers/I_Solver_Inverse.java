@@ -53,6 +53,11 @@ public interface I_Solver_Inverse<T extends A_Model_Inverse<T>> {
 
 	T inv_substring(T input, int start, int end);
 
+	T inv_substring(T input, int start);
+	
+	T inv_setLength(T input, int length);
+	
+	
 	T inv_toLowerCase(T input);
 
 	T inv_toUpperCase(T input);

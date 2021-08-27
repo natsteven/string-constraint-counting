@@ -28,6 +28,8 @@ public interface I_Model_Inverse<T extends I_Model_Inverse<T>> {
 	T inv_reverse();
 
 	T inv_substring(int start, int end);
+	
+	T inv_substring(int start);
 
 	T inv_setCharAt(int offset, T argModel);
 

@@ -261,6 +261,21 @@ public class Solver_Inverse<T extends A_Model_Inverse<T>> extends Solver_Count<T
 	}
 
 	/**
+	 * R3 Version 
+	 * Returns result T
+	 * 
+	 * 03/18/2021 MJR
+	 */
+	@Override
+	public T inv_substring(T input, int start) {
+		
+		//T baseModel = invStringMap.get(base);
+		T resModel = input.inv_substring(start);
+		//invStringMap.put(id, resultModel);
+		return resModel;
+	}
+	
+	/**
 	 * R3 Version Performs base.inv_toLowercase
 	 * Returns result T
 	 * 
@@ -415,6 +430,14 @@ public class Solver_Inverse<T extends A_Model_Inverse<T>> extends Solver_Count<T
 	public void setSymString(int id, T stringModel) {
 		invStringMap.put(id, stringModel);
 		
+	}
+
+	@Override
+	public T inv_setLength(T input, int length) {
+		
+		T resModel = input.inv_setLength(length);
+		//invStringMap.put(id, resultModel);
+		return resModel;
 	}
 	
 }

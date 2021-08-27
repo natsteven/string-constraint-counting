@@ -1146,6 +1146,21 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 		return result;
 	}
 
+	@Override
+	public Model_Acyclic_Inverse inv_substring(int start) {
+		
+		// we know the length of the prefix, it is equal to start.
+		Model_Acyclic_Inverse prefix = modelManager.createAnyString(start,start);
+		
+		// we do not know the length of the original string, so we do no know the length of the suffix.
+		// if the original had a longer suffix, we will lose string possibilities, under-estimation.
+		//Model_Acyclic_Inverse suffix = modelManager.createAnyString(0,maxStringPadding);
+		
+		Model_Acyclic_Inverse result = prefix.concatenate(this);
+		//result = result.concatenate(suffix);
+		
+		return result;
+	}
 
 
 
@@ -1160,8 +1175,11 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 
 	@Override
 	public Model_Acyclic_Inverse inv_setLength(int length) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Model_Acyclic_Inverse suffix = modelManager.createAnyString(0,maxStringPadding);
+		Model_Acyclic_Inverse result = this.concatenate(suffix);
+		
+		return result;
 	}
 
 
