@@ -117,6 +117,7 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 		//compute the intersection of all incoming values
 
 		if(inputs == null) {
+			System.out.println("inputs is null");
 			//the first time the node is evaluated
 			//do the intersection
 			inputs = incoming();
@@ -125,7 +126,7 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 			System.out.println("CONCAT SYMV INCOMING SET INCONSISTENT...");
 			ret = new Tuple<Boolean,Boolean>(false, true);
 		} else {
-			System.out.println("inputs " + inputs.getFiniteStrings());
+			//System.out.println("inputs " + inputs.getFiniteStrings());
 			//remove one solution from the inputs
 			T input = inputs.getShortestExampleModel();
 			System.out.println("input " + input.getFiniteStrings() + " hash " + input.hashCode());
