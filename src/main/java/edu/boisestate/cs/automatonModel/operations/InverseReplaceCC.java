@@ -45,14 +45,14 @@ public class InverseReplaceCC extends UnaryOperation {
                 char min = t.getMin();
                 char max = t.getMax();
                 State dest = t.getDest();
-                if (min <= c && c <= max) {
+                if (min <= d && d <= max) {
                    //transitions.remove(t);
-                    transitions.add(new Transition(d, dest));
-                    if (min < c) {
-                        transitions.add(new Transition(min, (char) (c - 1), dest));
+                    transitions.add(new Transition(c, dest));
+                    if (min < d) {
+                        transitions.add(new Transition(min, (char) (d - 1), dest));
                     }
-                    if (c < max) {
-                        transitions.add(new Transition((char) (c + 1), max, dest));
+                    if (d < max) {
+                        transitions.add(new Transition((char) (d + 1), max, dest));
                     }
                 }
             }

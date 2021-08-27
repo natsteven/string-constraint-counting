@@ -182,6 +182,7 @@ public class Solver_Inverse<T extends A_Model_Inverse<T>> extends Solver_Count<T
 		
 		//T baseModel = invStringMap.get(base);
 		T resModel = input.inv_replace(find, replace);
+		//T resModel = input.inv_replace(replace, find);
 		//invStringMap.put(id, resultModel);
 		return resModel;
 		
