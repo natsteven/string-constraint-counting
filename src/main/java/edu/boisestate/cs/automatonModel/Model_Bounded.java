@@ -863,6 +863,8 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 	 * @return - Model_Bounded object containing the resulting automaton
 	 */
 	public Model_Bounded replaceFirst(String regexString, String replacement) {
+		System.out.println("u n o p t i m i z e d");
+		long start = System.currentTimeMillis();
 		// get the set of all possible finite solutions for the automaton
 		Set<String> solutions = this.automaton.getFiniteStrings();
 		// if the automaton as an infinite language, return the unmodified automaton
@@ -880,33 +882,45 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 				result = result.union(a);
 		}
 		result.minimize();
+		System.out.println(System.currentTimeMillis() - start);
 		// return the result automaton in a Model_Bounded wrapper
 		return new Model_Bounded(result, this.alphabet, this.boundLength);
 	}
 
 	public Model_Bounded replaceFirstOptimized(String regexString, String replacementString) {
-		// start by minimizing target automaton to ensure there are no duplicate
-		// solutions for the same string
+		System.out.println("o p t i m i z e d");
+		long start = System.currentTimeMillis();
+		// clone the target automaton
 		Automaton targetAutomaton = this.automaton.clone();
+		// minimize the target automaton
+		targetAutomaton.minimize();
 		// initialize regex automaton
 		Automaton regexAutomaton = new RegExp(regexString).toAutomaton();
-		// set of all strings previously replaced or solution strings
+		// set of all previously replaced or solution strings
 		Set<String> stringsToIgnore = new HashSet<String>();
 		do {
-			// minimize the target automaton
-			targetAutomaton.minimize();
 			// find a string which contains a substring satisfying the regex
 			String solution = findConcreteString(targetAutomaton.getInitialState(), regexAutomaton.getInitialState(),
 					"", new HashMap<Integer, Integer>(), false, stringsToIgnore);
 			// if no solution is found, break out of the loop
 			if (solution == null)
 				break;
-			// add the solution string to stringsToIgnore for future loops
+			// account for the period at the end of the solution
+			solution = solution.substring(0, solution.length() - 1);
+			System.out.println(solution);
+			// add the solution and replaced string to stringsToIgnore for future loops
 			stringsToIgnore.add(solution);
+			stringsToIgnore.add(solution.replaceFirst(regexString, replacementString));
 			// create singleton automaton from result of solution.replaceFirst
-			Automaton duplicateBranch = BasicAutomata.makeString(solution.replaceFirst(regexString, replacementString));
+			Automaton modifiedString = BasicAutomata.makeString(solution.replaceFirst(regexString, replacementString));
 			// remove solution string from original automaton
+			targetAutomaton = removeString(targetAutomaton, solution);
+			// add the modified string back to the target automaton
+			targetAutomaton = targetAutomaton.union(modifiedString);
+			// minimize the target automaton
+			targetAutomaton.minimize();
 		} while (true);
+		System.out.println(System.currentTimeMillis() - start);
 		return new Model_Bounded(targetAutomaton, this.alphabet, this.boundLength);
 	}
 
@@ -955,30 +969,44 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 			targetTransition.getDest().setAccept(false);
 			return targetAutomaton;
 		} else {
-			// TODO: account for empty transitionStack (i.e. single-character solution strings)
-			previousTransition = targetTransition;
-			targetTransition = transitionStack.pop();
+			// if the targetString is exactly 1 character in length
+			if (transitionStack.empty()) {
+				// remove the targetTransition from the initial state
+				targetAutomaton.getInitialState().getTransitions().remove(targetTransition);
+				// TODO: may need to return an empty automaton
+				return targetAutomaton;
+			} else {
+				// if the targetString is at least 2 characters long
+				previousTransition = targetTransition;
+				targetTransition = transitionStack.pop();
+				targetTransition.getDest().getTransitions().remove(previousTransition);
+			}
 		}
 		while (!transitionStack.empty()) {
-			// if the destination state is an accept state and has departing transitions,
-			// change it to a non-accept state and return the automaton
-			if (targetTransition.getDest().isAccept() && targetTransition.getDest().getTransitions().size() > 0) {
-				targetTransition.getDest().setAccept(false);
+			// if the destination state is an accept state return the targetAutomaton to
+			// preserve the contained string
+			if (targetTransition.getDest().isAccept())
 				return targetAutomaton;
-			}
-			// if the destination state contains more than one departing transition, remove
-			// the previous transition and return the automaton
-			if (targetTransition.getDest().getTransitions().size() > 1) {
-				targetTransition.getDest().getTransitions().remove(previousTransition);
+			// if the destination state contains more than one departing transition, return
+			// the automaton to preserve the contained string
+			if (targetTransition.getDest().getTransitions().size() > 0)
 				return targetAutomaton;
-			}
 			// if the destination state is not an accept state and contains exactly 1
 			// departing transition, remove the target transition and continue
 			previousTransition = targetTransition;
 			targetTransition = transitionStack.pop();
 			targetTransition.getDest().getTransitions().remove(previousTransition);
 		}
-		// figure out how to handle removing the beginning of the automaton
+		// if the destination state is an accept state return the targetAutomaton to
+		// preserve the contained string
+		if (targetTransition.getDest().isAccept())
+			return targetAutomaton;
+		// if the destination state contains more than one departing transition, return
+		// the automaton to preserve the contained string
+		if (targetTransition.getDest().getTransitions().size() > 0)
+			return targetAutomaton;
+		// remove the targetTransition from the initial state
+		targetAutomaton.getInitialState().getTransitions().remove(targetTransition);
 		return targetAutomaton;
 	}
 
@@ -1012,14 +1040,25 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 	public String findConcreteString(State targetState, State regexState, String str,
 			HashMap<Integer, Integer> visitedStates, boolean regexSolutionUpstream, Set<String> stringsToIgnore)
 			throws IllegalArgumentException {
+		// TODO: figure out why loop is stopping at the end of a dead path and not looping back down other branches
+		System.out.println(str);
 		// if the targetState has been visited before, this means there is a cycle.
 		// Throw an exception.
 		if (visitedStates.get(targetState.hashCode()) != null && visitedStates.get(targetState.hashCode()) == 1)
 			throw new IllegalArgumentException("Cannot run cyclic automata in Model_Bounded");
-		if (str.equals("") && regexState.isAccept())
+		// account for possibility of automata accepting the empty string
+		if (str.equals("") && targetState.isAccept() && regexState.isAccept() && !stringsToIgnore.contains(str))
 			return ".";
-		if (regexSolutionUpstream && targetState.isAccept())
-			return ".";
+		// if the end of the target automata has been reached and a regex solution has
+		// been found upstream, return "."
+		if (regexSolutionUpstream && targetState.isAccept()) {
+			if (stringsToIgnore.contains(str)) {
+				if (targetState.getTransitions().isEmpty())
+					return null;
+			} else
+				return ".";
+		} else if (targetState.getTransitions().isEmpty())
+			return null;
 		// for each transition, check if its destination state has been visited,
 		// or if it has already been visited twice
 		for (Transition targetTrans : targetState.getTransitions()) {
@@ -1051,10 +1090,6 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 				}
 			}
 		}
-		// if the end of the target automata has been reached and a regex solution has
-		// been found upstream, return "."
-		if (regexSolutionUpstream && targetState.getTransitions().isEmpty())
-			return ".";
 		// if str is null, keep exploring any possibilities
 		// for each possible transition, recursively call this method on the next state
 		for (Transition targetTrans : targetState.getTransitions()) {
