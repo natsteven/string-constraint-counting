@@ -157,7 +157,7 @@ public class CleanGraph {
 
 		//System.out.println(jsonStr);
 
-		String cleanderDirPath = "./graphs/real/cleaned/";
+		String cleanderDirPath = "./graphs/benchmarks/inverse/cleaned/";
 		String jsonFileName = new File(filepath).getName();
 		int extIndex = jsonFileName.lastIndexOf('.');
 		jsonFileName = jsonFileName.substring(0, extIndex);
