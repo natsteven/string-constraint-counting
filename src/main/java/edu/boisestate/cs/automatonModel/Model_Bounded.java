@@ -35,6 +35,7 @@ import edu.boisestate.cs.automatonModel.operations.PreciseSubstring;
 import edu.boisestate.cs.automatonModel.operations.PreciseSuffix;
 import edu.boisestate.cs.automatonModel.operations.PreciseTrim;
 import edu.boisestate.cs.automatonModel.operations.StringModelCounter;
+import edu.boisestate.cs.util.DotToGraph;
 import edu.ucsb.cs.www.vlab.stranger.StrangerLibrary.transition;
 
 public class Model_Bounded extends A_Model<Model_Bounded> {
@@ -898,10 +899,13 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 		Automaton regexAutomaton = new RegExp(regexString).toAutomaton();
 		// set of all previously replaced or solution strings
 		Set<String> stringsToIgnore = new HashSet<String>();
+		int i = 0;
 		do {
+			DotToGraph.outputDotFileAndPng(targetAutomaton.toDot(), "progress" + i++);
 			// find a string which contains a substring satisfying the regex
 			String solution = findConcreteString(targetAutomaton.getInitialState(), regexAutomaton.getInitialState(),
 					"", new HashMap<Integer, Integer>(), false, stringsToIgnore);
+			DotToGraph.outputDotFileAndPng(targetAutomaton.toDot(), "progress" + i++);
 			// if no solution is found, break out of the loop
 			if (solution == null)
 				break;
@@ -915,6 +919,7 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 			Automaton modifiedString = BasicAutomata.makeString(solution.replaceFirst(regexString, replacementString));
 			// remove solution string from original automaton
 			targetAutomaton = removeString(targetAutomaton, solution);
+			DotToGraph.outputDotFileAndPng(targetAutomaton.toDot(), "progress" + i++);
 			// add the modified string back to the target automaton
 			targetAutomaton = targetAutomaton.union(modifiedString);
 			// minimize the target automaton
@@ -934,6 +939,7 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 	 *         contained in targetAutomaton
 	 */
 	private Automaton removeString(Automaton targetAutomaton, String targetString) {
+		// TODO: fix removeString to account for States and Transitions not being stored as duplicates
 		// initialize targetState
 		State targetState = targetAutomaton.getInitialState();
 		Stack<Transition> transitionStack = new Stack<Transition>();
@@ -973,7 +979,6 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 			if (transitionStack.empty()) {
 				// remove the targetTransition from the initial state
 				targetAutomaton.getInitialState().getTransitions().remove(targetTransition);
-				// TODO: may need to return an empty automaton
 				return targetAutomaton;
 			} else {
 				// if the targetString is at least 2 characters long
@@ -1040,7 +1045,6 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 	public String findConcreteString(State targetState, State regexState, String str,
 			HashMap<Integer, Integer> visitedStates, boolean regexSolutionUpstream, Set<String> stringsToIgnore)
 			throws IllegalArgumentException {
-		// TODO: figure out why loop is stopping at the end of a dead path and not looping back down other branches
 		System.out.println(str);
 		// if the targetState has been visited before, this means there is a cycle.
 		// Throw an exception.
