@@ -906,7 +906,6 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 		Automaton regexAutomaton = new RegExp(regexString).toAutomaton();
 		// set of all previously replaced or solution strings
 		Set<String> stringsToIgnore = new HashSet<String>();
-		int i = 0;
 		do {
 			// find a string which contains a substring satisfying the regex
 			String solution = findConcreteString(targetAutomaton.getInitialState(), regexAutomaton.getInitialState(),
