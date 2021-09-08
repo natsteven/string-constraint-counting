@@ -22,25 +22,13 @@ public class DebugMain {
 		// create manager with given alphabet and an initial bound of 5
 		Model_Bounded_Manager mFactory = new Model_Bounded_Manager(alpha, 5);
 		
-		String targetAutomaton = "(abc|hbe|qby)gf";
+		String targetAutomaton = "(abc|hbe|qby(ax|zbc))gf";
 		String targetRegex = "b";
 		String replacement = "X";
 		Model_Bounded replaceFirstOptimizedTest = mFactory.createFromRegex(targetAutomaton);
 		DotToGraph.outputDotFileAndPng(replaceFirstOptimizedTest.toDot(), "before");
 		DotToGraph.outputDotFileAndPng(replaceFirstOptimizedTest.replaceFirstOptimized(targetRegex, replacement).toDot(), "optimizedAfter");
 		DotToGraph.outputDotFileAndPng(replaceFirstOptimizedTest.replaceFirst(targetRegex, replacement).toDot(), "unoptimizedAfter");
-		
-		Automaton test = new RegExp("(a|g)c").toAutomaton();
-		DotToGraph.outputDotFileAndPng(test.toDot(), "test-before");
-		boolean first = true;
-		System.out.println(test.getInitialState().getTransitions().toString());
-		for (Transition t : test.getInitialState().getTransitions()) {
-			System.out.println(t.getMin());
-			System.out.println(t.getDest().getTransitions().toString());
-//			if (first)
-//				t.getDest().getTransitions().clear();
-		}
-		DotToGraph.outputDotFileAndPng(test.toDot(), "test-after");
 	}
 
 	public static boolean remove(char targetTransition, State curr) {

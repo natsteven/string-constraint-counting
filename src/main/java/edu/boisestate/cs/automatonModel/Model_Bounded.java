@@ -901,25 +901,21 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 		Set<String> stringsToIgnore = new HashSet<String>();
 		int i = 0;
 		do {
-			DotToGraph.outputDotFileAndPng(targetAutomaton.toDot(), "progress" + i++);
 			// find a string which contains a substring satisfying the regex
 			String solution = findConcreteString(targetAutomaton.getInitialState(), regexAutomaton.getInitialState(),
 					"", new HashMap<Integer, Integer>(), false, stringsToIgnore);
-			DotToGraph.outputDotFileAndPng(targetAutomaton.toDot(), "progress" + i++);
 			// if no solution is found, break out of the loop
 			if (solution == null)
 				break;
 			// account for the period at the end of the solution
 			solution = solution.substring(0, solution.length() - 1);
-			System.out.println(solution);
 			// add the solution and replaced string to stringsToIgnore for future loops
 			stringsToIgnore.add(solution);
 			stringsToIgnore.add(solution.replaceFirst(regexString, replacementString));
 			// create singleton automaton from result of solution.replaceFirst
 			Automaton modifiedString = BasicAutomata.makeString(solution.replaceFirst(regexString, replacementString));
 			// remove solution string from original automaton
-			targetAutomaton = removeString(targetAutomaton, solution);
-			DotToGraph.outputDotFileAndPng(targetAutomaton.toDot(), "progress" + i++);
+			targetAutomaton = targetAutomaton.minus(new RegExp(solution).toAutomaton());
 			// add the modified string back to the target automaton
 			targetAutomaton = targetAutomaton.union(modifiedString);
 			// minimize the target automaton
@@ -927,92 +923,6 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 		} while (true);
 		System.out.println(System.currentTimeMillis() - start);
 		return new Model_Bounded(targetAutomaton, this.alphabet, this.boundLength);
-	}
-
-	/**
-	 * Removed the desired string from the target automaton. This method assumes
-	 * that targetString is contained in targetAutomaton.
-	 * 
-	 * @param targetAutomaton - automaton to be modified
-	 * @param targetString    - string to be removed
-	 * @return - modified version of targetAutomaton, or null if targetString is not
-	 *         contained in targetAutomaton
-	 */
-	private Automaton removeString(Automaton targetAutomaton, String targetString) {
-		// TODO: fix removeString to account for States and Transitions not being stored as duplicates
-		// initialize targetState
-		State targetState = targetAutomaton.getInitialState();
-		Stack<Transition> transitionStack = new Stack<Transition>();
-		// iterate through each character in the target string
-		for (int i = 0; i < targetString.length(); i++) {
-			// true if the target character is found in a transition
-			boolean matchFound = false;
-			// compare transitions with the target string
-			for (Transition t : targetState.getTransitions()) {
-				// if a match is found, break out of the loop
-				if (getCharRange(t.getMin(), t.getMax()).indexOf(targetString.charAt(i)) != -1) {
-					targetState = t.getDest();
-					transitionStack.push(t);
-					matchFound = true;
-					break;
-				}
-			}
-			// if no match is found, then targetString is not contained in targetAutomaton
-			if (!matchFound)
-				return null;
-		}
-		// if the final target state is not an accept state, then targetString is not
-		// contained in targetAutomaton
-		if (!targetState.isAccept())
-			return null;
-		// start working backwards and removing states until one with multiple
-		// transitions is hit
-		Transition previousTransition = null;
-		Transition targetTransition = transitionStack.pop();
-		// if the final state contains further transitions, set the state to not accept
-		// and return the target automaton
-		if (targetTransition.getDest().getTransitions().size() > 0) {
-			targetTransition.getDest().setAccept(false);
-			return targetAutomaton;
-		} else {
-			// if the targetString is exactly 1 character in length
-			if (transitionStack.empty()) {
-				// remove the targetTransition from the initial state
-				targetAutomaton.getInitialState().getTransitions().remove(targetTransition);
-				return targetAutomaton;
-			} else {
-				// if the targetString is at least 2 characters long
-				previousTransition = targetTransition;
-				targetTransition = transitionStack.pop();
-				targetTransition.getDest().getTransitions().remove(previousTransition);
-			}
-		}
-		while (!transitionStack.empty()) {
-			// if the destination state is an accept state return the targetAutomaton to
-			// preserve the contained string
-			if (targetTransition.getDest().isAccept())
-				return targetAutomaton;
-			// if the destination state contains more than one departing transition, return
-			// the automaton to preserve the contained string
-			if (targetTransition.getDest().getTransitions().size() > 0)
-				return targetAutomaton;
-			// if the destination state is not an accept state and contains exactly 1
-			// departing transition, remove the target transition and continue
-			previousTransition = targetTransition;
-			targetTransition = transitionStack.pop();
-			targetTransition.getDest().getTransitions().remove(previousTransition);
-		}
-		// if the destination state is an accept state return the targetAutomaton to
-		// preserve the contained string
-		if (targetTransition.getDest().isAccept())
-			return targetAutomaton;
-		// if the destination state contains more than one departing transition, return
-		// the automaton to preserve the contained string
-		if (targetTransition.getDest().getTransitions().size() > 0)
-			return targetAutomaton;
-		// remove the targetTransition from the initial state
-		targetAutomaton.getInitialState().getTransitions().remove(targetTransition);
-		return targetAutomaton;
 	}
 
 	/**
@@ -1045,7 +955,6 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 	public String findConcreteString(State targetState, State regexState, String str,
 			HashMap<Integer, Integer> visitedStates, boolean regexSolutionUpstream, Set<String> stringsToIgnore)
 			throws IllegalArgumentException {
-		System.out.println(str);
 		// if the targetState has been visited before, this means there is a cycle.
 		// Throw an exception.
 		if (visitedStates.get(targetState.hashCode()) != null && visitedStates.get(targetState.hashCode()) == 1)
