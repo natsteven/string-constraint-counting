@@ -864,8 +864,6 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 	 * @return - Model_Bounded object containing the resulting automaton
 	 */
 	public Model_Bounded replaceFirst(String regexString, String replacement) {
-		System.out.println("u n o p t i m i z e d");
-		long start = System.currentTimeMillis();
 		// get the set of all possible finite solutions for the automaton
 		Set<String> solutions = this.automaton.getFiniteStrings();
 		// if the automaton as an infinite language, return the unmodified automaton
@@ -883,14 +881,23 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 				result = result.union(a);
 		}
 		result.minimize();
-		System.out.println(System.currentTimeMillis() - start);
 		// return the result automaton in a Model_Bounded wrapper
 		return new Model_Bounded(result, this.alphabet, this.boundLength);
 	}
 
+	/**
+	 * Given a regex and replacement String, perform a depth first search on the
+	 * target automaton. Method searches for a string which both satisfies the
+	 * target automaton, as well as contains a substring which satisfies the regex.
+	 * Upon discovery, replace the first occurrence of said substring with the
+	 * target replacement String. Repeat this process until no further matches are
+	 * found.
+	 * 
+	 * @param regexString - Regex to be found in the target Automaton
+	 * @param replacementString - String to replace the regex substring
+	 * @return - Modfied clone of target Automaton
+	 */
 	public Model_Bounded replaceFirstOptimized(String regexString, String replacementString) {
-		System.out.println("o p t i m i z e d");
-		long start = System.currentTimeMillis();
 		// clone the target automaton
 		Automaton targetAutomaton = this.automaton.clone();
 		// minimize the target automaton
@@ -921,7 +928,6 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 			// minimize the target automaton
 			targetAutomaton.minimize();
 		} while (true);
-		System.out.println(System.currentTimeMillis() - start);
 		return new Model_Bounded(targetAutomaton, this.alphabet, this.boundLength);
 	}
 
