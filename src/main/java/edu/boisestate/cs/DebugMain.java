@@ -1,13 +1,5 @@
 package edu.boisestate.cs;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-
-import dk.brics.automaton.Automaton;
-import dk.brics.automaton.RegExp;
-import dk.brics.automaton.State;
-import dk.brics.automaton.Transition;
 import edu.boisestate.cs.automatonModel.Model_Bounded;
 import edu.boisestate.cs.automatonModel.Model_Bounded_Manager;
 import edu.boisestate.cs.util.DotToGraph;
@@ -29,19 +21,6 @@ public class DebugMain {
 		DotToGraph.outputDotFileAndPng(replaceFirstOptimizedTest.toDot(), "before");
 		DotToGraph.outputDotFileAndPng(replaceFirstOptimizedTest.replaceFirstOptimized(targetRegex, replacement).toDot(), "optimizedAfter");
 		DotToGraph.outputDotFileAndPng(replaceFirstOptimizedTest.replaceFirst(targetRegex, replacement).toDot(), "unoptimizedAfter");
-	}
-
-	public static boolean remove(char targetTransition, State curr) {
-		for (Transition t : curr.getTransitions()) {
-			if (t.getMin() == targetTransition) {
-				curr.getTransitions().remove(t);
-				return true;
-			} else {
-				if (remove(targetTransition, t.getDest()))
-					return true;
-			}
-		}
-		return false;
 	}
 
 }
