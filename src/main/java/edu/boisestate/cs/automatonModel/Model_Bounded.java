@@ -893,7 +893,7 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 	 * target replacement String. Repeat this process until no further matches are
 	 * found.
 	 * 
-	 * @param regexString - Regex to be found in the target Automaton
+	 * @param regexString       - Regex to be found in the target Automaton
 	 * @param replacementString - String to replace the regex substring
 	 * @return - Modfied clone of target Automaton
 	 */
@@ -928,6 +928,74 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 			targetAutomaton.minimize();
 		} while (true);
 		return new Model_Bounded(targetAutomaton, this.alphabet, this.boundLength);
+	}
+
+	public Model_Bounded replaceFirstMoreOptimized(String regexString, String replacementString)
+			throws IllegalArgumentException {
+		// initialize automata
+		Automaton targetAutomaton = Automaton.minimize(this.automaton.clone());
+		Automaton regexAutomaton = new RegExp(regexString).toAutomaton();
+		Automaton modifiedAutomaton = Automaton.makeEmpty();
+		// initialize States
+		State targetState = targetAutomaton.getInitialState();
+		State regexState = regexAutomaton.getInitialState();
+		// initialize Stack
+		Stack<State> stateStack = new Stack<State>();
+		// initialize prefixString
+		String prefixString = "";
+		while (true) {
+			// if we have already visited the targetState, then the Automaton is cyclic
+			if (stateStack.contains(targetState))
+				throw new IllegalArgumentException("Cannot run cyclic automata in Model_Bounded");
+			// if the current prefixString satisfies the regex
+			if (regexState.isAccept()) {
+				// save the prefix in tempAutomaton and concat prefix with all possible suffixes
+				Automaton tempAutomaton = Automaton.makeString(prefixString);
+				tempAutomaton = concatState(tempAutomaton, targetState);
+				// union the resulting automaton with modifiedAutomaton and remove the old one from targetAutomaton
+				modifiedAutomaton = modifiedAutomaton.union(tempAutomaton);
+				targetAutomaton.minus(tempAutomaton);
+				// reset target and regex States
+				targetState = targetAutomaton.getInitialState();
+				regexState = regexAutomaton.getInitialState();
+				stateStack.clear();
+			} else {
+				String transition = "";
+				// else check if any of the next target transitions match the regex
+				for (Transition t : targetState.getTransitions()) {
+					for (Transition r : regexState.getTransitions()) {
+						String shared = getSharedTransition(r, t);
+						if (shared != null) {
+							transition = shared;
+						}
+					}
+				}
+				// if there is a transition next which matches
+				if (transition != null) {
+					stateStack.push(targetState);
+					prefixString = prefixString.concat(transition);
+					// TODO: handle going to next state with matching transition
+				} else {
+					// if there are no next transitions which match the regex
+					// TODO: this
+				}
+			}
+		}
+		return new Model_Bounded(targetAutomaton, this.alphabet, this.boundLength);
+	}
+
+	private Automaton concatState(Automaton a, State s) {
+		if (a.getSingleton() == null)
+			return null;
+		Automaton result = Automaton.minimize(a.clone());
+		State state = result.getInitialState();
+		while (!state.isAccept())
+			state = ((Transition) state.getTransitions().toArray()[0]).getDest();
+		for (Transition t : s.getTransitions())
+			state.addTransition(t);
+		state.setAccept(false);
+		result.minimize();
+		return result;
 	}
 
 	/**
