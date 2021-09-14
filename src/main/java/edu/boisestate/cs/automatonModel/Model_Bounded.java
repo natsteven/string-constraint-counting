@@ -930,6 +930,27 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 		return new Model_Bounded(targetAutomaton, this.alphabet, this.boundLength);
 	}
 
+	public Model_Bounded superOptimizedReplaceFirst(String regexString, String replacementString) {
+		// initialize Automata
+		Automaton regexAutomaton = new RegExp(regexString).toAutomaton();
+		Automaton originalAutomaton = Automaton.minimize(this.automaton.clone());
+		Automaton anyPrefixAndSuffix = Automaton.makeAnyString().concatenate(regexAutomaton)
+				.concatenate(Automaton.makeAnyString());
+		// Automaton containing all Strings in the originalAutomaton's language which
+		// contain a substring which satisfies the regex
+		Automaton removedStrings = originalAutomaton.minus(anyPrefixAndSuffix);
+		State targetState = removedStrings.getInitialState();
+		State regexState = regexAutomaton.getInitialState();
+		// Stack containing the order of states to visit
+		Stack<State> stateStack = new Stack<State>();
+		String prefixString = "";
+		// TODO: finish super optimized replace first
+		while (true) {
+			break;
+		}
+		return null;
+	}
+
 	public Model_Bounded replaceFirstMoreOptimized(String regexString, String replacementString)
 			throws IllegalArgumentException {
 		// initialize automata
@@ -952,7 +973,8 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 				// save the prefix in tempAutomaton and concat prefix with all possible suffixes
 				Automaton tempAutomaton = Automaton.makeString(prefixString);
 				tempAutomaton = concatState(tempAutomaton, targetState);
-				// union the resulting automaton with modifiedAutomaton and remove the old one from targetAutomaton
+				// union the resulting automaton with modifiedAutomaton and remove the old one
+				// from targetAutomaton
 				modifiedAutomaton = modifiedAutomaton.union(tempAutomaton);
 				targetAutomaton.minus(tempAutomaton);
 				// reset target and regex States

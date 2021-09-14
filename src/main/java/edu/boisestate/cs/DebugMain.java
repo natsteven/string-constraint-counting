@@ -1,5 +1,9 @@
 package edu.boisestate.cs;
 
+import dk.brics.automaton.Automaton;
+import dk.brics.automaton.RegExp;
+import dk.brics.automaton.State;
+import dk.brics.automaton.Transition;
 import edu.boisestate.cs.automatonModel.Model_Bounded;
 import edu.boisestate.cs.automatonModel.Model_Bounded_Manager;
 import edu.boisestate.cs.util.DotToGraph;
@@ -21,6 +25,20 @@ public class DebugMain {
 		DotToGraph.outputDotFileAndPng(replaceFirstOptimizedTest.toDot(), "before");
 		DotToGraph.outputDotFileAndPng(replaceFirstOptimizedTest.replaceFirstOptimized(targetRegex, replacement).toDot(), "optimizedAfter");
 		DotToGraph.outputDotFileAndPng(replaceFirstOptimizedTest.replaceFirst(targetRegex, replacement).toDot(), "unoptimizedAfter");
+		
+		Automaton a = new RegExp("(a|g)c").toAutomaton();
+		DotToGraph.outputDotFileAndPng(a.toDot(), "a-before");
+		for (Transition t : a.getInitialState().getTransitions()) {
+			State temp = null;
+			for (Transition t2 : t.getDest().getTransitions()) {
+				temp = t2.getDest();
+				break;
+			}
+			t.getDest().getTransitions().clear();
+			t.getDest().addTransition(new Transition('f', temp));
+			break;
+		}
+		DotToGraph.outputDotFileAndPng(a.toDot(), "a-after");
 	}
 
 }
