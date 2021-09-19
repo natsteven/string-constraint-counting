@@ -12,17 +12,17 @@ public class DebugMain {
 		// create manager with given alphabet and an initial bound of 5
 		Model_Bounded_Manager mFactory = new Model_Bounded_Manager(alpha, 10);
 
-		String targetAutomaton = "(a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z)b";
+		String targetAutomaton = "(a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z)(begfh|ndido(niob|hnudidhudibnido)|nudiofnuini|b)(iwonwoiwsnoi|nbsiuos|sjnmios(sjmiosbindondm|mndiopdndb)mdoipdmd)miodxpb";
 		String targetRegex = "b";
 		String replacement = "X";
 		Model_Bounded replaceFirstOptimizedTest = mFactory.createFromRegex(targetAutomaton);
 		DotToGraph.outputDotFileAndPng(replaceFirstOptimizedTest.toDot(), "before");
 		System.out.println("Optimized:");
 		DotToGraph.outputDotFileAndPng(
-				replaceFirstOptimizedTest.superOptimizedReplaceFirst(targetRegex, replacement).toDot(),
+				replaceFirstOptimizedTest.replaceFirstOptimized(targetRegex, replacement).toDot(),
 				"optimizedAfter");
-		System.out.println("Brute forces:");
-		DotToGraph.outputDotFileAndPng(replaceFirstOptimizedTest.replaceFirst(targetRegex, replacement).toDot(),
+		System.out.println("Brute force:");
+		DotToGraph.outputDotFileAndPng(replaceFirstOptimizedTest.replaceFirstBruteForce(targetRegex, replacement).toDot(),
 				"unoptimizedAfter");
 	}
 

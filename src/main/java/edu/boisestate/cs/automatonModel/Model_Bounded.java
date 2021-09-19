@@ -863,7 +863,7 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 	 * @param replacement - String to replace occurrences of the regex
 	 * @return - Model_Bounded object containing the resulting automaton
 	 */
-	public Model_Bounded replaceFirst(String regexString, String replacement) {
+	public Model_Bounded replaceFirstBruteForce(String regexString, String replacement) {
 		long start = System.currentTimeMillis();
 		// get the set of all possible finite solutions for the automaton
 		Set<String> solutions = this.automaton.getFiniteStrings();
@@ -882,57 +882,31 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 				result = result.union(a);
 		}
 		result.minimize();
-		System.out.println(System.currentTimeMillis() - start);
+		System.out.println(System.currentTimeMillis() - start + "ms");
 		// return the result automaton in a Model_Bounded wrapper
 		return new Model_Bounded(result, this.alphabet, this.boundLength);
 	}
 
 	/**
-	 * Given a regex and replacement String, perform a depth first search on the
-	 * target automaton. Method searches for a string which both satisfies the
-	 * target automaton, as well as contains a substring which satisfies the regex.
-	 * Upon discovery, replace the first occurrence of said substring with the
-	 * target replacement String. Repeat this process until no further matches are
-	 * found.
+	 * Given a regex and replacement String, this method performs a replaceFirst
+	 * operation on all Strings in the language of the target Automaton.
 	 * 
-	 * @param regexString       - Regex to be found in the target Automaton
-	 * @param replacementString - String to replace the regex substring
-	 * @return - Modfied clone of target Automaton
+	 * The intersection of the target Automaton and all Strings containing the
+	 * provided regex is found and saved as removedStrings. Then, a depth-first
+	 * search is performed on removedStrings to find each prefix containing the
+	 * regex. The prefix and following State (which contains its suffixes) are
+	 * saved. The prefix is modified with the String.replaceFirst method before
+	 * being concatenated with its suffixes. The resulting Automaton is then unioned
+	 * with the original Automaton. After all possible prefixes are found and
+	 * removedStrings is empty, the resulting Automaton is returned.
+	 * 
+	 * @param regexString       - String representation of the regex to be found in
+	 *                          the target Automaton
+	 * @param replacementString - String to replace the substring which satisfies
+	 *                          the target Automaton
+	 * @return - The modified Automaton
 	 */
 	public Model_Bounded replaceFirstOptimized(String regexString, String replacementString) {
-		// clone the target automaton
-		Automaton targetAutomaton = this.automaton.clone();
-		// minimize the target automaton
-		targetAutomaton.minimize();
-		// initialize regex automaton
-		Automaton regexAutomaton = new RegExp(regexString).toAutomaton();
-		// set of all previously replaced or solution strings
-		Set<String> stringsToIgnore = new HashSet<String>();
-		do {
-			// find a string which contains a substring satisfying the regex
-			String solution = findConcreteString(targetAutomaton.getInitialState(), regexAutomaton.getInitialState(),
-					"", new HashMap<Integer, Integer>(), false, stringsToIgnore);
-			// if no solution is found, break out of the loop
-			if (solution == null)
-				break;
-			// account for the period at the end of the solution
-			solution = solution.substring(0, solution.length() - 1);
-			// add the solution and replaced string to stringsToIgnore for future loops
-			stringsToIgnore.add(solution);
-			stringsToIgnore.add(solution.replaceFirst(regexString, replacementString));
-			// create singleton automaton from result of solution.replaceFirst
-			Automaton modifiedString = BasicAutomata.makeString(solution.replaceFirst(regexString, replacementString));
-			// remove solution string from original automaton
-			targetAutomaton = targetAutomaton.minus(new RegExp(solution).toAutomaton());
-			// add the modified string back to the target automaton
-			targetAutomaton = targetAutomaton.union(modifiedString);
-			// minimize the target automaton
-			targetAutomaton.minimize();
-		} while (true);
-		return new Model_Bounded(targetAutomaton, this.alphabet, this.boundLength);
-	}
-
-	public Model_Bounded superOptimizedReplaceFirst(String regexString, String replacementString) {
 		long start = System.currentTimeMillis();
 		// initialize Automata
 		Automaton regexAutomaton = new RegExp(regexString).toAutomaton();
@@ -954,7 +928,6 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 		// StringBuilder to contain the ongoing prefix
 		StringBuilder prefix = new StringBuilder();
 		while (true) {
-			System.out.println("Prefix: " + prefix.toString());
 			// if we have already visited the targetState, then the Automaton is cyclic
 			if (stateStack.contains(targetState))
 				throw new IllegalArgumentException("Cannot run cyclic automata in Model_Bounded");
@@ -964,7 +937,6 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 				Automaton modifiedPrefix = concatState(
 						Automaton.makeString(prefix.toString().replaceFirst(regexString, replacementString)),
 						targetState);
-				DotToGraph.outputDotFileAndPng(modifiedPrefix.toDot(), prefix.toString());
 				// minus target prefix from removedStrings
 				removedStrings = removedStrings
 						.minus(Automaton.makeString(prefix.toString()).concatenate(Automaton.makeAnyString()));
@@ -980,7 +952,7 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 				prefix.delete(0, prefix.length());
 				// if there are no further matches to operate on, return the modified automaton
 				if (removedStrings.isEmpty()) {
-					System.out.println(System.currentTimeMillis() - start);
+					System.out.println(System.currentTimeMillis() - start + "ms");
 					return new Model_Bounded(originalAutomaton, this.alphabet, this.boundLength);
 				}
 			} else {
@@ -1035,6 +1007,8 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 		if (a.getSingleton() == null)
 			return null;
 		Automaton result = Automaton.minimize(a.clone());
+		if (s.getTransitions().size() == 0)
+			return result;
 		State state = result.getInitialState();
 		while (!state.isAccept())
 			state = ((Transition) state.getTransitions().toArray()[0]).getDest();
@@ -1043,111 +1017,6 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 		state.setAccept(false);
 		result.minimize();
 		return result;
-	}
-
-	/**
-	 * Finds a concrete string which matches the regex. In essence, finds a symbolic
-	 * string (the regex) inside of another symbolic string (the target automata)
-	 * and returns a shared concrete string.
-	 * 
-	 * Steps through individual states and transitions in both model and regex
-	 * automaton to find matches between the two and account for transition ranges.
-	 * 
-	 * Initial call MUST start with str = "", regexSolutionUpstream = false, and
-	 * visitedStates as an empty HashMap.
-	 * 
-	 * @param targetState           - Current state of target automata
-	 * @param regexState            - Current state of regex automata
-	 * @param str                   - Current accepted string value
-	 * @param visitedStates         - HashMap of all visited states in the current
-	 *                              iteration or branch
-	 * @param regexSolutionUpstream - True if an upstream iteration has already
-	 *                              reached an accepted regex state. Used to avoid
-	 *                              loops
-	 * @param replacedStrings       - Set containing all strings which have already
-	 *                              been removed and replaced
-	 * @param replacementStrings    - Set containing all strings which have been
-	 *                              created via replaceFirst
-	 * @return - Concrete string which satisfies the target automaton and contains a
-	 *         substring which satisfies the regex. Returns "." at the end of any
-	 *         solution. Returns null if there is no solution.
-	 */
-	public String findConcreteString(State targetState, State regexState, String str,
-			HashMap<Integer, Integer> visitedStates, boolean regexSolutionUpstream, Set<String> stringsToIgnore)
-			throws IllegalArgumentException {
-		// if the targetState has been visited before, this means there is a cycle.
-		// Throw an exception.
-		if (visitedStates.get(targetState.hashCode()) != null && visitedStates.get(targetState.hashCode()) == 1)
-			throw new IllegalArgumentException("Cannot run cyclic automata in Model_Bounded");
-		// account for possibility of automata accepting the empty string
-		if (str.equals("") && targetState.isAccept() && regexState.isAccept() && !stringsToIgnore.contains(str))
-			return ".";
-		// if the end of the target automata has been reached and a regex solution has
-		// been found upstream, return "."
-		if (regexSolutionUpstream && targetState.isAccept()) {
-			if (stringsToIgnore.contains(str)) {
-				if (targetState.getTransitions().isEmpty())
-					return null;
-			} else
-				return ".";
-		} else if (targetState.getTransitions().isEmpty())
-			return null;
-		// for each transition, check if its destination state has been visited,
-		// or if it has already been visited twice
-		for (Transition targetTrans : targetState.getTransitions()) {
-			int targetHashCode = targetTrans.getDest().hashCode();
-			Integer value = visitedStates.get(targetHashCode);
-			if (value == null || value != 2) {
-				// for each next regex transition, if the target transition is a subset of the
-				// regex transition
-				for (Transition regexTrans : regexState.getTransitions()) {
-					// if there exists a transition value shared between the two transitions
-					String sharedTransition = getSharedTransition(targetTrans, regexTrans);
-					if (sharedTransition != null) {
-						// call method on itself for next iteration
-						String downstreamResult = findConcreteString(targetTrans.getDest(), regexTrans.getDest(),
-								str + sharedTransition, visitState(targetState, visitedStates),
-								regexSolutionUpstream || regexTrans.getDest().isAccept(), stringsToIgnore);
-						// if recursive call returns a value, then a solution has been found. Return
-						// the shared transition + this solution to the top
-						if (downstreamResult != null)
-							if (downstreamResult == ".") {
-								// if the current solution has already been found before, return null and ignore
-								// it
-								if (!stringsToIgnore.contains(str + sharedTransition)
-										&& !stringsToIgnore.contains(str + sharedTransition))
-									return str + sharedTransition + downstreamResult;
-							} else
-								return downstreamResult;
-					}
-				}
-			}
-		}
-		// if str is null, keep exploring any possibilities
-		// for each possible transition, recursively call this method on the next state
-		for (Transition targetTrans : targetState.getTransitions()) {
-			// to account for ranged OR statements, loop through the entire range of
-			// transition characters
-			for (char c = targetTrans.getMin(); c <= targetTrans.getMax(); c++) {
-				String downstreamResult = findConcreteString(targetTrans.getDest(), regexState, str + c,
-						visitState(targetState, visitedStates), regexSolutionUpstream || regexState.isAccept(),
-						stringsToIgnore);
-				// if recursive call returns a value, then a solution has been found. Return
-				// this transition + this solution to the top
-				if (downstreamResult != null)
-					if (downstreamResult == ".") {
-						// if the current solution has already been found before, return null and ignore
-						// it
-						if (!stringsToIgnore.contains(str + c) && !stringsToIgnore.contains(str + c))
-							return str + c + downstreamResult;
-					} else
-						return downstreamResult;
-			}
-		}
-		// If this point has been reached in the method, it means there are no possible
-		// solutions downstream from the current state. Return null to signify that this
-		// path is dead
-		return null;
 	}
 
 	/**
@@ -1191,35 +1060,10 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 	}
 
 	/**
-	 * Returns an updates version of visitedStates to reflect visiting the current
-	 * state. Returns null if the current state has already been visited twice.
+	 * Returns the Dot representation of this automaton.
 	 * 
-	 * @param state         - State to be visited
-	 * @param visitedStates - HashMap of already visited states to be updated
-	 * @return - Updated HashMap of visited states
+	 * @return - Dot representation of this automaton
 	 */
-	private static HashMap<Integer, Integer> visitState(State state, HashMap<Integer, Integer> visitedStates) {
-		// if state has not already been visited twice
-		if (visitedStates.get(state.hashCode()) == null || visitedStates.get(state.hashCode()) < 2) {
-			// copy all entries from visitedStates to updatedVisitedStates
-			HashMap<Integer, Integer> updatedVisitedStates = new HashMap<Integer, Integer>();
-			Set<Entry<Integer, Integer>> entries = visitedStates.entrySet();
-			for (Entry<Integer, Integer> entry : entries) {
-				updatedVisitedStates.put(entry.getKey(), entry.getValue());
-			}
-			// add/increment state to be visited in the updated hash map
-			if (updatedVisitedStates.get(state.hashCode()) == null)
-				updatedVisitedStates.put(state.hashCode(), 1);
-			else
-				updatedVisitedStates.put(state.hashCode(), 2);
-			return updatedVisitedStates;
-		} else {
-			// if the state has already been visited twice, it cannot be visited again.
-			// return null
-			return null;
-		}
-	}
-
 	public String toDot() {
 		return this.automaton.toDot();
 	}
