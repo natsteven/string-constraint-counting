@@ -864,6 +864,7 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 	 * @return - Model_Bounded object containing the resulting automaton
 	 */
 	public Model_Bounded replaceFirst(String regexString, String replacement) {
+		long start = System.currentTimeMillis();
 		// get the set of all possible finite solutions for the automaton
 		Set<String> solutions = this.automaton.getFiniteStrings();
 		// if the automaton as an infinite language, return the unmodified automaton
@@ -881,6 +882,7 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 				result = result.union(a);
 		}
 		result.minimize();
+		System.out.println(System.currentTimeMillis() - start);
 		// return the result automaton in a Model_Bounded wrapper
 		return new Model_Bounded(result, this.alphabet, this.boundLength);
 	}
@@ -931,6 +933,7 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 	}
 
 	public Model_Bounded superOptimizedReplaceFirst(String regexString, String replacementString) {
+		long start = System.currentTimeMillis();
 		// initialize Automata
 		Automaton regexAutomaton = new RegExp(regexString).toAutomaton();
 		Automaton originalAutomaton = Automaton.minimize(this.automaton.clone());
@@ -938,74 +941,96 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 				.concatenate(Automaton.makeAnyString());
 		// Automaton containing all Strings in the originalAutomaton's language which
 		// contain a substring which satisfies the regex
-		Automaton removedStrings = originalAutomaton.minus(anyPrefixAndSuffix);
+		Automaton removedStrings = Automaton.minimize(originalAutomaton.intersection(anyPrefixAndSuffix));
+		originalAutomaton = Automaton.minimize(originalAutomaton.minus(anyPrefixAndSuffix));
+		// if there are no matches to operate on, return the originalAutomaton
+		if (removedStrings.isEmpty())
+			return new Model_Bounded(originalAutomaton, this.alphabet, this.boundLength);
+		// initialize temporary States
 		State targetState = removedStrings.getInitialState();
 		State regexState = regexAutomaton.getInitialState();
-		// Stack containing the order of states to visit
+		// Stack containing visited States to check for cyclic Automata
 		Stack<State> stateStack = new Stack<State>();
-		String prefixString = "";
-		// TODO: finish super optimized replace first
+		// StringBuilder to contain the ongoing prefix
+		StringBuilder prefix = new StringBuilder();
 		while (true) {
-			break;
-		}
-		return null;
-	}
-
-	public Model_Bounded replaceFirstMoreOptimized(String regexString, String replacementString)
-			throws IllegalArgumentException {
-		// initialize automata
-		Automaton targetAutomaton = Automaton.minimize(this.automaton.clone());
-		Automaton regexAutomaton = new RegExp(regexString).toAutomaton();
-		Automaton modifiedAutomaton = Automaton.makeEmpty();
-		// initialize States
-		State targetState = targetAutomaton.getInitialState();
-		State regexState = regexAutomaton.getInitialState();
-		// initialize Stack
-		Stack<State> stateStack = new Stack<State>();
-		// initialize prefixString
-		String prefixString = "";
-		while (true) {
+			System.out.println("Prefix: " + prefix.toString());
 			// if we have already visited the targetState, then the Automaton is cyclic
 			if (stateStack.contains(targetState))
 				throw new IllegalArgumentException("Cannot run cyclic automata in Model_Bounded");
-			// if the current prefixString satisfies the regex
+			// if a satisfactory regex state has been reached
 			if (regexState.isAccept()) {
-				// save the prefix in tempAutomaton and concat prefix with all possible suffixes
-				Automaton tempAutomaton = Automaton.makeString(prefixString);
-				tempAutomaton = concatState(tempAutomaton, targetState);
-				// union the resulting automaton with modifiedAutomaton and remove the old one
-				// from targetAutomaton
-				modifiedAutomaton = modifiedAutomaton.union(tempAutomaton);
-				targetAutomaton.minus(tempAutomaton);
-				// reset target and regex States
-				targetState = targetAutomaton.getInitialState();
+				// concat prefix and all possible suffixes
+				Automaton modifiedPrefix = concatState(
+						Automaton.makeString(prefix.toString().replaceFirst(regexString, replacementString)),
+						targetState);
+				DotToGraph.outputDotFileAndPng(modifiedPrefix.toDot(), prefix.toString());
+				// minus target prefix from removedStrings
+				removedStrings = removedStrings
+						.minus(Automaton.makeString(prefix.toString()).concatenate(Automaton.makeAnyString()));
+				// union modifiedPrefix with originalAutomaton
+				originalAutomaton = originalAutomaton.union(modifiedPrefix);
+				// minimize Automata
+				removedStrings = Automaton.minimize(removedStrings);
+				originalAutomaton = Automaton.minimize(originalAutomaton);
+				// reset temp states and state stack
+				targetState = removedStrings.getInitialState();
 				regexState = regexAutomaton.getInitialState();
 				stateStack.clear();
+				prefix.delete(0, prefix.length());
+				// if there are no further matches to operate on, return the modified automaton
+				if (removedStrings.isEmpty()) {
+					System.out.println(System.currentTimeMillis() - start);
+					return new Model_Bounded(originalAutomaton, this.alphabet, this.boundLength);
+				}
 			} else {
-				String transition = "";
 				// else check if any of the next target transitions match the regex
+				boolean found = false;
 				for (Transition t : targetState.getTransitions()) {
 					for (Transition r : regexState.getTransitions()) {
-						String shared = getSharedTransition(r, t);
-						if (shared != null) {
-							transition = shared;
+						String transition = getSharedTransition(r, t);
+						// if a match is found
+						if (transition != null) {
+							found = true;
+							// update Stacks
+							stateStack.push(targetState);
+							prefix.append(transition);
+							// update State objects
+							targetState = t.getDest();
+							regexState = r.getDest();
+							// break out of loop
+							break;
 						}
 					}
+					if (found)
+						break;
 				}
-				// if there is a transition next which matches
-				if (transition != null) {
+				// if no matching transition was found, continue down the next available path
+				if (!found) {
+					// if there are no possible following Transitions
+					if (targetState.getTransitions().isEmpty()) {
+						throw new ArithmeticException("Invalid String found in removedStrings.");
+					}
+					// save next Transition
+					Transition t = (Transition) targetState.getTransitions().toArray()[0];
+					// update prefix and State counters
+					prefix.append(t.getMin());
 					stateStack.push(targetState);
-					prefixString = prefixString.concat(transition);
-					// TODO: handle going to next state with matching transition
-				} else {
-					// if there are no next transitions which match the regex
-					// TODO: this
+					// update State objects
+					regexState = regexAutomaton.getInitialState();
+					targetState = t.getDest();
 				}
 			}
 		}
-		return new Model_Bounded(targetAutomaton, this.alphabet, this.boundLength);
 	}
 
+	/**
+	 * Concatenates the given State s onto the end of the given Automaton a.
+	 * 
+	 * @param a - Automaton to be the prefix of the concatenation
+	 * @param s - State and its contained children to be the suffix
+	 * @return - Resulting Automaton after the two objects have been concatenated
+	 */
 	private Automaton concatState(Automaton a, State s) {
 		if (a.getSingleton() == null)
 			return null;

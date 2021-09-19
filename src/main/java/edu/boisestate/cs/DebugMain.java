@@ -1,9 +1,5 @@
 package edu.boisestate.cs;
 
-import dk.brics.automaton.Automaton;
-import dk.brics.automaton.RegExp;
-import dk.brics.automaton.State;
-import dk.brics.automaton.Transition;
 import edu.boisestate.cs.automatonModel.Model_Bounded;
 import edu.boisestate.cs.automatonModel.Model_Bounded_Manager;
 import edu.boisestate.cs.util.DotToGraph;
@@ -11,34 +7,23 @@ import edu.boisestate.cs.util.DotToGraph;
 public class DebugMain {
 
 	public static void main(String[] args) {
-		// regular expression to be converted
-		String regex = "aab(ab|c)d";
 		// alphabet to be used
 		Alphabet alpha = new Alphabet("a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z");
 		// create manager with given alphabet and an initial bound of 5
-		Model_Bounded_Manager mFactory = new Model_Bounded_Manager(alpha, 5);
-		
-		String targetAutomaton = "(abc|hbe|qby(ax|zbc))gf";
+		Model_Bounded_Manager mFactory = new Model_Bounded_Manager(alpha, 10);
+
+		String targetAutomaton = "(a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z)b";
 		String targetRegex = "b";
 		String replacement = "X";
 		Model_Bounded replaceFirstOptimizedTest = mFactory.createFromRegex(targetAutomaton);
 		DotToGraph.outputDotFileAndPng(replaceFirstOptimizedTest.toDot(), "before");
-		DotToGraph.outputDotFileAndPng(replaceFirstOptimizedTest.replaceFirstOptimized(targetRegex, replacement).toDot(), "optimizedAfter");
-		DotToGraph.outputDotFileAndPng(replaceFirstOptimizedTest.replaceFirst(targetRegex, replacement).toDot(), "unoptimizedAfter");
-		
-		Automaton a = new RegExp("(a|g)c").toAutomaton();
-		DotToGraph.outputDotFileAndPng(a.toDot(), "a-before");
-		for (Transition t : a.getInitialState().getTransitions()) {
-			State temp = null;
-			for (Transition t2 : t.getDest().getTransitions()) {
-				temp = t2.getDest();
-				break;
-			}
-			t.getDest().getTransitions().clear();
-			t.getDest().addTransition(new Transition('f', temp));
-			break;
-		}
-		DotToGraph.outputDotFileAndPng(a.toDot(), "a-after");
+		System.out.println("Optimized:");
+		DotToGraph.outputDotFileAndPng(
+				replaceFirstOptimizedTest.superOptimizedReplaceFirst(targetRegex, replacement).toDot(),
+				"optimizedAfter");
+		System.out.println("Brute forces:");
+		DotToGraph.outputDotFileAndPng(replaceFirstOptimizedTest.replaceFirst(targetRegex, replacement).toDot(),
+				"unoptimizedAfter");
 	}
 
 }
