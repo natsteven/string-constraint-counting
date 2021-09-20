@@ -864,7 +864,7 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 	 * @return - Model_Bounded object containing the resulting automaton
 	 */
 	public Model_Bounded replaceFirstBruteForce(String regexString, String replacement) {
-		long start = System.currentTimeMillis();
+//		long start = System.currentTimeMillis();
 		// get the set of all possible finite solutions for the automaton
 		Set<String> solutions = this.automaton.getFiniteStrings();
 		// if the automaton as an infinite language, return the unmodified automaton
@@ -882,7 +882,7 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 				result = result.union(a);
 		}
 		result.minimize();
-		System.out.println(System.currentTimeMillis() - start + "ms");
+//		System.out.println(System.currentTimeMillis() - start + "ms");
 		// return the result automaton in a Model_Bounded wrapper
 		return new Model_Bounded(result, this.alphabet, this.boundLength);
 	}
@@ -907,7 +907,7 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 	 * @return - The modified Automaton
 	 */
 	public Model_Bounded replaceFirstOptimized(String regexString, String replacementString) {
-		long start = System.currentTimeMillis();
+//		long start = System.currentTimeMillis();
 		// initialize Automata
 		Automaton regexAutomaton = new RegExp(regexString).toAutomaton();
 		Automaton originalAutomaton = Automaton.minimize(this.automaton.clone());
@@ -952,7 +952,7 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 				prefix.delete(0, prefix.length());
 				// if there are no further matches to operate on, return the modified automaton
 				if (removedStrings.isEmpty()) {
-					System.out.println(System.currentTimeMillis() - start + "ms");
+//					System.out.println(System.currentTimeMillis() - start + "ms");
 					return new Model_Bounded(originalAutomaton, this.alphabet, this.boundLength);
 				}
 			} else {
