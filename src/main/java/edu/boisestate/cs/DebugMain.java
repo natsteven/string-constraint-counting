@@ -29,7 +29,7 @@ public class DebugMain {
 		
 		Model_Bounded replaceAllTest = mFactory.createFromRegex("brbrbrb");
 		DotToGraph.outputDotFileAndPng(replaceAllTest.toDot(), "replaceAllBefore");
-		DotToGraph.outputDotFileAndPng(replaceAllTest.replaceAll("brb", "X").toDot(), "replaceAllBruteForce");
+		DotToGraph.outputDotFileAndPng(replaceAllTest.replaceAllBruteForce("brb", "X").toDot(), "replaceAllBruteForce");
 	}
 
 }
