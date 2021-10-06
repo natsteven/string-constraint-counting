@@ -41,6 +41,7 @@ import edu.ucsb.cs.www.vlab.stranger.StrangerLibrary.transition;
 public class Model_Bounded extends A_Model<Model_Bounded> {
 
 	private Automaton automaton;
+	private final boolean debug = false;
 
 	public String getAutomaton() {
 		return this.automaton.toString();
@@ -823,38 +824,6 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 	/**
 	 * Given a regex and a replacement String, iterate through all possible
 	 * solutions of the target automaton. For each solution, run
-	 * String.replaceAll(regex, String). Convert this String into an automaton, then
-	 * union said automaton with the result automaton. Return the final automaton.
-	 * 
-	 * @param regexString - String storing the regex to be used
-	 * @param replacement - String to replace occurrences of the regex
-	 * @return - Model_Bounded object containing the resulting automaton
-	 */
-	public Model_Bounded replaceAll(String regexString, String replacement) {
-		// get the set of all possible finite solutions for the automaton
-		Set<String> solutions = this.automaton.getFiniteStrings();
-		// if the automaton as an infinite language, return the unmodified automaton
-		if (solutions == null)
-			return new Model_Bounded(this.automaton, this.alphabet, this.boundLength);
-		// start with an empty automaton
-		Automaton result = Automaton.makeEmpty();
-		// for each solution, replace all occurrence of the regex and concatenate
-		// it with the result automaton
-		for (String str : solutions) {
-			Automaton a = BasicAutomata.makeString(str.replaceAll(regexString, replacement));
-			if (result.isEmpty())
-				result = a;
-			else
-				result = result.union(a);
-		}
-		result.minimize();
-		// return the result automaton in a Model_Bounded wrapper
-		return new Model_Bounded(result, this.alphabet, this.boundLength);
-	}
-
-	/**
-	 * Given a regex and a replacement String, iterate through all possible
-	 * solutions of the target automaton. For each solution, run
 	 * String.replaceFirst(regex, String). Convert this String into an automaton,
 	 * then union said automaton with the result automaton. Return the final
 	 * automaton.
@@ -864,7 +833,7 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 	 * @return - Model_Bounded object containing the resulting automaton
 	 */
 	public Model_Bounded replaceFirstBruteForce(String regexString, String replacement) {
-//		long start = System.currentTimeMillis();
+		long start = System.currentTimeMillis();
 		// get the set of all possible finite solutions for the automaton
 		Set<String> solutions = this.automaton.getFiniteStrings();
 		// if the automaton as an infinite language, return the unmodified automaton
@@ -882,9 +851,60 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 				result = result.union(a);
 		}
 		result.minimize();
-//		System.out.println(System.currentTimeMillis() - start + "ms");
+		if (debug)
+			System.out.println(System.currentTimeMillis() - start + "ms");
 		// return the result automaton in a Model_Bounded wrapper
 		return new Model_Bounded(result, this.alphabet, this.boundLength);
+	}
+
+	public Model_Bounded replaceAllBruteForce(String regexString, String replacement) {
+		long start = System.currentTimeMillis();
+		// get the set of all possible finite solutions for the automaton
+		Set<String> solutions = this.automaton.getFiniteStrings();
+		// if the automaton as an infinite language, return the unmodified automaton
+		if (solutions == null)
+			return new Model_Bounded(this.automaton, this.alphabet, this.boundLength);
+		// start with an empty automaton
+		Automaton result = Automaton.makeEmpty();
+		// for each solution, replace the first occurrence of the regex and concatenate
+		// it with the result automaton
+		for (String str : solutions) {
+			Automaton a = BasicAutomata.makeString(str.replaceAll(regexString, replacement));
+			if (result.isEmpty())
+				result = a;
+			else
+				result = result.union(a);
+		}
+		result.minimize();
+		if (debug)
+			System.out.println(System.currentTimeMillis() - start + "ms");
+		// return the result automaton in a Model_Bounded wrapper
+		return new Model_Bounded(result, this.alphabet, this.boundLength);
+	}
+
+	public Model_Bounded replaceAllOptimized(String regexString, String replacementString) {
+		// initialize automata
+		Automaton targetAutomaton = Automaton.minimize(this.automaton.clone());
+		Automaton regexAutomaton = new RegExp(regexString).toAutomaton();
+		// initialize target states
+		State targetState = targetAutomaton.getInitialState();
+		State regexState = regexAutomaton.getInitialState();
+		// initialize stringsToIgnore and the prefixandString tracker
+		Set<String> stringsToIgnore = new HashSet<String>();
+		StringBuilder prefixAndString = new StringBuilder();
+		// initialize stateStack
+		Stack<State> stateStack = new Stack<State>();
+		while (true) {
+			// if we have already visited the targetState, then the Automaton is cyclic
+			if (stateStack.contains(targetState))
+				throw new IllegalArgumentException("Cannot run cyclic automata in Model_Bounded");
+			// if we are at a satisfactory point in the regex and our current progress has
+			// not been replaced before
+			if (regexState.isAccept() && !stringsToIgnore.contains(prefixAndString.toString())) {
+			}
+			break;
+		}
+		return new Model_Bounded(targetAutomaton, this.alphabet, this.boundLength);
 	}
 
 	/**
@@ -907,7 +927,7 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 	 * @return - The modified Automaton
 	 */
 	public Model_Bounded replaceFirstOptimized(String regexString, String replacementString) {
-//		long start = System.currentTimeMillis();
+		long start = System.currentTimeMillis();
 		// initialize Automata
 		Automaton regexAutomaton = new RegExp(regexString).toAutomaton();
 		Automaton originalAutomaton = Automaton.minimize(this.automaton.clone());
@@ -952,7 +972,8 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 				prefix.delete(0, prefix.length());
 				// if there are no further matches to operate on, return the modified automaton
 				if (removedStrings.isEmpty()) {
-//					System.out.println(System.currentTimeMillis() - start + "ms");
+					if (debug)
+						System.out.println(System.currentTimeMillis() - start + "ms");
 					return new Model_Bounded(originalAutomaton, this.alphabet, this.boundLength);
 				}
 			} else {
