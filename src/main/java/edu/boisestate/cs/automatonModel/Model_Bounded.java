@@ -886,11 +886,13 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 		// initialize automata
 		Automaton targetAutomaton = Automaton.minimize(this.automaton.clone());
 		Automaton regexAutomaton = new RegExp(regexString).toAutomaton();
+		Automaton containsRegex = Automaton.makeAnyString().union(regexAutomaton).union(Automaton.makeAnyString());
+		Automaton intersection = targetAutomaton.intersection(containsRegex);
+		targetAutomaton = targetAutomaton.minus(containsRegex);
 		// initialize target states
-		State targetState = targetAutomaton.getInitialState();
+		State targetState = intersection.getInitialState();
 		State regexState = regexAutomaton.getInitialState();
-		// initialize stringsToIgnore and the prefixandString tracker
-		Set<String> stringsToIgnore = new HashSet<String>();
+		// initialize the prefixandString tracker
 		StringBuilder prefixAndString = new StringBuilder();
 		// initialize stateStack
 		Stack<State> stateStack = new Stack<State>();
@@ -898,9 +900,9 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 			// if we have already visited the targetState, then the Automaton is cyclic
 			if (stateStack.contains(targetState))
 				throw new IllegalArgumentException("Cannot run cyclic automata in Model_Bounded");
-			// if we are at a satisfactory point in the regex and our current progress has
-			// not been replaced before
-			if (regexState.isAccept() && !stringsToIgnore.contains(prefixAndString.toString())) {
+			// if we are at a satisfactory point in the regex
+			if (regexState.isAccept()) {
+
 			}
 			break;
 		}
@@ -953,6 +955,66 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 				throw new IllegalArgumentException("Cannot run cyclic automata in Model_Bounded");
 			// if a satisfactory regex state has been reached
 			if (regexState.isAccept()) {
+				// check if there is a path to continue
+				String transition = null;
+				boolean solution = false;
+				for (Transition t : targetState.getTransitions()) {
+					for (Transition r : regexState.getTransitions()) {
+						transition = getSharedTransition(t, r);
+						if (transition != null) {
+							// if there is a potential path, follow it
+							State subTargetState = t.getDest();
+							State subRegexState = r.getDest();
+							StringBuilder subPrefix = new StringBuilder(transition);
+							stateStack.push(targetState);
+							while (true) {
+								transition = null;
+								// if there is a further solution, update parent variables
+								if (subRegexState.isAccept()) {
+									targetState = subTargetState;
+									prefix.append(subPrefix.toString());
+									subPrefix.delete(0, subPrefix.length());
+									// find out if there is an even further solution
+									for (Transition subT : subTargetState.getTransitions()) {
+										for (Transition subR : subRegexState.getTransitions()) {
+											transition = getSharedTransition(subT, subR);
+											if (transition != null) {
+												subTargetState = subT.getDest();
+												subRegexState = subR.getDest();
+												subPrefix.append(transition);
+												break;
+											}
+										}
+										if (transition != null)
+											break;
+									}
+									if (transition == null)
+										break;
+								} else {
+									// if current state is not a solution, find out if there is a potential further path
+									for (Transition subT : subTargetState.getTransitions()) {
+										for (Transition subR : subRegexState.getTransitions()) {
+											transition = getSharedTransition(subT, subR);
+											if (transition != null) {
+												subTargetState = subT.getDest();
+												subRegexState = subR.getDest();
+												subPrefix.append(transition);
+												break;
+											}
+										}
+										if (transition != null)
+											break;
+									}
+									if (transition == null)
+										break;
+								}
+							}
+							break;
+						}
+					}
+					if (solution)
+						break;
+				}
 				// concat prefix and all possible suffixes
 				Automaton modifiedPrefix = concatState(
 						Automaton.makeString(prefix.toString().replaceFirst(regexString, replacementString)),

@@ -26,10 +26,11 @@ public class DebugMain {
 //		System.out.println("Brute force:");
 //		DotToGraph.outputDotFileAndPng(replaceFirstOptimizedTest.replaceFirstBruteForce(targetRegex, replacement).toDot(),
 //				"unoptimizedAfter");
+		System.out.println(new String("Hello").replaceFirst("ell*", "X"));
 		
-		Model_Bounded replaceAllTest = mFactory.createFromRegex("brbrbrb");
+		Model_Bounded replaceAllTest = mFactory.createFromRegex("Hello");
 		DotToGraph.outputDotFileAndPng(replaceAllTest.toDot(), "replaceAllBefore");
-		DotToGraph.outputDotFileAndPng(replaceAllTest.replaceAllBruteForce("brb", "X").toDot(), "replaceAllBruteForce");
+		DotToGraph.outputDotFileAndPng(replaceAllTest.replaceFirstOptimized("ell*", "X").toDot(), "replaceAllBruteForce");
 	}
 
 }
