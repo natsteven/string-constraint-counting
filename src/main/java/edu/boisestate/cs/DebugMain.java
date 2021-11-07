@@ -13,8 +13,8 @@ public class DebugMain {
 		Model_Bounded_Manager mFactory = new Model_Bounded_Manager(alpha, 10);
 
 		// this one breaks brute force
-		String targetAutomaton = "(a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z)(begfh|ndido(niob|hnudidhudibnido)|nudiofnuini|b)(iwonwoiwsnoi|nbsiuos|sjnmios(sjmiosbindondm|mndiopdndb)mdoipdmd)miodxpb";
-//		String targetAutomaton = "(a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z)(begfh|ndido(niob|hnudidhudibnido)|nudiofnuini|b)(iwonwoiwsnoi|nbsiuos|sjnmios)";
+//		String targetAutomaton = "(a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z)(begfh|ndido(niob|hnudidhudibnido)|nudiofnuini|b)(iwonwoiwsnoi|nbsiuos|sjnmios(sjmiosbindondm|mndiopdndb)mdoipdmd)miodxpb";
+		String targetAutomaton = "(a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z)(begfh|ndido(niob|hnudidhudibnido)|nudiofnuini|b)(iwonwoiwsnoi|nbsiuos|sjnmios)";
 		String targetRegex = "(di|n|g)";
 		String replacement = "X";
 //		Model_Bounded replaceFirstOptimizedTest = mFactory.createFromRegex(targetAutomaton);
