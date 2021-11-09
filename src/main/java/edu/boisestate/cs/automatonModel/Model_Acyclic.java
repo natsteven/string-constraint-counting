@@ -2,12 +2,16 @@ package edu.boisestate.cs.automatonModel;
 
 import dk.brics.automaton.Automaton;
 import dk.brics.automaton.BasicAutomata;
+import dk.brics.automaton.RegExp;
+import dk.brics.automaton.State;
+import dk.brics.automaton.Transition;
 import dk.brics.string.stringoperations.*;
 import edu.boisestate.cs.Alphabet;
 import edu.boisestate.cs.automatonModel.operations.*;
 
 import java.math.BigInteger;
 import java.util.Set;
+import java.util.Stack;
 
 /**
  * 
@@ -849,5 +853,485 @@ public class Model_Acyclic extends A_Model <Model_Acyclic> {
         }
         return new Model_Acyclic(result, this.alphabet, boundLength);
    }
+
+	/**
+	 * Checks if the automaton contained in this object is a subset of the provided
+	 * regex.
+	 * 
+	 * @param regexString - Regular expression to be checked
+	 * @return True if they match, false if otherwise.
+	 */
+	public boolean matches(String regexString) {
+		// create an Automaton from the regexString
+		RegExp regex = new RegExp(regexString);
+		Automaton regexAutomaton = regex.toAutomaton();
+		// return if the automaton are subsets of each other
+		return this.automaton.subsetOf(regexAutomaton);
+	}
+
+	/**
+	 * Given a regex and a replacement String, iterate through all possible
+	 * solutions of the target automaton. For each solution, run
+	 * String.replaceFirst(regex, String). Convert this String into an automaton,
+	 * then union said automaton with the result automaton. Return the final
+	 * automaton.
+	 * 
+	 * @param regexString - String storing the regex to be used
+	 * @param replacement - String to replace occurrences of the regex
+	 * @return - Model_Acyclic object containing the resulting automaton
+	 */
+	public Model_Acyclic replaceFirstBruteForce(String regexString, String replacement) {
+		// get the set of all possible finite solutions for the automaton
+		Set<String> solutions = this.automaton.getFiniteStrings();
+		// if the automaton as an infinite language, return the unmodified automaton
+		if (solutions == null)
+			return new Model_Acyclic(this.automaton, this.alphabet, this.boundLength);
+		// start with an empty automaton
+		Automaton result = Automaton.makeEmpty();
+		// for each solution, replace the first occurrence of the regex and concatenate
+		// it with the result automaton
+		for (String str : solutions) {
+			Automaton a = BasicAutomata.makeString(str.replaceFirst(regexString, replacement));
+			if (result.isEmpty())
+				result = a;
+			else
+				result = result.union(a);
+		}
+		result.minimize();
+		// return the result automaton in a Model_Acyclic wrapper
+		return new Model_Acyclic(result, this.alphabet, this.boundLength);
+	}
+
+	public Model_Acyclic replaceAllBruteForce(String regexString, String replacement) {
+		// get the set of all possible finite solutions for the automaton
+		Set<String> solutions = this.automaton.getFiniteStrings();
+		// if the automaton as an infinite language, return the unmodified automaton
+		if (solutions == null)
+			return new Model_Acyclic(this.automaton, this.alphabet, this.boundLength);
+		// start with an empty automaton
+		Automaton result = Automaton.makeEmpty();
+		// for each solution, replace the first occurrence of the regex and concatenate
+		// it with the result automaton
+		for (String str : solutions) {
+			Automaton a = BasicAutomata.makeString(str.replaceAll(regexString, replacement));
+			if (result.isEmpty())
+				result = a;
+			else
+				result = result.union(a);
+		}
+		result.minimize();
+		// return the result automaton in a Model_Acyclic wrapper
+		return new Model_Acyclic(result, this.alphabet, this.boundLength);
+	}
+
+	/**
+	 * Given a regex and replacement String, this method performs a replaceAll
+	 * operation on all Strings in the language of the target Automaton.
+	 * 
+	 * The intersection of the target Automaton and all Strings containing the
+	 * provided regex is found and saved as intersection. Then, a depth-first search
+	 * is performed on intersection to find each prefix containing the regex. The
+	 * prefix and suffix (i.e. following State which contains its suffixes) are
+	 * saved. The method calls itself on the suffix to find any further matches.
+	 * Once the suffix is returned, it is concatenated with the prefix and unioned
+	 * with the target automaton. Once the intersection is empty, the target
+	 * automaton is returned wrapped in a Model_Acyclic object.
+	 * 
+	 * @param regexString       - String representation of the regex to be found in
+	 *                          the target Automaton
+	 * @param replacementString - String to replace the substring which satisfies
+	 *                          the target Automaton
+	 * @return - The modified Automaton
+	 */
+	public Model_Acyclic replaceAllOptimized(String regexString, String replacementString) {
+		// initialize automata
+		Automaton targetAutomaton = Automaton.minimize(this.automaton.clone());
+		Automaton regexAutomaton = new RegExp(regexString).toAutomaton();
+		Automaton containsRegex = Automaton.makeAnyString().union(regexAutomaton).union(Automaton.makeAnyString());
+		Automaton intersection = targetAutomaton.intersection(containsRegex);
+		targetAutomaton = targetAutomaton.minus(containsRegex);
+		// initialize target states
+		State targetState = intersection.getInitialState();
+		State regexState = regexAutomaton.getInitialState();
+		// initialize the prefixandString tracker
+		StringBuilder prefix = new StringBuilder();
+		// initialize stateStack
+		Stack<State> stateStack = new Stack<State>();
+		while (true) {
+			// if we have already visited the targetState, then the Automaton is cyclic
+			if (stateStack.contains(targetState))
+				throw new IllegalArgumentException("Cannot run cyclic automata in Model_Acyclic");
+			// if we are at a satisfactory point in the regex
+			if (regexState.isAccept()) {
+				// check if there is a path to continue
+				String transition = null;
+				boolean solution = false;
+				for (Transition t : targetState.getTransitions()) {
+					for (Transition r : regexState.getTransitions()) {
+						transition = getSharedTransition(t, r);
+						if (transition != null) {
+							// if there is a potential path, follow it
+							State subTargetState = t.getDest();
+							State subRegexState = r.getDest();
+							StringBuilder subPrefix = new StringBuilder(transition);
+							stateStack.push(targetState);
+							while (true) {
+								transition = null;
+								// if there is a further solution, update parent variables
+								if (subRegexState.isAccept()) {
+									targetState = subTargetState;
+									prefix.append(subPrefix.toString());
+									subPrefix.delete(0, subPrefix.length());
+									// find out if there is an even further solution
+									for (Transition subT : subTargetState.getTransitions()) {
+										for (Transition subR : subRegexState.getTransitions()) {
+											transition = getSharedTransition(subT, subR);
+											if (transition != null) {
+												subTargetState = subT.getDest();
+												subRegexState = subR.getDest();
+												subPrefix.append(transition);
+												break;
+											}
+										}
+										if (transition != null)
+											break;
+									}
+									if (transition == null)
+										break;
+								} else {
+									// if current state is not a solution, find out if there is a potential further
+									// path
+									for (Transition subT : subTargetState.getTransitions()) {
+										for (Transition subR : subRegexState.getTransitions()) {
+											transition = getSharedTransition(subT, subR);
+											if (transition != null) {
+												subTargetState = subT.getDest();
+												subRegexState = subR.getDest();
+												subPrefix.append(transition);
+												break;
+											}
+										}
+										if (transition != null)
+											break;
+									}
+									if (transition == null)
+										break;
+								}
+							}
+							break;
+						}
+					}
+					if (solution)
+						break;
+				}
+				// create prefix
+				String modifiedPrefix = prefix.toString().replaceAll(regexString, replacementString);
+				// minus target prefix from intersection
+				intersection = Automaton.minimize(intersection
+						.minus(Automaton.makeString(prefix.toString()).concatenate(Automaton.makeAnyString())));
+				// create suffix automaton
+				Automaton suffix = Automaton.makeEmpty();
+				suffix.setInitialState(targetState);
+				// call self on suffix
+				Model_Acyclic suffixModel = new Model_Acyclic(suffix, this.alphabet, this.boundLength)
+						.replaceAllOptimized(regexString, replacementString);
+				// concat prefix and suffix
+				Automaton modifiedAutomaton = concatState(Automaton.makeString(modifiedPrefix),
+						suffixModel.automaton.getInitialState());
+				// union modifiedAutomaton with targetAutomaton and minimize
+				targetAutomaton = Automaton.minimize(targetAutomaton.union(modifiedAutomaton));
+				// reset temp states and state stack
+				targetState = intersection.getInitialState();
+				regexState = regexAutomaton.getInitialState();
+				stateStack.clear();
+				prefix.delete(0, prefix.length());
+				// if there are no further matches to operate on, return the modified automaton
+				if (intersection.isEmpty()) {
+					return new Model_Acyclic(targetAutomaton, this.alphabet, this.boundLength);
+				}
+			} else {
+				// else check if any of the next target transitions match the regex
+				boolean found = false;
+				for (Transition t : targetState.getTransitions()) {
+					for (Transition r : regexState.getTransitions()) {
+						String transition = getSharedTransition(r, t);
+						// if a match is found
+						if (transition != null) {
+							found = true;
+							// update Stacks
+							stateStack.push(targetState);
+							prefix.append(transition);
+							// update State objects
+							targetState = t.getDest();
+							regexState = r.getDest();
+							// break out of loop
+							break;
+						}
+					}
+					if (found)
+						break;
+				}
+				// if no matching transition was found, continue down the next available path
+				if (!found) {
+					// if there are no possible following Transitions
+					if (targetState.getTransitions().isEmpty()) {
+						if (targetState.isAccept()) {
+							return new Model_Acyclic(targetAutomaton.union(intersection), this.alphabet,
+									this.boundLength);
+						}
+						throw new ArithmeticException("Invalid String found in intersection.");
+					}
+					// save next Transition
+					Transition t = (Transition) targetState.getTransitions().toArray()[0];
+					// update prefix and State counters
+					prefix.append(t.getMin());
+					stateStack.push(targetState);
+					// update State objects
+					regexState = regexAutomaton.getInitialState();
+					targetState = t.getDest();
+				}
+			}
+		}
+	}
+
+	/**
+	 * Given a regex and replacement String, this method performs a replaceFirst
+	 * operation on all Strings in the language of the target Automaton.
+	 * 
+	 * The intersection of the target Automaton and all Strings containing the
+	 * provided regex is found and saved as intersection. Then, a depth-first search
+	 * is performed on intersection to find each prefix containing the regex. The
+	 * prefix and following State (which contains its suffixes) are saved. The
+	 * prefix is modified with the String.replaceFirst method before being
+	 * concatenated with its suffixes. The resulting Automaton is then unioned with
+	 * the original Automaton. After all possible prefixes are found and
+	 * intersection is empty, the resulting Automaton is returned.
+	 * 
+	 * @param regexString       - String representation of the regex to be found in
+	 *                          the target Automaton
+	 * @param replacementString - String to replace the substring which satisfies
+	 *                          the target Automaton
+	 * @return - The modified Automaton
+	 */
+	public Model_Acyclic replaceFirstOptimized(String regexString, String replacementString) {
+		long start = System.currentTimeMillis();
+		// initialize Automata
+		Automaton regexAutomaton = new RegExp(regexString).toAutomaton();
+		Automaton originalAutomaton = Automaton.minimize(this.automaton.clone());
+		Automaton anyPrefixAndSuffix = Automaton.makeAnyString().concatenate(regexAutomaton)
+				.concatenate(Automaton.makeAnyString());
+		// Automaton containing all Strings in the originalAutomaton's language which
+		// contain a substring which satisfies the regex
+		Automaton intersection = Automaton.minimize(originalAutomaton.intersection(anyPrefixAndSuffix));
+		originalAutomaton = Automaton.minimize(originalAutomaton.minus(anyPrefixAndSuffix));
+		// if there are no matches to operate on, return the originalAutomaton
+		if (intersection.isEmpty())
+			return new Model_Acyclic(originalAutomaton, this.alphabet, this.boundLength);
+		// initialize temporary States
+		State targetState = intersection.getInitialState();
+		State regexState = regexAutomaton.getInitialState();
+		// Stack containing visited States to check for cyclic Automata
+		Stack<State> stateStack = new Stack<State>();
+		// StringBuilder to contain the ongoing prefix
+		StringBuilder prefix = new StringBuilder();
+		while (true) {
+			// if we have already visited the targetState, then the Automaton is cyclic
+			if (stateStack.contains(targetState))
+				throw new IllegalArgumentException("Cannot run cyclic automata in Model_Acyclic");
+			// if a satisfactory regex state has been reached
+			if (regexState.isAccept()) {
+				// check if there is a path to continue
+				String transition = null;
+				boolean solution = false;
+				for (Transition t : targetState.getTransitions()) {
+					for (Transition r : regexState.getTransitions()) {
+						transition = getSharedTransition(t, r);
+						if (transition != null) {
+							// if there is a potential path, follow it
+							State subTargetState = t.getDest();
+							State subRegexState = r.getDest();
+							StringBuilder subPrefix = new StringBuilder(transition);
+							stateStack.push(targetState);
+							while (true) {
+								transition = null;
+								// if there is a further solution, update parent variables
+								if (subRegexState.isAccept()) {
+									targetState = subTargetState;
+									prefix.append(subPrefix.toString());
+									subPrefix.delete(0, subPrefix.length());
+									// find out if there is an even further solution
+									for (Transition subT : subTargetState.getTransitions()) {
+										for (Transition subR : subRegexState.getTransitions()) {
+											transition = getSharedTransition(subT, subR);
+											if (transition != null) {
+												subTargetState = subT.getDest();
+												subRegexState = subR.getDest();
+												subPrefix.append(transition);
+												break;
+											}
+										}
+										if (transition != null)
+											break;
+									}
+									if (transition == null)
+										break;
+								} else {
+									// if current state is not a solution, find out if there is a potential further
+									// path
+									for (Transition subT : subTargetState.getTransitions()) {
+										for (Transition subR : subRegexState.getTransitions()) {
+											transition = getSharedTransition(subT, subR);
+											if (transition != null) {
+												subTargetState = subT.getDest();
+												subRegexState = subR.getDest();
+												subPrefix.append(transition);
+												break;
+											}
+										}
+										if (transition != null)
+											break;
+									}
+									if (transition == null)
+										break;
+								}
+							}
+							break;
+						}
+					}
+					if (solution)
+						break;
+				}
+				// concat prefix and all possible suffixes
+				Automaton modifiedPrefix = concatState(
+						Automaton.makeString(prefix.toString().replaceFirst(regexString, replacementString)),
+						targetState);
+				// minus target prefix from intersection
+				intersection = intersection
+						.minus(Automaton.makeString(prefix.toString()).concatenate(Automaton.makeAnyString()));
+				// union modifiedPrefix with originalAutomaton
+				originalAutomaton = originalAutomaton.union(modifiedPrefix);
+				// minimize Automata
+				intersection = Automaton.minimize(intersection);
+				originalAutomaton = Automaton.minimize(originalAutomaton);
+				// reset temp states and state stack
+				targetState = intersection.getInitialState();
+				regexState = regexAutomaton.getInitialState();
+				stateStack.clear();
+				prefix.delete(0, prefix.length());
+				// if there are no further matches to operate on, return the modified automaton
+				if (intersection.isEmpty())
+					return new Model_Acyclic(originalAutomaton, this.alphabet, this.boundLength);
+			} else {
+				// else check if any of the next target transitions match the regex
+				boolean found = false;
+				for (Transition t : targetState.getTransitions()) {
+					for (Transition r : regexState.getTransitions()) {
+						String transition = getSharedTransition(r, t);
+						// if a match is found
+						if (transition != null) {
+							found = true;
+							// update Stacks
+							stateStack.push(targetState);
+							prefix.append(transition);
+							// update State objects
+							targetState = t.getDest();
+							regexState = r.getDest();
+							// break out of loop
+							break;
+						}
+					}
+					if (found)
+						break;
+				}
+				// if no matching transition was found, continue down the next available path
+				if (!found) {
+					// if there are no possible following Transitions
+					if (targetState.getTransitions().isEmpty()) {
+						throw new ArithmeticException("Invalid String found in intersection.");
+					}
+					// save next Transition
+					Transition t = (Transition) targetState.getTransitions().toArray()[0];
+					// update prefix and State counters
+					prefix.append(t.getMin());
+					stateStack.push(targetState);
+					// update State objects
+					regexState = regexAutomaton.getInitialState();
+					targetState = t.getDest();
+				}
+			}
+		}
+	}
+
+	/**
+	 * Concatenates the given State s onto the end of the given Automaton a.
+	 * 
+	 * @param a - Automaton to be the prefix of the concatenation
+	 * @param s - State and its contained children to be the suffix
+	 * @return - Resulting Automaton after the two objects have been concatenated
+	 */
+	private Automaton concatState(Automaton a, State s) {
+		if (a.getSingleton() == null)
+			return null;
+		Automaton result = Automaton.minimize(a.clone());
+		if (s.getTransitions().size() == 0)
+			return result;
+		State state = result.getInitialState();
+		while (!state.isAccept())
+			state = ((Transition) state.getTransitions().toArray()[0]).getDest();
+		for (Transition t : s.getTransitions())
+			state.addTransition(t);
+		state.setAccept(false);
+		result.minimize();
+		return result;
+	}
+
+	/**
+	 * Checks if the two transitions have any shared character in their ranges. If
+	 * they do, the first shared character is returned as a String.
+	 * 
+	 * @param trans1 - First transition to be checked
+	 * @param trans2 - Second transition to be checked
+	 * @return - Shared character if it exists. Otherwise, null
+	 */
+	private String getSharedTransition(Transition trans1, Transition trans2) {
+		// get range of each transition as a String
+		String range1 = getCharRange(trans1.getMin(), trans1.getMax());
+		String range2 = getCharRange(trans2.getMin(), trans2.getMax());
+		if (range1 == null || range2 == null)
+			return null;
+		// for each character in range 1, check if it is also contained in range2
+		for (int i = 0; i < range1.length(); i++)
+			if (range2.contains(range1.substring(i, i + 1)))
+				// if the character at index i is contained in both strings, then return the
+				// character
+				return range1.substring(i, i + 1);
+		// if the transitions have no shared characters, return null
+		return null;
+	}
+
+	/**
+	 * Gets the range between the min and max characters and returns it as a String.
+	 * 
+	 * @param min - Minimum char value
+	 * @param max - Maximum char value
+	 * @return - Range in String form if possible, otherwise null
+	 */
+	private String getCharRange(char min, char max) {
+		if (min > max)
+			return null;
+		String result = "";
+		while (min <= max)
+			result += min++;
+		return result;
+	}
+
+	/**
+	 * Returns the Dot representation of this automaton.
+	 * 
+	 * @return - Dot representation of this automaton
+	 */
+	public String toDot() {
+		return this.automaton.toDot();
+	}
     
 }
