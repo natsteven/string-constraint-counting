@@ -807,6 +807,17 @@ public class Parser_2<T extends A_Model<T>> {
 		// stringBuilder.replace(int start, int end, String str)
 
 		if (fName.equals("replaceAll")) {
+			// create new concrete strings in the solver
+			solver.newConcreteString(arg1, actualVals.get(arg1));
+			solver.newConcreteString(arg2, actualVals.get(arg2));
+			// add args to the constraint
+			constraint.addArg(arg1);
+			constraint.addArg(arg2);
+			// set op
+			constraint.setOp(REPLACE_ALL);
+			// perform op
+			solver.replaceAll(id, base, arg1, arg2);
+			// retuen success status of operation
 			return String.format("<S:%d>.%s(<S:%d>, <S:%d>)", base, fName, arg1, arg2);
 		} else if (fName.equals("replaceFirst")) {
 			// create new concrete strings in the solver

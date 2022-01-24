@@ -291,6 +291,12 @@ public class Model_Concrete_Singleton extends A_Model<Model_Concrete_Singleton >
 	public Model_Concrete_Singleton replaceFirstOptimized(String regexString, String replacementString) {
 		return null;
 	}
+
+	@Override
+	public Model_Concrete_Singleton replaceAllOptimized(String arg1String, String arg2String) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 
 }

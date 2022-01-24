@@ -1348,4 +1348,10 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 		return null;
 	}
 
+	@Override
+	public Model_Acyclic_Inverse replaceAllOptimized(String arg1String, String arg2String) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

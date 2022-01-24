@@ -106,4 +106,6 @@ public interface I_Model<T extends I_Model<T>> {
 	
 	T replaceFirstOptimized(String regexString, String replacementString);
 
+	T replaceAllOptimized(String arg1String, String arg2String);
+
 }

@@ -174,6 +174,9 @@ public abstract class A_Model <T extends A_Model <T>> implements Cloneable, I_Mo
     @Override
 	public abstract T replaceFindKnown(char find);
     
+	@Override
+	public abstract T replaceAllOptimized(String arg1String, String arg2String);
+	
     @Override
     public abstract T replaceFirstOptimized(String regexString, String replacementString);
 

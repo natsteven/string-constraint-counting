@@ -574,6 +574,32 @@ public class Solver<T extends A_Model<T>> extends A_Solver_Extended<T> implement
         return value;
     }
     
+    
+    /**
+     * This should be working
+     * @param id
+     * @param base
+     * @param argOne
+     * @param argTwo
+     */
+    public void replaceAll(int id, int base, int argOne, int argTwo) {
+    	// get models
+    	T baseModel = this.symbolicStringMap.get(base);
+    	if (baseModel.getClass() != Model_Acyclic.class)
+    		return;
+    	String arg1String = this.concreteStringMap.get(argOne);
+    	String arg2String = this.concreteStringMap.get(argTwo);
+    	// start timer
+    	BasicTimer.start();
+    	// perform replaceFirst string operation
+    	baseModel = baseModel.replaceAllOptimized(arg1String, arg2String);
+    	// stop timer
+    	BasicTimer.stop();
+    	// store result model
+    	this.symbolicStringMap.put(id, baseModel);
+    }
+    
+    
     /**
      * This should be working
      * @param id

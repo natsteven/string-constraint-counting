@@ -29,6 +29,7 @@ public enum Operation {	CONCAT,						// args:
 						REPLACE_UNK_CHAR,			// args: 0:REPLACE
 						REPLACE_CHAR_UNK,			// args: 0:FIND
 						REPLACE_FIRST,				// args: 0:FIND, 1:REPLACE
+						REPLACE_ALL,				// args: 0:FIND, 1:REPLACE
 						REPLACE_UNK_UNK,			// args: 
 						REPLACE_CHARSEQ_CHARSEQ,	// args: 0:FIND, 1:REPLACE
 						REVERSE,					// args:
