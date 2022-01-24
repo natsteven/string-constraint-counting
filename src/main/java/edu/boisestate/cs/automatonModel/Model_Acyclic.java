@@ -1113,6 +1113,7 @@ public class Model_Acyclic extends A_Model <Model_Acyclic> {
 	 *                          the target Automaton
 	 * @return - The modified Automaton
 	 */
+	@Override
 	public Model_Acyclic replaceFirstOptimized(String regexString, String replacementString) {
 		long start = System.currentTimeMillis();
 		// initialize Automata

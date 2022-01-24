@@ -950,5 +950,10 @@ public class Model_Acyclic_Weighted extends A_Model<Model_Acyclic_Weighted>{
 		return automaton.toString();
 	}
 
+	@Override
+	public Model_Acyclic_Weighted replaceFirstOptimized(String regexString, String replacementString) {
+		return null;
+	}
+
 
 }

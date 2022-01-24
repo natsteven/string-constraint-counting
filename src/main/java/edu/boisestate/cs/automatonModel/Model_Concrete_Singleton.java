@@ -286,6 +286,11 @@ public class Model_Concrete_Singleton extends A_Model<Model_Concrete_Singleton >
 	public String getAutomaton() {
 		return singleton;
 	}
+
+	@Override
+	public Model_Concrete_Singleton replaceFirstOptimized(String regexString, String replacementString) {
+		return null;
+	}
 	
 
 }

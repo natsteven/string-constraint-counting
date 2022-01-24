@@ -1,0 +1,82 @@
+{
+  "alphabet" : {
+    "size" : 3,
+    "declaration" : "A,B,C"
+  },
+  "vertices" : [ {
+    "num" : 0,
+    "actualValue" : "A",
+    "incomingEdges" : [ ],
+    "sourceConstraints" : [ ],
+    "timeStamp" : 0,
+    "type" : 0,
+    "id" : 1,
+    "value" : "r1!:!getStringValue!!"
+  }, {
+    "num" : 0,
+    "actualValue" : "A",
+    "incomingEdges" : [ ],
+    "sourceConstraints" : [ ],
+    "timeStamp" : 0,
+    "type" : 0,
+    "id" : 2,
+    "value" : "\"A\"!:!<init>"
+  }, {
+    "num" : 0,
+    "actualValue" : "B",
+    "incomingEdges" : [ ],
+    "sourceConstraints" : [ ],
+    "timeStamp" : 0,
+    "type" : 0,
+    "id" : 3,
+    "value" : "\"B\"!:!<init>"
+  }, {
+    "num" : 0,
+    "actualValue" : "true",
+    "incomingEdges" : [ {
+      "source" : 1,
+      "type" : "t"
+    }, {
+      "source" : 2,
+      "type" : "s1"
+    } ],
+    "sourceConstraints" : [ ],
+    "timeStamp" : 0,
+    "type" : 0,
+    "id" : 4,
+    "value" : "contains!!Ljava/lang/CharSequence;!:!0"
+  }, {
+    "num" : 0,
+    "actualValue" : "B",
+    "incomingEdges" : [ {
+      "source" : 1,
+      "type" : "t"
+    }, {
+      "source" : 2,
+      "type" : "s1"
+    }, {
+      "source" : 3,
+      "type" : "s2"
+    } ],
+    "sourceConstraints" : [ ],
+    "timeStamp" : 0,
+    "type" : 0,
+    "id" : 5,
+    "value" : "replaceFirst!!Ljava/lang/String;!:!Ljava/lang/String;!:!0"
+  }, {
+    "num" : 0,
+    "actualValue" : "true",
+    "incomingEdges" : [ {
+      "source" : 5,
+      "type" : "t"
+    }, {
+      "source" : 3,
+      "type" : "s1"
+    } ],
+    "sourceConstraints" : [ ],
+    "timeStamp" : 0,
+    "type" : 0,
+    "id" : 6,
+    "value" : "contains!!Ljava/lang/CharSequence;!:!0"
+  } ]
+}

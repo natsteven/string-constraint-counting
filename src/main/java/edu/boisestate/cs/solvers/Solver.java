@@ -5,6 +5,7 @@ import edu.boisestate.cs.BasicTimer;
 import edu.boisestate.cs.automatonModel.A_Model;
 import edu.boisestate.cs.automatonModel.A_Model_Manager;
 import edu.boisestate.cs.util.Tuple;
+import edu.boisestate.cs.automatonModel.Model_Acyclic;
 
 public class Solver<T extends A_Model<T>> extends A_Solver_Extended<T> implements I_Solver<T> {
 
@@ -571,6 +572,30 @@ public class Solver<T extends A_Model<T>> extends A_Solver_Extended<T> implement
 
         // all unicode characters supported
         return value;
+    }
+    
+    /**
+     * This should be working
+     * @param id
+     * @param base
+     * @param argOne
+     * @param argTwo
+     */
+    public void replaceFirst(int id, int base, int argOne, int argTwo) {
+    	// get models
+    	T baseModel = this.symbolicStringMap.get(base);
+    	if (baseModel.getClass() != Model_Acyclic.class)
+    		return;
+    	String arg1String = this.concreteStringMap.get(argOne);
+    	String arg2String = this.concreteStringMap.get(argTwo);
+    	// start timer
+    	BasicTimer.start();
+    	// perform replaceFirst string operation
+    	baseModel = baseModel.replaceFirstOptimized(arg1String, arg2String);
+    	// stop timer
+    	BasicTimer.stop();
+    	// store result model
+    	this.symbolicStringMap.put(id, baseModel);
     }
 
     @Override

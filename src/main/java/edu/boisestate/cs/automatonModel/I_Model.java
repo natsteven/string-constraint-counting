@@ -103,5 +103,7 @@ public interface I_Model<T extends I_Model<T>> {
 	T clone();
 
 	String getAutomaton();
+	
+	T replaceFirstOptimized(String regexString, String replacementString);
 
 }

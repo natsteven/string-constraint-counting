@@ -1343,4 +1343,9 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 
 	}
 
+	@Override
+	public Model_Acyclic_Inverse replaceFirstOptimized(String regexString, String replacementString) {
+		return null;
+	}
+
 }
