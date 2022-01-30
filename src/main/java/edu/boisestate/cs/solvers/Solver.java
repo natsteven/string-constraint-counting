@@ -615,11 +615,13 @@ public class Solver<T extends A_Model<T>> extends A_Solver_Extended<T> implement
     	String arg1String = this.concreteStringMap.get(argOne);
     	String arg2String = this.concreteStringMap.get(argTwo);
     	// start timer
+    	System.out.println("Before:\n" + baseModel.getFiniteStrings());
     	BasicTimer.start();
     	// perform replaceFirst string operation
     	baseModel = baseModel.replaceFirstOptimized(arg1String, arg2String);
     	// stop timer
     	BasicTimer.stop();
+    	System.out.println("After:\n" + baseModel.getFiniteStrings());
     	// store result model
     	this.symbolicStringMap.put(id, baseModel);
     }
