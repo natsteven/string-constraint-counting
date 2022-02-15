@@ -56,7 +56,7 @@ abstract public class A_Reporter <T extends A_Model<T>> {
         this.outputHeader();
 
         // initialize sets
-        Set<PrintConstraint> ends = new HashSet<>();
+        Set<PrintConstraint> leaves = new HashSet<>();
         Set<PrintConstraint> roots = new HashSet<>();
         Map<PrintConstraint, Set<PrintConstraint>> unfinishedOutEdges = new HashMap<>();
         Map<PrintConstraint, Set<PrintConstraint>> unfinishedInEdges = new HashMap<>();
@@ -79,7 +79,7 @@ abstract public class A_Reporter <T extends A_Model<T>> {
 
             // if no out paths, node is an end node
             if (graph.outDegreeOf(constraint) == 0) {
-                ends.add(constraint);
+                leaves.add(constraint);
             }
 
             // update max id if necessary
@@ -94,7 +94,7 @@ abstract public class A_Reporter <T extends A_Model<T>> {
         		System.out.println("reporter-root ID: " + pc.getId() + "  " + pc.getValue());
         	}
 
-        	for (PrintConstraint pc : ends) {
+        	for (PrintConstraint pc : leaves) {
         		System.out.println("reporter-end ID: " + pc.getId() + "  " + pc.getValue());
         	}
         }
@@ -114,7 +114,7 @@ abstract public class A_Reporter <T extends A_Model<T>> {
             // get constraint
             PrintConstraint constraint = iterator.next();
             int constraintId = constraint.getId();
-
+            //System.out.println("c " + constraint);
             // add to unfinished edges
             Set<PrintConstraint> unfinishedOutSet = new HashSet<>();
             for (SymbolicEdge e : graph.outgoingEdgesOf(constraint)) {
@@ -128,8 +128,12 @@ abstract public class A_Reporter <T extends A_Model<T>> {
                 }
                 unfinishedInSet.add(constraint);
                 unfinishedInEdges.put(target, unfinishedInSet);
+                //System.out.println("unfn in " + unfinishedInSet);
             }
             unfinishedOutEdges.put(constraint, unfinishedOutSet);
+            
+            //System.out.println("unfn out " + unfinishedOutSet);
+            
 
             // initialize constraint source map
             Map<String, Integer> sourceMap = new HashMap<>();
@@ -155,8 +159,8 @@ abstract public class A_Reporter <T extends A_Model<T>> {
             // set the constraint source map
             constraint.setSourceMap(sourceMap);
 
-            // if constraint is an end node
-            if (ends.contains(constraint)) {
+            // if constraint is a leaf node
+            if (leaves.contains(constraint)) {
 
                 // add end
                 boolean isBoolFunc = parser.addEnd(constraint);
@@ -167,7 +171,7 @@ abstract public class A_Reporter <T extends A_Model<T>> {
 
                 finishEdges(unfinishedInEdges, unfinishedOutEdges, constraint);
             }
-            // if constraint is root node
+            // if constraint is a root node
             else if (roots.contains(constraint)) {
 
                 // add root
