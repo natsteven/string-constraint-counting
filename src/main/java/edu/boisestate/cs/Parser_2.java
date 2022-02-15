@@ -830,6 +830,9 @@ public class Parser_2<T extends A_Model<T>> {
 			constraint.setOp(REPLACE_FIRST);
 			// perform op
 			solver.replaceFirst(id, base, arg1, arg2);
+			// TODO: I added this idk why but it seems to give the right outcome
+			// setting length to 1 keeps fsat at true, which is incorrect :(
+			solver.newSymbolicString(id);
 			// return success status of operation
 			return String.format("<S:%d>.%s(<S:%d>, <S:%d>)", base, fName, arg1, arg2);
 
