@@ -160,6 +160,8 @@ public class Parser_2<T extends A_Model<T>> {
 		} else if (fName.equals("replaceFirst")) {
 			// TODO: add replaceFirst
 			operationString = processReplace(constraint);
+		} else if (fName.equals("replaceAll")) {
+			operationString = processReplace(constraint);
 		} else if (fName.equals("setLength")) {
 
 			operationString = processSetLength(constraint);
@@ -817,7 +819,7 @@ public class Parser_2<T extends A_Model<T>> {
 			constraint.setOp(REPLACE_ALL);
 			// perform op
 			solver.replaceAll(id, base, arg1, arg2);
-			// retuen success status of operation
+			// return success status of operation
 			return String.format("<S:%d>.%s(<S:%d>, <S:%d>)", base, fName, arg1, arg2);
 		} else if (fName.equals("replaceFirst")) {
 			// create new concrete strings in the solver
