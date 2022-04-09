@@ -58,7 +58,9 @@ abstract public class A_Reporter <T extends A_Model<T>> {
         // initialize sets
         Set<PrintConstraint> leaves = new HashSet<>();
         Set<PrintConstraint> roots = new HashSet<>();
+        //all outgoing constraints of a constraints (node)
         Map<PrintConstraint, Set<PrintConstraint>> unfinishedOutEdges = new HashMap<>();
+        //all incoming constraints of a constraint (node)
         Map<PrintConstraint, Set<PrintConstraint>> unfinishedInEdges = new HashMap<>();
 
         int maxId = 0;
@@ -122,6 +124,7 @@ abstract public class A_Reporter <T extends A_Model<T>> {
 
                 unfinishedOutSet.add(target);
 
+                //updating incoming edges of the target of constraint, which is source
                 Set<PrintConstraint> unfinishedInSet = unfinishedInEdges.get(target);
                 if (unfinishedInSet == null) {
                     unfinishedInSet = new HashSet<>();
@@ -163,10 +166,10 @@ abstract public class A_Reporter <T extends A_Model<T>> {
             if (leaves.contains(constraint)) {
 
                 // add end
-                boolean isBoolFunc = parser.addEnd(constraint);
+                boolean isBoolFunc = parser.addEnd(constraint);//parses the constraints
 
                 if (isBoolFunc) {
-                    this.calculateStats(constraint);
+                    this.calculateStats(constraint); //invokes prints and stats computations, also sat checks
                 }
 
                 finishEdges(unfinishedInEdges, unfinishedOutEdges, constraint);
