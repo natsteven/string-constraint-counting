@@ -95,6 +95,13 @@ public class Parser_2<T extends A_Model<T>> {
 
 		return Solver.containsBoolFunction(fName);
 	}
+	
+	public boolean isPredicate(PrintConstraint constraint) {
+		String string = constraint.getSplitValue();
+		// if solver containsString boolean function name
+		String fName = string.split("!!")[0];
+		return Solver.containsBoolFunction(fName);
+	}
 
 	/**
 	 * Processes an operation node propagating the resulting symbolic string values.
