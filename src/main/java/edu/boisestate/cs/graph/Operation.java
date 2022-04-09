@@ -148,6 +148,18 @@ public enum Operation {	CONCAT,						// args:
 				
 				break;
 				
+			case "replaceFirst":
+				
+				returnOp = REPLACE_FIRST;
+				
+				break;
+				
+			case "replaceAll":
+				
+				returnOp = REPLACE_ALL;
+				
+				break;
+				
 			case "toUpperCase":
 				
 				if (sourceMapSize == 1) { returnOp = TOUPPERCASE; }

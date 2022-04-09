@@ -589,12 +589,16 @@ public class Solver<T extends A_Model<T>> extends A_Solver_Extended<T> implement
     		return;
     	String arg1String = this.concreteStringMap.get(argOne);
     	String arg2String = this.concreteStringMap.get(argTwo);
+//    	System.out.println("Before:\n" + baseModel.getFiniteStrings());
+//    	System.out.println("\n==========\n\nStarting Automaton:\n\n" + baseModel.getAutomaton().toString() + "\n\n========\n\n");
     	// start timer
     	BasicTimer.start();
     	// perform replaceFirst string operation
     	baseModel = baseModel.replaceAllOptimized(arg1String, arg2String);
     	// stop timer
     	BasicTimer.stop();
+//    	System.out.println("After:\n" + baseModel.getFiniteStrings());
+//    	System.out.println("\n==========\n\nFinished Automaton:\n\n" + baseModel.getAutomaton().toString() + "\n\n========\n\n");
     	// store result model
     	this.symbolicStringMap.put(id, baseModel);
     }
@@ -602,6 +606,7 @@ public class Solver<T extends A_Model<T>> extends A_Solver_Extended<T> implement
     
     /**
      * This should be working
+     * 
      * @param id
      * @param base
      * @param argOne
@@ -610,12 +615,12 @@ public class Solver<T extends A_Model<T>> extends A_Solver_Extended<T> implement
     public void replaceFirst(int id, int base, int argOne, int argTwo) {
     	// get models
     	T baseModel = this.symbolicStringMap.get(base);
-    	if (baseModel.getClass() != Model_Acyclic.class)
-    		return;
+//    	if (baseModel.getClass() != Model_Acyclic.class)
+//    		return;
     	String arg1String = this.concreteStringMap.get(argOne);
     	String arg2String = this.concreteStringMap.get(argTwo);
-    	// start timer
     	System.out.println("Before:\n" + baseModel.getFiniteStrings());
+    	// start timer
     	BasicTimer.start();
     	// perform replaceFirst string operation
     	baseModel = baseModel.replaceFirstOptimized(arg1String, arg2String);

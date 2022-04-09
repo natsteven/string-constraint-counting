@@ -14,13 +14,13 @@
     "value" : "r1!:!getStringValue!!"
   }, {
     "num" : 0,
-    "actualValue" : "AA",
+    "actualValue" : "A",
     "incomingEdges" : [ ],
     "sourceConstraints" : [ ],
     "timeStamp" : 0,
     "type" : 0,
     "id" : 2,
-    "value" : "\"AA\"!:!<init>"
+    "value" : "\"A\"!:!<init>"
   }, {
     "num" : 0,
     "actualValue" : "B",
@@ -62,7 +62,7 @@
     "timeStamp" : 0,
     "type" : 0,
     "id" : 5,
-    "value" : "replaceFirst!!Ljava/lang/String;!:!Ljava/lang/String;!:!0"
+    "value" : "replaceAll!!Ljava/lang/String;!:!Ljava/lang/String;!:!0"
   }, {
     "num" : 0,
     "actualValue" : "true",
