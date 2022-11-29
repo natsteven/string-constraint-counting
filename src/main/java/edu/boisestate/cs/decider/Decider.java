@@ -15,6 +15,6 @@ import edu.boisestate.cs.automatonModel.A_Model;
  * @param <T> the type of solver
  */
 
-public abstract class AbstractDecider <T extends A_Model<T>>{
+public abstract class Decider <T extends A_Model<T>>{
 
 }
