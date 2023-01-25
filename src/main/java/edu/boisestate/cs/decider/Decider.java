@@ -34,6 +34,7 @@ import org.jgrapht.traverse.TopologicalOrderIterator;
  * @param <T> the type of solver
  */
 
+<<<<<<< HEAD
 public class Decider <T extends A_Model<T>>{
 	protected final DirectedGraph<PrintConstraint, SymbolicEdge> graph;
 	   protected final Parser_2<T> parser;
@@ -161,5 +162,8 @@ public class Decider <T extends A_Model<T>>{
 		
 		return ret;
 	}
+=======
+public abstract class Decider <T extends A_Model<T>>{
+>>>>>>> branch 'mjr/solvemain' of https://github.com/BoiseState/string-constraint-counting.git
 
 }
