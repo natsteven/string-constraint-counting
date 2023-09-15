@@ -1242,6 +1242,7 @@ public class Parser_2<T extends A_Model<T>> {
 		} else if (fName.equals("equals") || fName.equals("contentEquals")) {
 
 			solver.equals(result, base, arg);
+			constraint.setOp(EQUALS);
 
 		} else if (fName.equals("equalsIgnoreCase")) {
 

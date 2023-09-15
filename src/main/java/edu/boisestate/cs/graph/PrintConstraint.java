@@ -183,6 +183,15 @@ public class PrintConstraint implements Serializable,
     public int getId() {
         return id;
     }
+    
+    /**
+     * For updating id based on various
+     * search strategies
+     * @param id
+     */
+    public void setID(int id) {
+    	this.id = id;
+    }
 
     /**
      * @return The numeric type (such as static string).
@@ -199,7 +208,7 @@ public class PrintConstraint implements Serializable,
     }
 
     /**
-     * @param newValue The new value (name) of this vetex.
+     * @param newValue The new value (name) of this vertex.
      */
     public void setValue(String newValue) {
         this.value = newValue;

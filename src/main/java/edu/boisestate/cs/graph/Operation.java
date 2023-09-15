@@ -23,6 +23,7 @@ public enum Operation {	CONCAT,						// args:
 						DELETE,						// args:
 						DELETE_START_END,			// args: 0:START, 1:END
 						DELETE_CHAR_AT,				// args: 0:LOCATION
+						EQUALS,						// args: 
 						INSERT,						// args:
 						REPLACE,					// args:
 						REPLACE_CHAR_CHAR,			// args: 0:FIND, 1:REPLACE

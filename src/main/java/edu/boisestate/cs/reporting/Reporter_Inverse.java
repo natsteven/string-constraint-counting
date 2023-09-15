@@ -8,6 +8,7 @@ import edu.boisestate.cs.graph.InvConstraintConcatSym;
 import edu.boisestate.cs.graph.InvConstraintConcreteValue;
 import edu.boisestate.cs.graph.InvConstraintDeleteCharAt;
 import edu.boisestate.cs.graph.InvConstraintDeleteStartEnd;
+import edu.boisestate.cs.graph.InvConstraintEquals;
 import edu.boisestate.cs.graph.InvConstraintInput;
 import edu.boisestate.cs.graph.InvConstraintPredicate;
 import edu.boisestate.cs.graph.InvConstraintPropagation;
@@ -425,6 +426,17 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
     		case PREDICATE:
 
     			newConstraint = new InvConstraintPredicate<T>(ID,invSolver);
+    			allInverseConstraints.put(ID, newConstraint);
+    			
+    			if (localDebug) {
+    				System.out.println("processed " + op.toString() + "  " + pc.getId());
+    			}
+
+    			break;
+    			
+    		case EQUALS:
+
+    			newConstraint = new InvConstraintEquals<T>(ID,invSolver);
     			allInverseConstraints.put(ID, newConstraint);
     			
     			if (localDebug) {
