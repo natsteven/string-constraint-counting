@@ -387,6 +387,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 
     		int ID = pc.getId();
     		Operation op = pc.getOp();
+    		String value = pc.getActualVal();
     		//System.out.println("ID " + ID + " op " + op);
     		I_Inv_Constraint<T> newConstraint;
 
@@ -435,8 +436,8 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
     			break;
     			
     		case EQUALS:
-
-    			newConstraint = new InvConstraintEquals<T>(ID,invSolver);
+    			boolean output = value.equals("true")? true : false;
+    			newConstraint = new InvConstraintEquals<T>(ID,invSolver, output);
     			allInverseConstraints.put(ID, newConstraint);
     			
     			if (localDebug) {
