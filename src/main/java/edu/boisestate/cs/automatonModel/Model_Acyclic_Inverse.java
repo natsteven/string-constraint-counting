@@ -2,6 +2,7 @@ package edu.boisestate.cs.automatonModel;
 
 import dk.brics.automaton.Automaton;
 import dk.brics.automaton.BasicAutomata;
+import dk.brics.automaton.State;
 import dk.brics.string.stringoperations.*;
 import edu.boisestate.cs.Alphabet;
 import edu.boisestate.cs.automatonModel.operations.*;
@@ -1330,7 +1331,85 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 		return results;
 	}
 
-	
+	@Override
+	public List<Tuple<Model_Acyclic_Inverse, Model_Acyclic_Inverse>> inv_concatenate_sym_all(Model_Acyclic_Inverse base,
+			Model_Acyclic_Inverse arg) {
+		List<Tuple<Model_Acyclic_Inverse,Model_Acyclic_Inverse>> results = new ArrayList<Tuple<Model_Acyclic_Inverse,Model_Acyclic_Inverse>>();
+		
+		Model_Acyclic_Inverse prefixModelInit = this.clone();
+		//clear all final states in the prefix model
+		Set<State> accepting = prefixModelInit.automaton.getAcceptStates();
+		for(State s : accepting) {
+			s.setAccept(false);
+		}
+		Model_Acyclic_Inverse suffixModelInit = this.clone();
+						
+		boolean noMatch = true;
+		//iterate over each state of this automata
+		int indx = 0;
+		for(State s: automaton.getStates()) {
+			indx++;
+			//find the same states in both models
+			Model_Acyclic_Inverse prefixModel = prefixModelInit.clone();
+			
+			//in brics states are put into an ordered linkedlist set
+			//the order is from the start state based on the transition id
+			//so the same indx of the iteration would get the same state
+			
+			//make the state s(ps) the final states, i.e.,
+			//where prefix would end
+			int pindx = 1;
+			for(State ps : prefixModel.automaton.getStates()) {
+				if(indx == pindx) {
+					ps.setAccept(true);
+					break;
+				}
+				pindx++;
+			}
+			
+			//check if this split works with base
+			if (base.intersect(prefixModel).isEmpty()) {
+				System.out.println("Going to the next split, prefix failed");
+				//does not work, go to the next split
+				continue;
+			}
+			
+			Model_Acyclic_Inverse suffixModel = suffixModelInit.clone();
+			//make the state s(ss) the start state, i.e.,
+			//where the prefix ends this suffix should start
+			int sindx=1;
+			for(State ss : suffixModel.automaton.getStates()) {
+				if(indx == sindx) {//need try compare also
+					suffixModel.automaton.setInitialState(ss);
+					break;
+				}
+				sindx++;
+			}
+			
+			//check if this split worked for suffix
+			if(arg.intersect(suffixModel).isEmpty()) {
+				System.out.println("Going to the next split, suffix failed");
+				continue;
+			}
+			
+			//eas since we just changing state attributes, there should be
+			//no need for minimization
+			
+			//if the split on state s is feasible for both base and arg then
+			//add them into the list
+			results.add(new Tuple<Model_Acyclic_Inverse, Model_Acyclic_Inverse>(prefixModel, suffixModel));
+			noMatch = false;
+			System.out.println(" Accepted on state s " + s);
+			noMatch = false;
+			
+		}
+		
+		if(noMatch) {
+			System.out.println("No match found, returning empty set of tuples");
+		}
+		
+		return results;
+	}
 	
 	/**
 	 * Removes strings from argument mode from this model.
@@ -1353,5 +1432,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
 
 }

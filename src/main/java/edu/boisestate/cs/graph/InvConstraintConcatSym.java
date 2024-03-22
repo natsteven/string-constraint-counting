@@ -126,6 +126,7 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 			System.out.println("CONCAT SYMV INCOMING SET INCONSISTENT...");
 			ret = new Tuple<Boolean,Boolean>(false, true);
 		} else {
+
 			//System.out.println("inputs " + inputs.getFiniteStrings());
 			//remove one solution from the inputs
 			T input = inputs.getShortestExampleModel();
@@ -152,26 +153,47 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 				//compute outgoing solutions
 				T nextModel = solver.getSymbolicModel(nextConstraint.getID());
 				T argModel = solver.getSymbolicModel(argConstraint.getID());
-				//			System.out.println("input " + input.getFiniteStrings());
-				//			System.out.println("nextM " + nextModel.getFiniteStrings());
-				//			System.out.println("argM " + argModel.getFiniteStrings());
-				//let's try this input
-				currOutput = input.inv_concatenate_sym_set(nextModel, argModel);
-				//if not a single split is produced then try another if some inputs are left
-				//System.out.println("currOutput " + currOutput);
-				while(currOutput.isEmpty()) {
-					//more inputs left?
-					inputs.minus(input);
-					System.out.println("inputs empty " + inputs.isEmpty());
-					if(inputs.isEmpty()) {
+
+				boolean ostrich = false;
+				if(ostrich) {
+					//Make two copies of inputs
+					//the algorithm from ostrich paper POPL'19
+					currOutput = inputs.inv_concatenate_sym_all(nextModel, argModel);
+					if(currOutput.isEmpty()) {
 						//backtrack to previous nodes, don't add to backtrack, no more inputs are left here
 						return new Tuple<Boolean, Boolean>(false, true);
 					}
-					//try them that
-					input = inputs.getShortestExampleModel();
+					mapInOut.put(inputs, currOutput);
+
+				} else {
+					//compute it fresh and add to the map
+					//compute outgoing solutions
+					//					T nextModel = solver.getSymbolicModel(nextConstraint.getID());
+					//					T argModel = solver.getSymbolicModel(argConstraint.getID());
+					//			System.out.println("input " + input.getFiniteStrings());
+					//			System.out.println("nextM " + nextModel.getFiniteStrings());
+					//			System.out.println("argM " + argModel.getFiniteStrings());
+					//let's try this input
 					currOutput = input.inv_concatenate_sym_set(nextModel, argModel);
+					//if not a single split is produced then try another if some inputs are left
+					//System.out.println("currOutput " + currOutput);
+					while(currOutput.isEmpty()) {
+						//more inputs left?
+						inputs.minus(input);
+						System.out.println("inputs empty " + inputs.isEmpty());
+						if(inputs.isEmpty()) {
+							//backtrack to previous nodes, don't add to backtrack, no more inputs are left here
+							return new Tuple<Boolean, Boolean>(false, true);
+						}
+						//try them that
+						input = inputs.getShortestExampleModel();
+						currOutput = input.inv_concatenate_sym_set(nextModel, argModel);
+					}
+					mapInOut.put(input, currOutput);
+
 				}
-				mapInOut.put(input, currOutput);
+
+
 
 			}
 
@@ -185,6 +207,10 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 
 			T prefix = split.get1();
 			T suffix = split.get2();
+
+			// we need to get all possible suffixes with the same prefix and then intersect them.
+			//Step 1: create prefix*
+			//T newPrefix = prefix.concatenate( /* with * of the max length of the input model*/ suffix);
 
 			outputSet.put(1, prefix);
 			outputSet.put(2, suffix);
@@ -206,6 +232,7 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 
 			System.out.format("CHOSE: P %4s  S %4s\n", prefix.getShortestExampleString(), suffix.getShortestExampleString());
 		}
+
 
 		return ret;
 	}
