@@ -1,0 +1,15 @@
+digraph G {
+  4 [ label="concat!!Ljava/lang/String;!:!0!-!4" ];
+  5 [ label="concat!!Ljava/lang/String;!:!0!-!5" ];
+  0 [ label="r0!:!getStringValue!!!-!0" ];
+  1 [ label="r1!:!getStringValue!!!-!1" ];
+  6 [ label="T:contains!!Ljava/lang/CharSequence;!:!0!-!6" ];
+  2 [ label="\"_evil\"!:!<init>!-!2" ];
+  3 [ label="r2!:!getStringValue!!!-!3" ];
+  3 -> 5 [ label="t" ];
+  4 -> 5 [ label="s1" ];
+  0 -> 6 [ label="t" ];
+  5 -> 6 [ label="s1" ];
+  2 -> 4 [ label="t" ];
+  1 -> 4 [ label="s1" ];
+}

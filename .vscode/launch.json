@@ -1,0 +1,106 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Attach to Java Process",
+            "type": "java",
+            "request": "attach",
+            "hostName": "localhost",
+            "port": 5005,
+            "projectName": "string-constraint-solvers"
+        },
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "DebugMain",
+            "request": "launch",
+            "mainClass": "edu.boisestate.cs.DebugMain",
+            "projectName": "string-constraint-solvers"
+        },
+        {
+            "type": "java",
+            "name": "InputSolver",
+            "request": "launch",
+            "mainClass": "edu.boisestate.cs.InputSolver",
+            "projectName": "string-constraint-solvers"
+        },
+        {
+            "type": "java",
+            "name": "SolveMain",
+            "request": "launch",
+            "mainClass": "edu.boisestate.cs.SolveMain",
+            "projectName": "string-constraint-solvers"
+        },
+        {
+            "type": "java",
+            "name": "Datatypes",
+            "request": "launch",
+            "mainClass": "edu.boisestate.cs.automaton.Datatypes",
+            "projectName": "string-constraint-solvers"
+        },
+        {
+            "type": "java",
+            "name": "GenerateConstraint",
+            "request": "launch",
+            "mainClass": "edu.boisestate.cs.graph.generator.GenerateConstraint",
+            "projectName": "string-constraint-solvers"
+        },
+        {
+            "type": "java",
+            "name": "GenerateGraph",
+            "request": "launch",
+            "mainClass": "edu.boisestate.cs.graph.generator.GenerateGraph",
+            "projectName": "string-constraint-solvers"
+        },
+        {
+            "type": "java",
+            "name": "MCDifference",
+            "request": "launch",
+            "mainClass": "edu.boisestate.cs.reporting.MCDifference",
+            "projectName": "string-constraint-solvers"
+        },
+        {
+            "type": "java",
+            "name": "ChangeInputs",
+            "request": "launch",
+            "mainClass": "edu.boisestate.cs.util.ChangeInputs",
+            "projectName": "string-constraint-solvers"
+        },
+        {
+            "type": "java",
+            "name": "CleanGraph",
+            "request": "launch",
+            "mainClass": "edu.boisestate.cs.util.CleanGraph",
+            "projectName": "string-constraint-solvers"
+        },
+        {
+            "type": "java",
+            "name": "DotGenerator",
+            "request": "launch",
+            "mainClass": "edu.boisestate.cs.util.DotGenerator",
+            "projectName": "string-constraint-solvers"
+        },
+        {
+            "type": "java",
+            "name": "MethodCount",
+            "request": "launch",
+            "mainClass": "edu.boisestate.cs.util.MethodCount",
+            "projectName": "string-constraint-solvers"
+        },
+        {
+            "type": "java",
+            "name": "Testing",
+            "request": "launch",
+            "mainClass": "edu.boisestate.cs.util.Testing",
+            "projectName": "string-constraint-solvers"
+        }
+    ]
+}
