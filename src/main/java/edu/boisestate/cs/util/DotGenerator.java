@@ -69,13 +69,13 @@ public class DotGenerator {
         }
 
        // use dot on file to produce png
-       Runtime rt = Runtime.getRuntime();
-
-       try {
-           rt.exec("dot -Tpng " + filePath + ".dot -o " + filePath + ".png");
-       } catch (IOException e) {
-           e.printStackTrace();
-       }
+        ProcessBuilder processBuilder = new ProcessBuilder("dot", "-Tpng", filePath + ".dot", "-o", filePath + ".png");
+        try {
+            Process process = processBuilder.start();
+            process.waitFor();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 }
