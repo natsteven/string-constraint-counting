@@ -71,7 +71,7 @@ public interface I_Model_Inverse<T extends I_Model_Inverse<T>> {
 	/**
 	 * 
 	 * will return all valid prefixes/suffixes in a list of tuples of concated base.arg from this model.
-	 * 
+	 * it only works when this is a single string
 	 * OVER-ESTIMATION - .
 	 * UNDER-ESTIMATION - .
 	 * 
@@ -79,6 +79,19 @@ public interface I_Model_Inverse<T extends I_Model_Inverse<T>> {
 	 * 05/24/2020
 	 */
 	List<Tuple<T, T>> inv_concatenate_sym_set (T base,	T arg);
+	
+	/**
+	 * 
+	 * will return all valid prefies/suffixes automata splits in a list of tuples of concated base.arg from this model.
+	 * this works for any 
+	 * OVER-ESTIMATION - .
+	 * UNDER-ESTIMATION - .
+	 * 
+	 * @author Elena Sherman
+	 * 03/24/2024
+	 */
+	List<Tuple<T, T>> inv_concatenate_sym_all (T base,	T arg);
+	
 	
 	
 }
