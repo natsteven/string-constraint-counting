@@ -155,7 +155,7 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 					Set<Integer> clearSet = new HashSet<Integer>();
 					//include all descendants of the elements in qID
 					for(int clearEl : qID) {
-							clearSet.addAll(eGraph.getAncestors(allConstraints.get(clearEl)));
+						clearSet.addAll(eGraph.getAncestors(allConstraints.get(clearEl)));
 					}
 					clearSet.remove(backtrackID);//remove the node itself to make more choices
 					clearSet.retainAll(processedID);//only keep those that have been computed
