@@ -3,7 +3,7 @@
   "inputs" : [ {
     "ID" : 4,
     "SPFsym" : "",
-    "input" : "B"
+    "input" : "A"
   }, {
     "ID" : 5,
     "SPFsym" : "",
