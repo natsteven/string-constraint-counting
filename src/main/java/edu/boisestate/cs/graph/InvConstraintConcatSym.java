@@ -115,7 +115,8 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 	public Tuple<Boolean, Boolean> evaluate() {
 		Tuple<Boolean, Boolean> ret = new Tuple<Boolean, Boolean>(true, true); //continue and don't add to backtrack
 		//compute the intersection of all incoming values
-
+		boolean ostrich = true;
+		
 		if(inputs == null) {
 			System.out.println("inputs is null");
 			//the first time the node is evaluated
@@ -129,7 +130,7 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 
 			//System.out.println("inputs " + inputs.getFiniteStrings());
 			//remove one solution from the inputs
-			T input = inputs.getShortestExampleModel();
+			T input = ostrich? inputs : inputs.getShortestExampleModel();
 			System.out.println("input " + input.getFiniteStrings() + " hash " + input.hashCode());
 			List<Tuple<T,T>> currOutput = new ArrayList<Tuple<T,T>>();
 			//equals is implemented between two automata, but
@@ -154,7 +155,7 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 				T nextModel = solver.getSymbolicModel(nextConstraint.getID());
 				T argModel = solver.getSymbolicModel(argConstraint.getID());
 
-				boolean ostrich = false;
+			
 				if(ostrich) {
 					//Make two copies of inputs
 					//the algorithm from ostrich paper POPL'19
@@ -198,7 +199,9 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 			}
 
 			for (Tuple<T,T> t : currOutput) {
-				System.out.format("RCVD:  P %4s  S %4s\n", t.get1().getShortestExampleString(),t.get2().getShortestExampleString());
+				//System.out.format("RCVD1:  P %4s  S %4s\n", t.get1().getShortestExampleString(),t.get2().getShortestExampleString());
+				System.out.format("RCVD: P " + t.get1().getFiniteStrings() + "\t S " + t.get2().getFiniteStrings() + "\n");
+				
 			}
 
 			//recomputing new outgoing values and updating the 
@@ -230,7 +233,8 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 				}
 			}
 
-			System.out.format("CHOSE: P %4s  S %4s\n", prefix.getShortestExampleString(), suffix.getShortestExampleString());
+			//System.out.format("CHOSE: P %4s  S %4s\n", prefix.getShortestExampleString(), suffix.getShortestExampleString());
+			System.out.format("CHOSE: P " + prefix.getFiniteStrings() + "\t S " + prefix.getFiniteStrings() + "\n");
 		}
 
 

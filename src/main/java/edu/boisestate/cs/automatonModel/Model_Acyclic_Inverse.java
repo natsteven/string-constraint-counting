@@ -3,6 +3,7 @@ package edu.boisestate.cs.automatonModel;
 import dk.brics.automaton.Automaton;
 import dk.brics.automaton.BasicAutomata;
 import dk.brics.automaton.State;
+import dk.brics.automaton.Transition;
 import dk.brics.string.stringoperations.*;
 import edu.boisestate.cs.Alphabet;
 import edu.boisestate.cs.automatonModel.operations.*;
@@ -10,6 +11,10 @@ import edu.boisestate.cs.util.Tuple;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -1343,14 +1348,20 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 			s.setAccept(false);
 		}
 		Model_Acyclic_Inverse suffixModelInit = this.clone();
+		
+		//System.out.println("prefixModelInit " + prefixModelInit.getAutomaton());
+		//System.out.println("suffixModelInit " + suffixModelInit.getAutomaton());
 						
 		boolean noMatch = true;
 		//iterate over each state of this automata
 		int indx = 0;
-		for(State s: automaton.getStates()) {
+		for(State s: suffixModelInit.getStatesOrdered()) {
 			indx++;
 			//find the same states in both models
 			Model_Acyclic_Inverse prefixModel = prefixModelInit.clone();
+			//System.out.println("prefixCurrent " + prefixModel.getAutomaton());
+			
+			//System.out.println("current state " + s);
 			
 			//in brics states are put into an ordered linkedlist set
 			//the order is from the start state based on the transition id
@@ -1359,16 +1370,18 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 			//make the state s(ps) the final states, i.e.,
 			//where prefix would end
 			int pindx = 1;
-			for(State ps : prefixModel.automaton.getStates()) {
+			for(State ps : prefixModel.getStatesOrdered()) {
 				if(indx == pindx) {
 					ps.setAccept(true);
+					//System.out.println("prefix state " + ps);
 					break;
 				}
 				pindx++;
 			}
 			
-			//check if this split works with base
-			if (base.intersect(prefixModel).isEmpty()) {
+			//update and check if this split works with base
+			prefixModel = base.intersect(prefixModel);
+			if (prefixModel.isEmpty()) {
 				System.out.println("Going to the next split, prefix failed");
 				//does not work, go to the next split
 				continue;
@@ -1378,29 +1391,36 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 			//make the state s(ss) the start state, i.e.,
 			//where the prefix ends this suffix should start
 			int sindx=1;
-			for(State ss : suffixModel.automaton.getStates()) {
+			for(State ss : suffixModel.getStatesOrdered()) {
 				if(indx == sindx) {//need try compare also
+					//System.out.println("sufix state " + ss);
 					suffixModel.automaton.setInitialState(ss);
 					break;
 				}
 				sindx++;
 			}
 			
-			//check if this split worked for suffix
-			if(arg.intersect(suffixModel).isEmpty()) {
+			//update and check if this split worked for suffix
+			suffixModel = arg.intersect(suffixModel);
+			if(suffixModel.isEmpty()) {
 				System.out.println("Going to the next split, suffix failed");
 				continue;
 			}
 			
 			//eas since we just changing state attributes, there should be
-			//no need for minimization
-			
+			//no need for minimization? I think we need for the 
+			//second/suffix one where we change the start state since
+			//some states might become unreachable
+			//in the first/prefix one we just change what accepting states
+			//are, which can also change how equivalent states can be collapsed.
+			//So both of them needs to be minimized before adding the solution set
+			prefixModel.automaton.minimize();
+			suffixModel.automaton.minimize();
 			//if the split on state s is feasible for both base and arg then
 			//add them into the list
 			results.add(new Tuple<Model_Acyclic_Inverse, Model_Acyclic_Inverse>(prefixModel, suffixModel));
 			noMatch = false;
-			System.out.println(" Accepted on state s " + s);
-			noMatch = false;
+			//System.out.println(" Accepted on state s " + s);
 			
 		}
 		
@@ -1410,6 +1430,31 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 		
 		return results;
 	}
+	
+	
+	/** 
+	 * Returns the set of states that are reachable from the initial state.
+	 * @return set of {@link State} objects
+	 */
+	public Set<State> getStatesOrdered() {
+		Set<State> visited = new LinkedHashSet<State>();
+
+		LinkedList<State> worklist = new LinkedList<State>();
+		State initial = automaton.getInitialState();
+		worklist.add(initial);
+		visited.add(initial);
+		while (worklist.size() > 0) {
+			State s = worklist.removeFirst();
+			Collection<Transition> tr = s.getSortedTransitions(false);
+			for (Transition t : tr)
+				if (!visited.contains(t.getDest())) {
+					visited.add(t.getDest());
+					worklist.add(t.getDest());
+				}
+		}
+		return visited;
+	}
+	
 	
 	/**
 	 * Removes strings from argument mode from this model.
@@ -1421,6 +1466,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 		automaton = automaton.minus(remove);
 
 	}
+	
 
 	@Override
 	public Model_Acyclic_Inverse replaceFirstOptimized(String regexString, String replacementString) {
