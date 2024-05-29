@@ -3,15 +3,19 @@
   "inputs" : [ {
     "ID" : 4,
     "SPFsym" : "",
+<<<<<<< Updated upstream
     "input" : "A"
+=======
+    "input" : "AAB"
+>>>>>>> Stashed changes
   }, {
     "ID" : 5,
     "SPFsym" : "",
-    "input" : "B"
+    "input" : "A"
   }, {
     "ID" : 6,
     "SPFsym" : "",
-    "input" : ""
+    "input" : "ABA"
   }, {
     "ID" : 7,
     "SPFsym" : "",
@@ -19,6 +23,6 @@
   }, {
     "ID" : 8,
     "SPFsym" : "",
-    "input" : ""
+    "input" : "AA"
   } ]
 }
