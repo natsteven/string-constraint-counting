@@ -93,6 +93,11 @@ public class InvConstraintConcreteValue<T extends A_Model_Inverse<T>>  extends A
 		
 		while(iter.hasNext()) {
 				T next = iter.next().output(this);
+				if (next == null){
+					System.out.println("ERROR: NULL CONSTRAINT OUTPUT");
+					continue; // Nat: dont do intersect with null
+					// currently only see issue due to rplace char being in prevcontraints set of concretes
+				}
 				inputs = inputs.intersect(next);
 		}
 		

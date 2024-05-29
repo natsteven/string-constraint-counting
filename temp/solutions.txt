@@ -3,11 +3,7 @@
   "inputs" : [ {
     "ID" : 4,
     "SPFsym" : "",
-<<<<<<< Updated upstream
-    "input" : "A"
-=======
     "input" : "AAB"
->>>>>>> Stashed changes
   }, {
     "ID" : 5,
     "SPFsym" : "",

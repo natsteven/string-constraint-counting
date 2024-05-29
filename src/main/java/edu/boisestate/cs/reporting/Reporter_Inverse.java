@@ -649,6 +649,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
     			
     		}
     		System.out.println("Parents  "  + p + " are " + invParents);
+			// Nat: potentially should not set replacechar as parent for concrete constraints.
     		I_Inv_Constraint<T> invP = allInverseConstraints.get(p.getID());
     		invP.setPrev(invParents);
     	}
