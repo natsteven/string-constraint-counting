@@ -898,9 +898,9 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 		int prefixBound = base.getBoundLength();		// symbolic, could be any length up to bound
 		
 		System.out.println("attempting to split: ");
-		for (String s : this.getFiniteStrings()) {
-			System.out.println(s);
-		}
+//		for (String s : this.getFiniteStrings()) {
+//			System.out.println(s);
+//		}
 		
 		Model_Acyclic_Inverse prefixModel = null;
 		Model_Acyclic_Inverse suffixModel = null;
@@ -915,15 +915,15 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 		while (!prefixFound && !noMatch) {
 			prefixModel = this.substring(0, prefixLength);
 			
-			for (String s : prefixModel.getFiniteStrings()) {
-				System.out.println("prefixModel: " + s);
-			}
+//			for (String s : prefixModel.getFiniteStrings()) {
+//				System.out.println("prefixModel: " + s);
+//			}
 			
 			suffixModel = this.substring(prefixLength, resultLength);
 			
-			for (String s : suffixModel.getFiniteStrings()) {
-				System.out.println("suffixModel: " + s);
-			}
+//			for (String s : suffixModel.getFiniteStrings()) {
+//				System.out.println("suffixModel: " + s);
+//			}
 			
 			if (!base.intersect(prefixModel).isEmpty() && !arg.intersect(suffixModel).isEmpty()) {
 				prefixFound = true;
@@ -961,9 +961,9 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 		int prefixBound = base.getBoundLength();		// symbolic, could be any length up to bound
 		
 		System.out.println("attempting to split: ");
-		for (String s : this.getFiniteStrings()) {
-			System.out.println(s);
-		}
+//		for (String s : this.getFiniteStrings()) {
+//			System.out.println(s);
+//		}
 		
 		Model_Acyclic_Inverse prefixModel = null;
 		Model_Acyclic_Inverse suffixModel = null;
@@ -978,15 +978,15 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 		while (!prefixFound && !noMatch) {
 			prefixModel = this.substring(0, prefixLength);
 			
-			for (String s : prefixModel.getFiniteStrings()) {
-				System.out.println("prefixModel: " + s);
-			}
+//			for (String s : prefixModel.getFiniteStrings()) {
+//				System.out.println("prefixModel: " + s);
+//			}
 			
 			suffixModel = this.substring(prefixLength, resultLength);
 			
-			for (String s : suffixModel.getFiniteStrings()) {
-				System.out.println("suffixModel: " + s);
-			}
+//			for (String s : suffixModel.getFiniteStrings()) {
+//				System.out.println("suffixModel: " + s);
+//			}
 			
 			if (!base.intersect(prefixModel).isEmpty() && !arg.intersect(suffixModel).isEmpty()) {
 				prefixFound = true;
