@@ -3,22 +3,22 @@
   "inputs" : [ {
     "ID" : 4,
     "SPFsym" : "",
-    "input" : "B"
+    "input" : "C"
   }, {
     "ID" : 5,
     "SPFsym" : "",
-    "input" : ""
+    "input" : "B"
   }, {
     "ID" : 6,
     "SPFsym" : "",
-    "input" : "C"
+    "input" : "A"
   }, {
     "ID" : 7,
     "SPFsym" : "",
-    "input" : "AA"
+    "input" : "A"
   }, {
     "ID" : 8,
     "SPFsym" : "",
-    "input" : "AA"
+    "input" : "A"
   } ]
 }

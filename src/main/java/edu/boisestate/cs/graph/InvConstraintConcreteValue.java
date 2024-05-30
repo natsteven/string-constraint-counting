@@ -94,10 +94,10 @@ public class InvConstraintConcreteValue<T extends A_Model_Inverse<T>>  extends A
 		while(iter.hasNext()) {
 			// issue with output
 			T next = iter.next().output(this);
-//			if (inputs == null || next == null) {
-//				inputs = next;
-//				continue;
-//			}
+			if (inputs == null || next == null) {
+				inputs = next;
+				continue;
+			}
 			inputs = inputs.intersect(next);
 		}
 		
