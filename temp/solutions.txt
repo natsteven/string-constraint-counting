@@ -1,27 +1,23 @@
 {
   "SAT" : true,
   "inputs" : [ {
-    "ID" : 4,
-    "SPFsym" : "",
-<<<<<<< Updated upstream
-    "input" : "A"
-=======
-    "input" : "AAB"
->>>>>>> Stashed changes
-  }, {
     "ID" : 5,
     "SPFsym" : "",
     "input" : "A"
   }, {
     "ID" : 6,
     "SPFsym" : "",
-    "input" : "ABA"
+    "input" : "A"
   }, {
     "ID" : 7,
     "SPFsym" : "",
-    "input" : "A"
+    "input" : "BbA"
   }, {
     "ID" : 8,
+    "SPFsym" : "",
+    "input" : "AAA"
+  }, {
+    "ID" : 9,
     "SPFsym" : "",
     "input" : "AA"
   } ]

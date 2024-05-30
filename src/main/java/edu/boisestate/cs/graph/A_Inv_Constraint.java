@@ -114,7 +114,7 @@ public abstract class A_Inv_Constraint<T extends A_Model_Inverse<T>> implements 
 			System.out.println("Next: " + nextConstraint);
 			// replace char is 'dependent' on an arg but arg is concrete. shouldnt evaluate output for replace on arg constraints?
 			System.out.println("OutputSet: " + outputSet);
-			return outputSet.get(1); // default to next assuming outputSet size is 1?
+//			return outputSet.get(1); // default to next assuming outputSet size is 1?
 		}
 		return outputSet.get(index);
 	}
