@@ -3,15 +3,15 @@
   "inputs" : [ {
     "ID" : 4,
     "SPFsym" : "",
-    "input" : "AAB"
+    "input" : "CB"
   }, {
     "ID" : 5,
     "SPFsym" : "",
-    "input" : "A"
+    "input" : ""
   }, {
     "ID" : 6,
     "SPFsym" : "",
-    "input" : "ABA"
+    "input" : ""
   }, {
     "ID" : 7,
     "SPFsym" : "",
@@ -19,6 +19,6 @@
   }, {
     "ID" : 8,
     "SPFsym" : "",
-    "input" : "AA"
+    "input" : "A"
   } ]
 }

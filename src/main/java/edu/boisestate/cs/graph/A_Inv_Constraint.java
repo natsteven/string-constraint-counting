@@ -109,12 +109,11 @@ public abstract class A_Inv_Constraint<T extends A_Model_Inverse<T>> implements 
 		}
 		if (index == -1) {
 			System.out.println("ERROR: child constraint not found in output");
-//			System.out.println("This: " + this);
-//			System.out.println("Child: " + childConstraint);
-//			System.out.println("Next: " + nextConstraint);
-//			System.out.println("Arg: " + argConstraint);
+			System.out.println("This: " + this);
+			System.out.println("Child: " + childConstraint);
+			System.out.println("Next: " + nextConstraint);
 			// replace char is 'dependent' on an arg but arg is concrete. shouldnt evaluate output for replace on arg constraints?
-//			System.out.println("OutputSet: " + outputSet);
+			System.out.println("OutputSet: " + outputSet);
 //			return outputSet.get(1); // default to next assuming outputSet size is 1?
 		}
 		return outputSet.get(index);

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package edu.boisestate.cs.graph;
 
@@ -68,7 +68,7 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 			outputs = input.inv_concatenate_sym_set(nextModel, argModel);
 
 			for (Tuple<T,T> t : outputs) {
-//				System.out.format("RCVD:  P %4s  S %4s\n", t.get1().getShortestExampleString(),t.get2().getShortestExampleString());
+				System.out.format("RCVD:  P %4s  S %4s\n", t.get1().getShortestExampleString(),t.get2().getShortestExampleString());
 			}
 
 			while (!outputs.isEmpty()) {
@@ -98,7 +98,7 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 
 		} // continue until all inputs are exhausted
 
-		// catastrophic fail 
+		// catastrophic fail
 		return false;
 
 	}
@@ -115,12 +115,8 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 	public Tuple<Boolean, Boolean> evaluate() {
 		Tuple<Boolean, Boolean> ret = new Tuple<Boolean, Boolean>(true, true); //continue and don't add to backtrack
 		//compute the intersection of all incoming values
-<<<<<<< Updated upstream
+		boolean ostrich = true;
 
-=======
-		boolean ostrich	 = true;
-		
->>>>>>> Stashed changes
 		if(inputs == null) {
 			System.out.println("inputs is null");
 			//the first time the node is evaluated
@@ -134,13 +130,8 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 
 			//System.out.println("inputs " + inputs.getFiniteStrings());
 			//remove one solution from the inputs
-<<<<<<< Updated upstream
-			T input = inputs.getShortestExampleModel();
-			System.out.println("input " + input.getFiniteStrings() + " hash " + input.hashCode());
-=======
 			T input = ostrich? inputs : inputs.getShortestExampleModel();
 //			System.out.println("input " + input.getFiniteStrings() + " hash " + input.hashCode());
->>>>>>> Stashed changes
 			List<Tuple<T,T>> currOutput = new ArrayList<Tuple<T,T>>();
 			//equals is implemented between two automata, but
 			//the hash functions is not, so in order to use hash map
@@ -164,7 +155,7 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 				T nextModel = solver.getSymbolicModel(nextConstraint.getID());
 				T argModel = solver.getSymbolicModel(argConstraint.getID());
 
-				boolean ostrich = false;
+
 				if(ostrich) {
 					//Make two copies of inputs
 					//the algorithm from ostrich paper POPL'19
@@ -207,17 +198,13 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 
 			}
 
-			for (Tuple<T,T> t : currOutput) {
-<<<<<<< Updated upstream
-				System.out.format("RCVD:  P %4s  S %4s\n", t.get1().getShortestExampleString(),t.get2().getShortestExampleString());
-=======
-				//System.out.format("RCVD1:  P %4s  S %4s\n", t.get1().getShortestExampleString(),t.get2().getShortestExampleString());
+//			for (Tuple<T,T> t : currOutput) {
+//				//System.out.format("RCVD1:  P %4s  S %4s\n", t.get1().getShortestExampleString(),t.get2().getShortestExampleString());
 //				System.out.format("RCVD: P " + t.get1().getFiniteStrings() + "\t S " + t.get2().getFiniteStrings() + "\n");
-				
->>>>>>> Stashed changes
-			}
+//
+//			}
 
-			//recomputing new outgoing values and updating the 
+			//recomputing new outgoing values and updating the
 			//set of choices
 			Tuple<T,T> split = currOutput.remove(0);
 
@@ -231,7 +218,7 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 			outputSet.put(1, prefix);
 			outputSet.put(2, suffix);
 
-			//if there are more choices left in currOutput then 
+			//if there are more choices left in currOutput then
 			//backtrack to it
 			if(!currOutput.isEmpty()) {
 				ret = new Tuple<Boolean, Boolean>(true, false);//continue and add to backtrack
@@ -246,12 +233,8 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 				}
 			}
 
-<<<<<<< Updated upstream
-			System.out.format("CHOSE: P %4s  S %4s\n", prefix.getShortestExampleString(), suffix.getShortestExampleString());
-=======
 			//System.out.format("CHOSE: P %4s  S %4s\n", prefix.getShortestExampleString(), suffix.getShortestExampleString());
 //			System.out.format("CHOSE: P " + prefix.getFiniteStrings() + "\t S " + prefix.getFiniteStrings() + "\n");
->>>>>>> Stashed changes
 		}
 
 
