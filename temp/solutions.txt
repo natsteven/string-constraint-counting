@@ -1,24 +1,24 @@
 {
   "SAT" : true,
   "inputs" : [ {
-    "ID" : 4,
-    "SPFsym" : "",
-    "input" : "CB"
-  }, {
-    "ID" : 5,
-    "SPFsym" : "",
-    "input" : ""
-  }, {
-    "ID" : 6,
-    "SPFsym" : "",
-    "input" : ""
-  }, {
     "ID" : 7,
     "SPFsym" : "",
     "input" : "A"
   }, {
     "ID" : 8,
     "SPFsym" : "",
-    "input" : "A"
+    "input" : ""
+  }, {
+    "ID" : 9,
+    "SPFsym" : "",
+    "input" : "B"
+  }, {
+    "ID" : 10,
+    "SPFsym" : "",
+    "input" : "CaB"
+  }, {
+    "ID" : 11,
+    "SPFsym" : "",
+    "input" : ""
   } ]
 }
