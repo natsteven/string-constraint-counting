@@ -166,7 +166,7 @@ abstract public class A_Reporter <T extends A_Model<T>> {
             if (leaves.contains(constraint)) {
 
                 // add end
-                boolean isBoolFunc = parser.addEnd(constraint);//parses the constraints
+                boolean isBoolFunc = parser.addEnd(constraint);//parses the constraint
 
                 if (isBoolFunc) {
                     this.calculateStats(constraint); //invokes prints and stats computations, also sat checks

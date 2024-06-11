@@ -280,7 +280,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         //invSolver.initStringMap();
         //invSolver.initStringMapAccum();
         // we will rebuild all constraints, since this is a new path
-        allInverseConstraints.clear();
+//        allInverseConstraints.clear();
 
         // clear previous input solutions
         //inputSolutions.clear();
@@ -292,7 +292,8 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         predicateIDs.add(constraint.getId());
 
         // build the transposed graph of inverse constraints
-        buildICG_r3();
+//        if (predicateIDs.isEmpty())
+			buildICG_r3();
         
         solveInputs();
 
@@ -590,48 +591,48 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 
 
     	// all inverse constraints have been created, now we set the next and arg constraint references
-    	for (PrintConstraint pc : allConstraints.values()) {
+		for (PrintConstraint pc : allConstraints.values()) {
 
-    		if (pc.getOp() != Operation.UNDEFINED) {
-    			    		// each print constraint has a corresponding inverse constraint, get a reference to it
-    		I_Inv_Constraint<T> invConstraint = allInverseConstraints.get(pc.getId());
-    	   	
-    		// the next inverse constraint to evaluate is the base of printconstraint
-    		I_Inv_Constraint<T> nextConstraint = allInverseConstraints.get(pc.getBase());
-    		if (nextConstraint != null) {
-    			invConstraint.setNext(nextConstraint);
-    		}
-    		
-    		
-    		// get the arglist and check if not empty
-    		List<Integer> argList = pc.getArgList();
+			if (pc.getOp() != Operation.UNDEFINED) {
+				// each print constraint has a corresponding inverse constraint, get a reference to it
+				I_Inv_Constraint<T> invConstraint = allInverseConstraints.get(pc.getId());
 
-    		
-    		// MJR some operations only have concrete arguments and the value in args are the actual values and NOT constraint IDs. 
-    		if (!argList.isEmpty() && pc.getOp() != Operation.SUBSTR_STRT_END && 
-    				pc.getOp() != Operation.SUBSTRING_START && 
-    				pc.getOp() != Operation.SET_LENGTH && 
-    				pc.getOp() != Operation.REPLACE_CHAR_CHAR &&
-    				pc.getOp() != Operation.DELETE_START_END) {
+				// the next inverse constraint to evaluate is the base of printconstraint
+				I_Inv_Constraint<T> nextConstraint = allInverseConstraints.get(pc.getBase());
+				if (nextConstraint != null) {
+					invConstraint.setNext(nextConstraint);
+				}
 
 
-    				// argument present, set invConstraint argument reference.
-    	 			int arg = argList.get(0);
-    	 			if (arg != -1) {
-    	 				
-    	    			if (localDebug) {
-    	    				System.out.println("pcID: " + pc.getId() + " getting arg: " + arg);
-    	    			}
-    	 				
-    	 				
-    	 				invConstraint.setArg(allInverseConstraints.get(arg));
-    	 			} // end if
+				// get the arglist and check if not empty
+				List<Integer> argList = pc.getArgList();
 
-    	   		} // end if
-    		
-    		} // end if
-    		
-    	}  // end for each printconstraint
+
+				// MJR some operations only have concrete arguments and the value in args are the actual values and NOT constraint IDs.
+				if (!argList.isEmpty() && pc.getOp() != Operation.SUBSTR_STRT_END &&
+						pc.getOp() != Operation.SUBSTRING_START &&
+						pc.getOp() != Operation.SET_LENGTH &&
+						pc.getOp() != Operation.REPLACE_CHAR_CHAR &&
+						pc.getOp() != Operation.DELETE_START_END) {
+
+
+					// argument present, set invConstraint argument reference.
+					int arg = argList.get(0);
+					if (arg != -1) {
+
+						if (localDebug) {
+							System.out.println("pcID: " + pc.getId() + " getting arg: " + arg);
+						}
+
+
+						invConstraint.setArg(allInverseConstraints.get(arg));
+					} // end if
+
+				} // end if
+
+			} // end if
+
+		}  // end for each printconstraint
     	
     	//populate previous constraints -- need for BFS
     	//get all parents for the particular node
