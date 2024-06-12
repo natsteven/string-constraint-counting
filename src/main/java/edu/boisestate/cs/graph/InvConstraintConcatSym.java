@@ -198,11 +198,11 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 
 			}
 
-//			for (Tuple<T,T> t : currOutput) {
-//				//System.out.format("RCVD1:  P %4s  S %4s\n", t.get1().getShortestExampleString(),t.get2().getShortestExampleString());
-//				System.out.format("RCVD: P " + t.get1().getFiniteStrings() + "\t S " + t.get2().getFiniteStrings() + "\n");
-//
-//			}
+			for (Tuple<T,T> t : currOutput) {
+				//System.out.format("RCVD1:  P %4s  S %4s\n", t.get1().getShortestExampleString(),t.get2().getShortestExampleString());
+				System.out.format("RCVD: P " + t.get1().getFiniteStrings() + "\t S " + t.get2().getFiniteStrings() + "\n");
+
+			}
 
 			//recomputing new outgoing values and updating the
 			//set of choices
@@ -233,8 +233,8 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 				}
 			}
 
-			//System.out.format("CHOSE: P %4s  S %4s\n", prefix.getShortestExampleString(), suffix.getShortestExampleString());
-//			System.out.format("CHOSE: P " + prefix.getFiniteStrings() + "\t S " + prefix.getFiniteStrings() + "\n");
+//			System.out.format("CHOSE: P %4s  S %4s\n", prefix.getShortestExampleString(), suffix.getShortestExampleString());
+			System.out.format("CHOSE: P " + prefix.getFiniteStrings() + "\t S " + prefix.getFiniteStrings() + "\n");
 		}
 
 

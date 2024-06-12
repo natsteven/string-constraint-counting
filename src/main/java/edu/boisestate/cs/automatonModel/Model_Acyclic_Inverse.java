@@ -1340,7 +1340,24 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 	public List<Tuple<Model_Acyclic_Inverse, Model_Acyclic_Inverse>> inv_concatenate_sym_all(Model_Acyclic_Inverse base,
 			Model_Acyclic_Inverse arg) {
 		List<Tuple<Model_Acyclic_Inverse,Model_Acyclic_Inverse>> results = new ArrayList<Tuple<Model_Acyclic_Inverse,Model_Acyclic_Inverse>>();
-		
+
+        // Check if base or arg is a singleton
+        if (base.isSingleton()) {
+            String baseString = base.getShortestExampleString();
+            int baseLength = baseString.length();
+            Model_Acyclic_Inverse prefixModel = this.substring(0, baseLength);
+            Model_Acyclic_Inverse suffixModel = this.substring(baseLength, this.getBoundLength());
+            results.add(new Tuple<Model_Acyclic_Inverse, Model_Acyclic_Inverse>(prefixModel, suffixModel));
+            return results;
+        } else if (arg.isSingleton()) {
+            String argString = arg.getShortestExampleString();
+            int argLength = argString.length();
+            Model_Acyclic_Inverse prefixModel = this.substring(0, this.getBoundLength() - argLength);
+            Model_Acyclic_Inverse suffixModel = this.substring(this.getBoundLength() - argLength, this.getBoundLength());
+            results.add(new Tuple<Model_Acyclic_Inverse, Model_Acyclic_Inverse>(prefixModel, suffixModel));
+            return results;
+        }
+
 		Model_Acyclic_Inverse prefixModelInit = this.clone();
 		//clear all final states in the prefix model
 		Set<State> accepting = prefixModelInit.automaton.getAcceptStates();
