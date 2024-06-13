@@ -4,6 +4,7 @@ import edu.boisestate.cs.BasicTimer;
 import edu.boisestate.cs.Parser;
 import edu.boisestate.cs.Parser_2;
 import edu.boisestate.cs.automatonModel.A_Model;
+import edu.boisestate.cs.graph.InvDefaultDirectedGraph;
 import edu.boisestate.cs.graph.PrintConstraint;
 import edu.boisestate.cs.graph.PrintConstraintComparator;
 import edu.boisestate.cs.graph.SymbolicEdge;
@@ -163,13 +164,37 @@ abstract public class A_Reporter <T extends A_Model<T>> {
             constraint.setSourceMap(sourceMap);
 
             // if constraint is a leaf node
+
+            // NPS - we need to wait until we are at any of the deepest level of predicates.
+            // best way may be to wait until a predicate has all other predicates as dependencies
+            // main issue would any kind of disconnected graph, which is handleable but arguably shuold just be seperate graphs.
+            // i dont think there are cases in connected graphs where a deepest leaf doesn't have all other predicates as dependencies.
             if (leaves.contains(constraint)) {
 
                 // add end
                 boolean isBoolFunc = parser.addEnd(constraint);//parses the constraint
 
                 if (isBoolFunc) {
-                    this.calculateStats(constraint); //invokes prints and stats computations, also sat checks
+                    // NPS 6/13/24 - not 100 percent certain we don't need the outlying code in this branch
+                    // so we'll just check that the contraint's depended predicates includes all leaves
+
+                    // actually issue with this is that itll still do it for every predicate that has all dependencies.
+                    // so instead we shuold just wait until every node is processed
+//                    Set<Integer> leafIds = new HashSet<>();
+//                    for (PrintConstraint leaf : leaves) {
+//                        leafIds.add(leaf.getId());
+//                    }
+//                    Set<Integer> dependedPredicates = ((InvDefaultDirectedGraph) graph).getDependedPredicates(constraint.getId());
+//                    if (dependedPredicates.containsAll(leafIds)) {
+//                        System.out.println("=".repeat(42) + "PREDICATE ROOT FOUND FOR BACKWARDS PROPOGATION" + constraint.getId() + "=".repeat(42));
+//                        this.calculateStats(constraint); //invokes prints and stats computations, also sat checks
+//                    } else {
+//                        System.out.println("PREDICATE NOT DEEP ENOUGH TO HAVE ALL OTHER PRED DEPENDENENT ON IT");
+//                    }
+
+                    if (!iterator.hasNext()){
+                        this.calculateStats(constraint); //invokes prints and stats computations, also sat checks
+                    }
                 }
 
                 finishEdges(unfinishedInEdges, unfinishedOutEdges, constraint);
