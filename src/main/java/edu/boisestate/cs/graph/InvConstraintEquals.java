@@ -180,7 +180,7 @@ public class InvConstraintEquals<T extends A_Model_Inverse<T>> extends A_Inv_Con
 					//expected result is false
 					System.out.println("Not equals");
 
-					//argument model
+					//argument model (nat - argmodel could be used here?)
 					T input2 = solver.getSymbolicModel(argConstraint.getID()).clone();
 					//if both have no common strings: intersection is empty
 					boolean common = !solver.intersect(inputs, argID).isEmpty();
@@ -194,7 +194,7 @@ public class InvConstraintEquals<T extends A_Model_Inverse<T>> extends A_Inv_Con
 						//no backtracking here back
 					} else {
 						
-						//TOD: an optimization where inputs, over which we iterate
+						//TODO: an optimization where inputs, over which we iterate
 						//single values has the smallest number of strings in
 						//its solution set.
 

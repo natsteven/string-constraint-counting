@@ -111,7 +111,8 @@ public class InvDefaultDirectedGraph extends DefaultDirectedGraph<PrintConstrain
 	public int getNumSymbolicInputs() {
 		int ret = 0;
 		for(PrintConstraint c : vertexSet()) {
-			if(c.getSplitValue().startsWith("r")) {
+			if(c.getOp() == Operation.INIT_SYM) {
+				System.out.println(c);
 				ret++;
 			}
 		}
