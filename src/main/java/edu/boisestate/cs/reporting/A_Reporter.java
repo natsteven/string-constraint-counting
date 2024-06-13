@@ -64,6 +64,9 @@ abstract public class A_Reporter <T extends A_Model<T>> {
         //all incoming constraints of a constraint (node)
         Map<PrintConstraint, Set<PrintConstraint>> unfinishedInEdges = new HashMap<>();
 
+        // NPS - minimal spanning preds (only for inverse and may/will break other solvings)
+        Set<PrintConstraint> minimalPreds = ((InvDefaultDirectedGraph)this.graph).computeMinimalSpanningPredicates();
+
         int maxId = 0;
 
         // populate root and end sets
@@ -192,7 +195,14 @@ abstract public class A_Reporter <T extends A_Model<T>> {
 //                        System.out.println("PREDICATE NOT DEEP ENOUGH TO HAVE ALL OTHER PRED DEPENDENENT ON IT");
 //                    }
 
-                    if (!iterator.hasNext()){
+                    // okay so we need to find the minimal set of predicates that's depended sets contain all predicates
+                    // issue is that dependency is reliant on symbolic inputs and there isnt necessarily a root predicate like that
+                    // so may want to calculate minimal set during loadGraph.
+//                    if (!iterator.hasNext()){ // not certain this is valid though it theoretically should be
+//                        this.calculateStats(constraint); //invokes prints and stats computations, also sat checks
+//                    }
+
+                    if (minimalPreds.contains(constraint)) {
                         this.calculateStats(constraint); //invokes prints and stats computations, also sat checks
                     }
                 }

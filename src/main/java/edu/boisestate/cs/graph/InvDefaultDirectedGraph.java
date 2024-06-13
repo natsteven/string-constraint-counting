@@ -5,13 +5,9 @@ import org.jgrapht.graph.EdgeReversedGraph;
 import org.jgrapht.traverse.BreadthFirstIterator;
 import org.jgrapht.traverse.DepthFirstIterator;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
+
 public class InvDefaultDirectedGraph extends DefaultDirectedGraph<PrintConstraint, SymbolicEdge> {
 
 	private Map<PrintConstraint, Set<PrintConstraint>> predDepend;
@@ -112,4 +108,37 @@ public class InvDefaultDirectedGraph extends DefaultDirectedGraph<PrintConstrain
 		return predDepend.size();
 	}
 
+	public int getNumSymbolicInputs() {
+		int ret = 0;
+		for(PrintConstraint c : vertexSet()) {
+			if(c.getSplitValue().startsWith("r")) {
+				ret++;
+			}
+		}
+		return ret;
+	}
+
+	public Set<PrintConstraint> computeMinimalSpanningPredicates() {
+		Set<Integer> ret = new HashSet<Integer>();
+		Set<Integer> retDepends = new HashSet<Integer>();
+		Map<Integer, Set<Integer>> unsortedMap = new HashMap<>(predDependID);
+
+		List<Entry<Integer, Set<Integer>>> sortedPreds = new ArrayList<>(unsortedMap.entrySet());
+		sortedPreds.sort(Entry.comparingByValue(Comparator.comparingInt(Set::size)));
+
+		// greedy set-cover algorithm works fine
+		for (Entry<Integer, Set<Integer>> entry : sortedPreds) {
+			if (!retDepends.containsAll(entry.getValue())) {
+				ret.add(entry.getKey());
+				retDepends.addAll(entry.getValue());
+			}
+		}
+		Set<PrintConstraint> retCon = new HashSet<PrintConstraint>();
+		for (PrintConstraint c : vertexSet()) {
+			if (ret.contains(c.getId())) {
+				retCon.add(c);
+			}
+		}
+		return retCon;
+	}
 }
