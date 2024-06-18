@@ -52,7 +52,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
     protected final Solver_Inverse<T> invSolver;
 	protected Map<Integer,PrintConstraint> allConstraints = new HashMap<>();
 	protected Map<Integer,I_Inv_Constraint<T>> allInverseConstraints = new HashMap<>();
-	//protected Map<Integer,SolutionSet<T>> inputSolutions = new HashMap<>();
+//	protected Map<Integer,SolutionSet<T>> inputSolutions = new HashMap<>();
 	protected Map<Integer,T> inputSolution = new HashMap<>();
 	protected Map<Integer,Integer> inputIndexes = new HashMap<>();
 	protected List<Integer> predicateIDs = new ArrayList<>();
@@ -296,6 +296,18 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 			buildICG_r3();
         
         solveInputs();
+		System.out.println("REPORTER INVERSE SOLUTION SIZE" + inputSolution.size());
+		//coalesce solutions into solutions map (in A_Reporter)
+		//as calcstats is being called for relevant predicates from there
+		for (Integer i : inputSolution.keySet()) {
+			if (solutions.containsKey(i)){
+				T prev = solutions.get(i);
+				T n = inputSolution.get(i);
+				solutions.put(i, prev.intersect(n));
+			} else {
+				solutions.put(i, inputSolution.get(i));
+			}
+		}
 
         // output finalized inverse constraints for debug
 //        if (true) {
@@ -736,12 +748,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         
     	
     }
-    
-    
-    
-    
-    
-    
+
     
     
     

@@ -4,6 +4,7 @@ import edu.boisestate.cs.BasicTimer;
 import edu.boisestate.cs.Parser;
 import edu.boisestate.cs.Parser_2;
 import edu.boisestate.cs.automatonModel.A_Model;
+import edu.boisestate.cs.automatonModel.A_Model_Inverse;
 import edu.boisestate.cs.graph.InvDefaultDirectedGraph;
 import edu.boisestate.cs.graph.PrintConstraint;
 import edu.boisestate.cs.graph.PrintConstraintComparator;
@@ -30,6 +31,11 @@ abstract public class A_Reporter <T extends A_Model<T>> {
     protected final Solver<T> solver;
     protected final Map<Integer, String[]> operationsMap;
     protected final Map<Integer, Long> timerMap;
+
+    //NPS - 6/18 - input solutions. there's SolutionSet SPFInput etcetera classes by marlin
+    // but this is only for inverse and wanted it handled differently/dont care to figure out
+    // what he was trying to do
+    protected HashMap<Integer, T> solutions = new HashMap<Integer, T>();
 
     /**
      * 
@@ -179,8 +185,7 @@ abstract public class A_Reporter <T extends A_Model<T>> {
 
                 if (isBoolFunc) {
                     // NPS 6/13/24 - not 100 percent certain we don't need the outlying code in this branch
-                    // so we'll just check that the contraint's depended predicates includes all leaves
-
+                    // so we'll just check that the constraint's depended predicates includes all leaves
 
                     if (minimalPreds.contains(constraint)) {
                         this.calculateStats(constraint); //invokes prints and stats computations, also sat checks
@@ -243,6 +248,8 @@ abstract public class A_Reporter <T extends A_Model<T>> {
         //solveInputs();
         
         // shut down solver
+        printSolutions();
+
         solver.shutDown();
         
     } // end run
@@ -349,5 +356,14 @@ abstract public class A_Reporter <T extends A_Model<T>> {
     protected abstract void calculateStats(PrintConstraint constraint);
     
     protected abstract void solveInputs();
+
+    public void printSolutions(){
+        System.out.println("=".repeat(64));
+        System.out.println("Example SOLUTIONS: ");
+        System.out.println("solutions size: " + solutions.size());
+        for (Integer id : solutions.keySet()) {
+        		System.out.println("ID: " + id + "  " + ((A_Model_Inverse)solutions.get(id)).getShortestExampleString());
+        	}
+    }
     
 }

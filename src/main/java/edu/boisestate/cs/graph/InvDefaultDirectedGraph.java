@@ -12,6 +12,7 @@ public class InvDefaultDirectedGraph extends DefaultDirectedGraph<PrintConstrain
 
 	private Map<PrintConstraint, Set<PrintConstraint>> predDepend;
 	private Map<Integer, Set<Integer>> predDependID;
+	private Integer numSymInputs;
 
 	public InvDefaultDirectedGraph(Class<? extends SymbolicEdge> edgeClass) {
 		super(edgeClass);
@@ -32,7 +33,7 @@ public class InvDefaultDirectedGraph extends DefaultDirectedGraph<PrintConstrain
 				predDependID.put(c.getId(), dependSetID);
 			}
 		}
-		
+
 		//get all the symbolic sources
 		Set<PrintConstraint> sources = new HashSet<PrintConstraint>();
 		for(PrintConstraint s : vertexSet()) {
@@ -43,6 +44,8 @@ public class InvDefaultDirectedGraph extends DefaultDirectedGraph<PrintConstrain
 		}
 
 		//System.out.println(sources);
+
+		numSymInputs = sources.size();
 
 		//intermediate map that remember symbolic sources for each predicate
 		Map<PrintConstraint, Set<PrintConstraint>> symbValPred = new HashMap<PrintConstraint, Set<PrintConstraint>>();
@@ -66,11 +69,11 @@ public class InvDefaultDirectedGraph extends DefaultDirectedGraph<PrintConstrain
 			for(PrintConstraint p : reachedPred) {
 				predDepend.get(p).addAll(reachedPred);
 			}
-			
+
 			for(Integer p : reachedPredID) {
 				predDependID.get(p).addAll(reachedPredID);
 			}
-			
+
 		}
 
 //		//resulting map
@@ -84,23 +87,23 @@ public class InvDefaultDirectedGraph extends DefaultDirectedGraph<PrintConstrain
 //			System.out.println();
 //		}
 	}
-	
+
 	public Set<Integer> getDependedPredicates(Integer id){
 		Set<Integer> ret = new HashSet<Integer>();
 		ret.addAll(predDependID.get(id));
-		
+
 		return ret;
 	}
-	
+
 	public Set<Integer> getAncestors(PrintConstraint start){
-		Set<Integer> ret = new HashSet<Integer>();	
+		Set<Integer> ret = new HashSet<Integer>();
 		EdgeReversedGraph<PrintConstraint, SymbolicEdge> reversedGraph = new EdgeReversedGraph<PrintConstraint, SymbolicEdge>(this);
 		BreadthFirstIterator<PrintConstraint, SymbolicEdge>breadthFirstIterator =
 				new BreadthFirstIterator<PrintConstraint, SymbolicEdge>(reversedGraph, start);
 		while (breadthFirstIterator.hasNext()) {
 			ret.add(breadthFirstIterator.next().getId());
 		}
-		
+
 		return ret;
 	}
 
@@ -108,15 +111,8 @@ public class InvDefaultDirectedGraph extends DefaultDirectedGraph<PrintConstrain
 		return predDepend.size();
 	}
 
-	public int getNumSymbolicInputs() {
-		int ret = 0;
-		for(PrintConstraint c : vertexSet()) {
-			if(c.getOp() == Operation.INIT_SYM) {
-				System.out.println(c);
-				ret++;
-			}
-		}
-		return ret;
+	public int getNumSymInputs() {
+		return numSymInputs;
 	}
 
 	public Set<PrintConstraint> computeMinimalSpanningPredicates() {

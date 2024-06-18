@@ -218,7 +218,7 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 						System.out.print(s + " ");
 					}
 
-				}			
+				}
 				System.out.println();
 			}
 		}
