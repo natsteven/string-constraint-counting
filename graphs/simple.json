@@ -10,5 +10,5 @@
 {"num": 0, "actualValue": "ACBB", "incomingEdges": [{"source": 1, "type": "t"}, {"source": 8, "type": "s1"}], "sourceConstraints": [], "timeStamp": 1482521433, "type": 0, "id": 9,"value": "concat!!Ljava/lang/String;!:!0"},
 {"num": 0, "actualValue": "CCBAC", "incomingEdges": [{"source": 7, "type": "t"}, {"source": 6, "type": "s1"}], "sourceConstraints": [], "timeStamp": 1482521433, "type": 0, "id": 10,"value": "concat!!Ljava/lang/String;!:!0"},
 {"num": 0, "actualValue": "false", "incomingEdges": [{"source": 7, "type": "t"}, {"source": 8, "type": "s1"}], "sourceConstraints": [], "timeStamp": 1482521433, "type": 0, "id": 11,"value": "equals!!Ljava/lang/Object;!:!0"},
-{"num": 0, "actualValue": "false", "incomingEdges": [{"source": 9, "type": "t"}, {"source": 10, "type": "s1"}], "sourceConstraints": [], "timeStamp": 1482521433, "type": 0, "id": 12,"value": "equals!!Ljava/lang/Object;!:!0"}]}
+{"num": 0, "actualValue": "true", "incomingEdges": [{"source": 9, "type": "t"}, {"source": 10, "type": "s1"}], "sourceConstraints": [], "timeStamp": 1482521433, "type": 0, "id": 12,"value": "equals!!Ljava/lang/Object;!:!0"}]}
 

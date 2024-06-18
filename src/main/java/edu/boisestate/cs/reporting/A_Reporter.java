@@ -360,9 +360,9 @@ abstract public class A_Reporter <T extends A_Model<T>> {
     public void printSolutions(){
         System.out.println("=".repeat(64));
         System.out.println("Example SOLUTIONS: ");
-        System.out.println("solutions size: " + solutions.size());
         for (Integer id : solutions.keySet()) {
-        		System.out.println("ID: " + id + "  " + ((A_Model_Inverse)solutions.get(id)).getShortestExampleString());
+            // no protection from large output
+        		System.out.println("ID: " + id + "  " + ((A_Model_Inverse)solutions.get(id)).getFiniteStrings());
         	}
     }
     

@@ -3,28 +3,7 @@ package edu.boisestate.cs.reporting;
 import edu.boisestate.cs.BasicTimer;
 import edu.boisestate.cs.Parser_2;
 import edu.boisestate.cs.automatonModel.A_Model_Inverse;
-import edu.boisestate.cs.graph.I_Inv_Constraint;
-import edu.boisestate.cs.graph.InvConstraintConcatSym;
-import edu.boisestate.cs.graph.InvConstraintConcreteValue;
-import edu.boisestate.cs.graph.InvConstraintDeleteCharAt;
-import edu.boisestate.cs.graph.InvConstraintDeleteStartEnd;
-import edu.boisestate.cs.graph.InvConstraintEquals;
-import edu.boisestate.cs.graph.InvConstraintInput;
-import edu.boisestate.cs.graph.InvConstraintPredicate;
-import edu.boisestate.cs.graph.InvConstraintPropagation;
-import edu.boisestate.cs.graph.InvConstraintReplaceCharChar;
-import edu.boisestate.cs.graph.InvConstraintSetLength;
-import edu.boisestate.cs.graph.InvConstraintSubStringStart;
-import edu.boisestate.cs.graph.InvConstraintSubStringStartEnd;
-import edu.boisestate.cs.graph.InvConstraintToLowerCase;
-import edu.boisestate.cs.graph.InvConstraintToUpperCase;
-import edu.boisestate.cs.graph.InvDefaultDirectedGraph;
-import edu.boisestate.cs.graph.Operation;
-import edu.boisestate.cs.graph.PrintConstraint;
-import edu.boisestate.cs.graph.SPFInput;
-import edu.boisestate.cs.graph.SPFInputSet;
-import edu.boisestate.cs.graph.SolutionSet;
-import edu.boisestate.cs.graph.SymbolicEdge;
+import edu.boisestate.cs.graph.*;
 import edu.boisestate.cs.solvers.Solver_Inverse;
 
 import org.jgrapht.DirectedGraph;
@@ -296,18 +275,10 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 			buildICG_r3();
         
         solveInputs();
-		System.out.println("REPORTER INVERSE SOLUTION SIZE" + inputSolution.size());
-		//coalesce solutions into solutions map (in A_Reporter)
+
+		//NPS 6/18 - coalesce solutions into solutions map (in A_Reporter)
 		//as calcstats is being called for relevant predicates from there
-		for (Integer i : inputSolution.keySet()) {
-			if (solutions.containsKey(i)){
-				T prev = solutions.get(i);
-				T n = inputSolution.get(i);
-				solutions.put(i, prev.intersect(n));
-			} else {
-				solutions.put(i, inputSolution.get(i));
-			}
-		}
+		coalesceSolutions(inputSolution);
 
         // output finalized inverse constraints for debug
 //        if (true) {
@@ -334,7 +305,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         // THIS CODE DOES NOT CURRENTLY DO ANYTHING ....
 
         // indicate if output going to file ..
-        if (solutionFile != "") {
+        if (false && solutionFile != "") {
         	System.out.println(cid + "Outputting to solution file: " + solutionFile);
 
         	// Code to output json solution file here ...
@@ -351,7 +322,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 //        		SPFInput.input = ss.getSolution().getShortestExampleString();
 //        		SPFInputs.inputSet.add(SPFInput);
 //        	}
-        	
+
         	for (Integer i : inputSolution.keySet()) {
         		SPFInput SPFInput = new SPFInput();
         		SPFInput.ID = i;
@@ -359,7 +330,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         		SPFInputs.inputSet.add(SPFInput);
         	}
 
-        	ObjectMapper mapper = new ObjectMapper(); 
+        	ObjectMapper mapper = new ObjectMapper();
         	mapper.enable(SerializationFeature.INDENT_OUTPUT);
 
         	try {
@@ -382,8 +353,37 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         // ------------------------------------------------------------------------------------
          
     }
-    
-    /*
+
+	private void coalesceSolutions(Map<Integer,T> inputSolution) {
+		 // update solutions map in A_Reporter (the overall solution map that is aggregating solutions
+		 // for runs of solveInputs for specific predicates
+		 for (Integer i : inputSolution.keySet()) {
+			 if (solutions.containsKey(i)) {
+				 System.out.println("Solutions existed for " + i + "  intersecting...");
+				 if (solutions.get(i).equals(inputSolution.get(i))) {
+					 System.out.println("Solutions are the same, no need to update");
+					 continue;
+				 }
+				 T curr = solutions.get(i);
+				 T n = inputSolution.get(i);
+				 System.out.println("PREVIOUS : ");
+				 printInputSolutions(curr);
+				 System.out.println("NEW : ");
+				 printInputSolutions(n);
+				 curr = curr.intersect(n);
+				 System.out.println("UPDATED ");
+				 printInputSolutions(curr);
+				 System.out.println("SANITY CHECK: ");
+				 printInputSolutions(solutions.get(i));
+			 } else {
+				 System.out.println("ADDING NEW SOLUTION: ");
+				 printInputSolutions(inputSolution.get(i));
+				 solutions.put(i, inputSolution.get(i));
+			 }
+		 }
+	}
+
+	/*
      * builds the transposed graph of inverse constraints.
      * first, creates an inverse constraint for every print constraint.
      * second, sets the internal next and arg references to the correct inverse constraint.
@@ -661,7 +661,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
     			}
     			
     		}
-    		System.out.println("Parents  "  + p + " are " + invParents);
+//    		System.out.println("Parents  "  + p + " are " + invParents);
 			// Nat: potentially should not set replacechar as parent for concrete constraints.
     		I_Inv_Constraint<T> invP = allInverseConstraints.get(p.getID());
     		invP.setPrev(invParents);
@@ -750,7 +750,20 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
     }
 
     
-    
+    protected void printInputSolutions(T solution){
+		BigInteger limit = new BigInteger("50");
+
+		if (solution.modelCount().compareTo(limit) > 0) {
+			System.out.print("Too many values to output,  " + solution.modelCount() + "  example: ");
+			System.out.print(solution.getShortestExampleString());
+		} else {
+			for (String s : solution.getFiniteStrings()) {
+				System.out.print(s + " ");
+			}
+
+		}
+		System.out.println();
+	}
     
     
     @Override

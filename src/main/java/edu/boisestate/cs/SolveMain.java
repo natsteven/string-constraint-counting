@@ -85,7 +85,6 @@ public class SolveMain {
 			System.out.println("NUM SYMBOLIC INPUTS:\t" + graph.getNumSymInputs());
 			System.out.println("=".repeat(95));
 			run_Acyclic_Inverse_r3(graph);
-			System.out.println("NUM SYMBOLIC INPUTS:\t" + graph.getNumSymInputs());
 
 
 		/*

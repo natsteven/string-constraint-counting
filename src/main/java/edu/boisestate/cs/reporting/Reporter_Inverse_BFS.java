@@ -44,7 +44,7 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 	protected void solveInputs() {
 		//from Marlin's code
 		// output finalized inverse constraints for debug
-		if (true) {
+		if (false) {
 			System.out.println(cid);
 			System.out.println(cid + "Inverse Constraint Set:");
 			for (I_Inv_Constraint<T> c : allInverseConstraints.values()) {
@@ -81,14 +81,14 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 			actual.addAll(eGraph.getAncestors(allConstraints.get(val)));
 			actual.add(val);
 		}
-		System.out.println("actuall " + actual);
+//		System.out.println("actuall " + actual);
 		//iterate over all actual nodes and remove them from the parents
 		//those nodes that are not there
 		for (I_Inv_Constraint<T> c : allInverseConstraints.values()) {
-			System.out.println(c + "1 " + c.getPrevID());
+//			System.out.println(c + "1 " + c.getPrevID());
 			c.getPrevID().retainAll(actual);
 			c.update();
-			System.out.println(c + "2 " + c.getPrevID());
+//			System.out.println(c + "2 " + c.getPrevID());
 		}
 		
 
@@ -144,7 +144,7 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 						backtrackID = ids;
 					}
 				}
-				System.out.println("backtrackID " + backtrackID);
+//				System.out.println("backtrackID " + backtrackID);
 				//case when nothing to backtrack to
 				if(backtrackID != Integer.MAX_VALUE) {
 					//get the queue
@@ -208,18 +208,7 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 				inputSolution.put(i.getID(), solution);
 
 				System.out.print("INPUT ID: " + i.getID() + "  COUNT: " + solution.modelCount() + "  VALUE(S): ");
-				BigInteger limit = new BigInteger("50");
-
-				if (solution.modelCount().compareTo(limit) > 0) {
-					System.out.print("Too many values to output,  " + solution.modelCount() + "  example: ");
-					System.out.print(solution.getShortestExampleString());
-				} else {
-					for (String s : solution.getFiniteStrings()) {
-						System.out.print(s + " ");
-					}
-
-				}
-				System.out.println();
+				printInputSolutions(solution);
 			}
 		}
 
