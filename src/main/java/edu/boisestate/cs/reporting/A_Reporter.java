@@ -181,26 +181,6 @@ abstract public class A_Reporter <T extends A_Model<T>> {
                     // NPS 6/13/24 - not 100 percent certain we don't need the outlying code in this branch
                     // so we'll just check that the contraint's depended predicates includes all leaves
 
-                    // actually issue with this is that itll still do it for every predicate that has all dependencies.
-                    // so instead we shuold just wait until every node is processed
-//                    Set<Integer> leafIds = new HashSet<>();
-//                    for (PrintConstraint leaf : leaves) {
-//                        leafIds.add(leaf.getId());
-//                    }
-//                    Set<Integer> dependedPredicates = ((InvDefaultDirectedGraph) graph).getDependedPredicates(constraint.getId());
-//                    if (dependedPredicates.containsAll(leafIds)) {
-//                        System.out.println("=".repeat(42) + "PREDICATE ROOT FOUND FOR BACKWARDS PROPOGATION" + constraint.getId() + "=".repeat(42));
-//                        this.calculateStats(constraint); //invokes prints and stats computations, also sat checks
-//                    } else {
-//                        System.out.println("PREDICATE NOT DEEP ENOUGH TO HAVE ALL OTHER PRED DEPENDENENT ON IT");
-//                    }
-
-                    // okay so we need to find the minimal set of predicates that's depended sets contain all predicates
-                    // issue is that dependency is reliant on symbolic inputs and there isnt necessarily a root predicate like that
-                    // so may want to calculate minimal set during loadGraph.
-//                    if (!iterator.hasNext()){ // not certain this is valid though it theoretically should be
-//                        this.calculateStats(constraint); //invokes prints and stats computations, also sat checks
-//                    }
 
                     if (minimalPreds.contains(constraint)) {
                         this.calculateStats(constraint); //invokes prints and stats computations, also sat checks
