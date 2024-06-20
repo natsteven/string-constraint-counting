@@ -68,12 +68,13 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 		//predicateIDs have the last predicate is the current constraint predicate
 		//and it contains all predicates solved so far
 		qID.addAll(predicateIDs);
-		qID.retainAll(eGraph.getDependedPredicates(predicateIDs.get(predicateIDs.size()-1)));
+		Integer currPred = predicateIDs.get(predicateIDs.size()-1);
+		qID.retainAll(eGraph.getDependedPredicates(currPred));
 		//sort it so the predicate with the largest ids processed first
 		//Collections.sort(qID, Collections.reverseOrder());
 		System.out.println("Q " + qID);
 		System.out.println(predicateIDs);
-		List<I_Inv_Constraint<T>> q = new ArrayList<I_Inv_Constraint<T>>();
+		List<I_Inv_Constraint<T>> q = new ArrayList<I_Inv_Constraint<T>>();		//NPS -- not used
 		Set<Integer> actual = new HashSet<Integer>();
 		for(Integer val : qID) {
 			q.add(allInverseConstraints.get(val));
@@ -81,15 +82,16 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 			actual.addAll(eGraph.getAncestors(allConstraints.get(val)));
 			actual.add(val);
 		}
-//		System.out.println("actuall " + actual);
+		System.out.println("actuall " + actual);
 		//iterate over all actual nodes and remove them from the parents
 		//those nodes that are not there
 		for (I_Inv_Constraint<T> c : allInverseConstraints.values()) {
-//			System.out.println(c + "1 " + c.getPrevID());
+			System.out.println(c + "1 " + c.getPrevID());
 			c.getPrevID().retainAll(actual);
 			c.update();
-//			System.out.println(c + "2 " + c.getPrevID());
+			System.out.println(c + "2 " + c.getPrevID());
 		}
+		System.out.println(qID);
 		
 
 		//backtrack map - records the current current queue for the backtracked id

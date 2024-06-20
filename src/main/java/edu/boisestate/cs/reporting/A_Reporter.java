@@ -33,9 +33,10 @@ abstract public class A_Reporter <T extends A_Model<T>> {
     protected final Map<Integer, Long> timerMap;
 
     //NPS - 6/18 - input solutions. there's SolutionSet SPFInput etcetera classes by marlin
-    // but this is only for inverse and wanted it handled differently/dont care to figure out
-    // what he was trying to do
-    protected HashMap<Integer, T> solutions = new HashMap<Integer, T>();
+    // but this is only for inverse and wanted it handled differently?
+    // integer ID of predicate and a hashmap of the predicate's solutions
+    protected HashMap<Integer, HashMap<Integer, T>> solutions = new HashMap<>();
+    protected Map<Integer, Set<Integer>> predProcessing = new HashMap<>();
 
     /**
      * 
@@ -71,7 +72,15 @@ abstract public class A_Reporter <T extends A_Model<T>> {
         Map<PrintConstraint, Set<PrintConstraint>> unfinishedInEdges = new HashMap<>();
 
         // NPS - minimal spanning preds (only for inverse and may/will break other solvings)
-        Set<PrintConstraint> minimalPreds = ((InvDefaultDirectedGraph)this.graph).computeMinimalSpanningPredicates();
+//        Set<PrintConstraint> minimalPreds = ((InvDefaultDirectedGraph)this.graph).computeMinimalSpanningPredicates();
+        // 6/19 above is incorrect does not guarantee evaluation of all nodes. instead using predependency hashamp
+//        predProcessing = new HashMap<>(((InvDefaultDirectedGraph)graph).getPredDependIDMap());
+        // copy not working?
+        for (Integer key : ((InvDefaultDirectedGraph)graph).getPredDependIDMap().keySet()) {
+            Set<Integer> set = new HashSet<>(((InvDefaultDirectedGraph)graph).getPredDependIDMap().get(key));
+            predProcessing.put(key, set);
+        }
+
 
         int maxId = 0;
 
@@ -173,11 +182,6 @@ abstract public class A_Reporter <T extends A_Model<T>> {
             constraint.setSourceMap(sourceMap);
 
             // if constraint is a leaf node
-
-            // NPS - we need to wait until we are at any of the deepest level of predicates.
-            // best way may be to wait until a predicate has all other predicates as dependencies
-            // main issue would any kind of disconnected graph, which is handleable but arguably shuold just be seperate graphs.
-            // i dont think there are cases in connected graphs where a deepest leaf doesn't have all other predicates as dependencies.
             if (leaves.contains(constraint)) {
 
                 // add end
@@ -186,10 +190,9 @@ abstract public class A_Reporter <T extends A_Model<T>> {
                 if (isBoolFunc) {
                     // NPS 6/13/24 - not 100 percent certain we don't need the outlying code in this branch
                     // so we'll just check that the constraint's depended predicates includes all leaves
-
-                    if (minimalPreds.contains(constraint)) {
-                        this.calculateStats(constraint); //invokes prints and stats computations, also sat checks
-                    }
+                    // NPS 6/19/24 - minimal preds solutions is wrong, simply using predepend hashmap
+                    // decision of processing is taken care of in calculateStats
+                    this.calculateStats(constraint);
                 }
 
                 finishEdges(unfinishedInEdges, unfinishedOutEdges, constraint);
@@ -359,11 +362,26 @@ abstract public class A_Reporter <T extends A_Model<T>> {
 
     public void printSolutions(){
         System.out.println("=".repeat(64));
-        System.out.println("Example SOLUTIONS: ");
-        for (Integer id : solutions.keySet()) {
-            // no protection from large output
-        		System.out.println("ID: " + id + "  " + ((A_Model_Inverse)solutions.get(id)).getFiniteStrings());
-        	}
+        System.out.println("SOLUTIONS: ");
+        HashMap<Integer, T> finalsols = new HashMap<>();
+        for (Integer pred : solutions.keySet()){
+
+            for (Integer input: solutions.get(pred).keySet()) {
+                T sol = solutions.get(pred).get(input);
+                if (finalsols.get(input) == null){
+                    finalsols.put(input, sol);
+                } else {
+                    T oldSol = finalsols.get(input);
+                    T newSol = oldSol.intersect(sol);
+                    finalsols.put(input, newSol);
+                }
+                // no protection from large output
+//                System.out.println("ID: " + i + "  " + ((A_Model_Inverse) solutions.get(id).get(i)).getFiniteStrings());
+            }
+        }
+        for (Integer id : finalsols.keySet()){
+            System.out.println("ID: " + id + "  " + ((A_Model_Inverse)finalsols.get(id)).getFiniteStrings());
+        }
+
     }
-    
 }

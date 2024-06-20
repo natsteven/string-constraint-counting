@@ -266,19 +266,38 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 
         // save this predicate ID so we can grab the new inverse constraint
         // from the allInverseConstraints container later
-        //int predicateID = constraint.getId();
+        int predID = constraint.getId();
         
-        predicateIDs.add(constraint.getId());
+        predicateIDs.add(predID);
+
+		// NPS 6-19 : now we only want to solve for certain predicates
+		// if predicate has higher level dependent predicates remove it and continue
+		// else only predicate left in set is itself and we need to process it
+		if (predProcessing.get(predID).size() > 1){
+			Set<Integer> removals = predProcessing.get(predID);
+			removals.remove(predID);
+			predProcessing.remove(predID);
+			for (Integer i : removals) {
+				predProcessing.get(i).remove(predID);
+			}
+			return;
+		}
 
         // build the transposed graph of inverse constraints
 //        if (predicateIDs.isEmpty())
-			buildICG_r3();
-        
+		buildICG_r3();
+
         solveInputs();
+
+		// NPS 6/19 - add solutions found for a given predicate (K=id) to the solutions map
+		// inputsolutions are a map of inputID to solution model
+		// will need some kind of coalescing to find a consistent set for all inputs
+		solutions.put(constraint.getId(), new HashMap<>(inputSolution));
 
 		//NPS 6/18 - coalesce solutions into solutions map (in A_Reporter)
 		//as calcstats is being called for relevant predicates from there
-		coalesceSolutions(inputSolution);
+//		coalesceSolutions(inputSolution);
+//		solutions = (HashMap<Integer, T>) inputSolution;
 
         // output finalized inverse constraints for debug
 //        if (true) {
@@ -305,7 +324,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         // THIS CODE DOES NOT CURRENTLY DO ANYTHING ....
 
         // indicate if output going to file ..
-        if (false && solutionFile != "") {
+        if (solutionFile != "") {
         	System.out.println(cid + "Outputting to solution file: " + solutionFile);
 
         	// Code to output json solution file here ...
@@ -354,34 +373,33 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
          
     }
 
-	private void coalesceSolutions(Map<Integer,T> inputSolution) {
-		 // update solutions map in A_Reporter (the overall solution map that is aggregating solutions
-		 // for runs of solveInputs for specific predicates
-		 for (Integer i : inputSolution.keySet()) {
-			 if (solutions.containsKey(i)) {
-				 System.out.println("Solutions existed for " + i + "  intersecting...");
-				 if (solutions.get(i).equals(inputSolution.get(i))) {
-					 System.out.println("Solutions are the same, no need to update");
-					 continue;
-				 }
-				 T curr = solutions.get(i);
-				 T n = inputSolution.get(i);
-				 System.out.println("PREVIOUS : ");
-				 printInputSolutions(curr);
-				 System.out.println("NEW : ");
-				 printInputSolutions(n);
-				 curr = curr.intersect(n);
-				 System.out.println("UPDATED ");
-				 printInputSolutions(curr);
-				 System.out.println("SANITY CHECK: ");
-				 printInputSolutions(solutions.get(i));
-			 } else {
-				 System.out.println("ADDING NEW SOLUTION: ");
-				 printInputSolutions(inputSolution.get(i));
-				 solutions.put(i, inputSolution.get(i));
-			 }
-		 }
-	}
+//	private void coalesceSolutions(Map<Integer,T> inputSolution) {
+//		 // update solutions map in A_Reporter (the overall solution map that is aggregating solutions
+//		 // for runs of solveInputs for specific predicates
+//		 for (Integer i : inputSolution.keySet()) {
+//			 if (solutions.containsKey(i)) {
+//				 System.out.println("Solutions existed for " + i + "  intersecting...");
+//				 if (solutions.get(i).equals(inputSolution.get(i))) {
+//					 System.out.println("Solutions are the same, no need to update");
+//					 continue;
+//				 }
+//				 T curr = solutions.get(i);
+//				 T n = inputSolution.get(i);
+//				 System.out.println("PREVIOUS : ");
+//				 printInputSolutions(curr);
+//				 System.out.println("NEW : ");
+//				 printInputSolutions(n);
+//				 curr = curr.intersect(n);
+//				 solutions.put(i, curr);
+//				 System.out.println("UPDATED ");
+//				 printInputSolutions(curr);
+//			 } else {
+//				 System.out.println("ADDING NEW SOLUTION: ");
+//				 printInputSolutions(inputSolution.get(i));
+//				 solutions.put(i, inputSolution.get(i));
+//			 }
+//		 }
+//	}
 
 	/*
      * builds the transposed graph of inverse constraints.

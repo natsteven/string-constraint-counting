@@ -102,7 +102,7 @@ public class SolutionSet<T extends A_Model_Inverse<T>> {
 	}
 	
 	
-	public String toString() {
+	public String toSring() {
 		
 		StringBuilder output = new StringBuilder();
 		Formatter fm = new Formatter (output);

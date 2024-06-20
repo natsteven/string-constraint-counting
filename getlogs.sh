@@ -23,21 +23,21 @@ for file in "$directory"/*; do
     if [ -d "$file" ]; then
         echo "Skipping directory: $filename"
         continue
-    fi 
-    
+    fi
+
     # Capture start time before timeout execution
-    start_time=$(date +%s.%N)   
-    
+    start_time=$(date +%s.%N)
+
     # Execute with timeout and capture output/error
-    output=$(timeout "$timeout"s java -cp target/string-constraint-solvers-1.0-SNAPSHOT-jar-with-dependencies.jar edu.boisestate.cs.SolveMain "$file" -l "$length" -s Inverse -v 2 2>&1)    
-    
+    output=$(timeout "$timeout"s java -cp target/string-constraint-solvers-1.0-SNAPSHOT-jar-with-dependencies.jar edu.boisestate.cs.SolveMain "$file" -l "$length" -s Inverse -v 2 2>&1)
+
     tout=$?
 
     # Capture end time after execution (even on timeout)
-    end_time=$(date +%s.%N) 
+    end_time=$(date +%s.%N)
 
     # Calculate elapsed time (consider using bc for sub-second precision)
-    elapsed_time=$(echo "$end_time - $start_time" | bc -l)  
+    elapsed_time=$(echo "$end_time - $start_time" | bc -l)
 
     # Write output and calculated time to log file
     echo "** Time elapsed: $elapsed_time seconds **" > $outfile
@@ -48,4 +48,7 @@ for file in "$directory"/*; do
       echo "TIMEOUT OCCURED"
     fi
     echo "$output" >> $outfile
+
+    cp "/temp/solutions.txt" "logs/$directoryname/$filename-solutions-l$length.txt"
+
 done
