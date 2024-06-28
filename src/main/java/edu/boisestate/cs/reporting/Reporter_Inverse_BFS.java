@@ -86,10 +86,10 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 		//iterate over all actual nodes and remove them from the parents
 		//those nodes that are not there
 		for (I_Inv_Constraint<T> c : allInverseConstraints.values()) {
-			System.out.println(c + "1 " + c.getPrevID());
+//			System.out.println(c + "1 " + c.getPrevID());
 			c.getPrevID().retainAll(actual);
 			c.update();
-			System.out.println(c + "2 " + c.getPrevID());
+//			System.out.println(c + "2 " + c.getPrevID());
 		}
 		System.out.println(qID);
 		
