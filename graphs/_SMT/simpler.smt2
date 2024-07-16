@@ -1,0 +1,15 @@
+(set-logic QF_S)
+(set-option :produce-models true)
+(declare-fun r4 () String)
+(declare-fun r5 () String)
+(define-fun Alphabet () RegLan 
+	(re.* (re.union (str.to_re "A") (str.to_re "B") (str.to_re "C") ))
+)
+
+(assert (str.in_re r5 Alphabet))
+(assert (str.in_re r4 Alphabet))
+(assert (not (= (str.++ r5 "B" )(str.++ r4 "B" ))))
+(assert (not (= "" r5 )))
+(check-sat)
+(get-model)
+(exit)
