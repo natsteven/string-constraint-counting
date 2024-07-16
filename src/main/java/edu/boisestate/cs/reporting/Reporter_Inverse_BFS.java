@@ -207,6 +207,17 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 				// populate map for output to file/SPF
 				inputSolution.put(i.getID(), solution);
 
+				//put solution in map of solutiongs for this id;
+				// so i guess inputSoltion may only have some of the INIT_SYMS??
+				Set<T> solutions = allSolutions.get(i.getID());
+				if (solutions == null){
+					Set<T> solSet = new HashSet<>();
+					solSet.add(solution);
+					allSolutions.put(id, solSet);
+				} else {
+					solutions.add(solution);
+				}
+
 				System.out.print("INPUT ID: " + i.getID() + "  COUNT: " + solution.modelCount() + "  VALUE(S): ");
 				BigInteger limit = new BigInteger("50");
 

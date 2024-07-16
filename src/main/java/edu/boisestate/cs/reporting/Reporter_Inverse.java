@@ -298,6 +298,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 			for (Integer i : removals) {
 				predProcessing.get(i).remove(predID);
 			}
+			remaining--;
 			return;
 		}
 
@@ -377,7 +378,35 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         // ------------------------------------------------------------------------------------    	
         // The input solution process stops here.
         // ------------------------------------------------------------------------------------
-         
+        if (--remaining == 0) {
+			System.out.println(predProcessing.size());
+			System.out.println("DONE SOLVING, GETTING INPUT SOLUTIONS");
+			for (int id : allSolutions.keySet()){
+				T solution = null;
+				for (T sol : allSolutions.get(id)){
+					if (solution == null) solution = sol; //first iter
+					solution = solution.intersect(sol);
+					if (solution == null){
+						System.out.println("INCONSISTENT SOLUTION SET");
+						return; // maybe shouldn't return?
+					}
+				}
+				// stolen from reporter_inverse_bfs, (note i did creaet a specific method for this in nat branch)
+				System.out.print("INPUT ID: " + id + "  COUNT: " + solution.modelCount() + "  VALUE(S): ");
+				BigInteger limit = new BigInteger("50");
+
+				if (solution.modelCount().compareTo(limit) > 0) {
+					System.out.print("Too many to ouput; example: ");
+					System.out.print(solution.getShortestExampleString());
+				} else {
+					for (String s : solution.getFiniteStrings()) {
+						System.out.print(s + " ");
+					}
+
+				}			
+				System.out.println();
+			}
+		}
     }
     
     /*
