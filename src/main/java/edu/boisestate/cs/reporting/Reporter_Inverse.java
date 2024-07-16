@@ -287,9 +287,19 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 
         // save this predicate ID so we can grab the new inverse constraint
         // from the allInverseConstraints container later
-        //int predicateID = constraint.getId();
+        int predID = constraint.getId();
         
-        predicateIDs.add(constraint.getId());
+        predicateIDs.add(predID);
+
+		if (predProcessing.get(predID).size() > 1){
+			Set<Integer> removals = predProcessing.get(predID);
+			removals.remove(predID);
+			predProcessing.remove(predID);
+			for (Integer i : removals) {
+				predProcessing.get(i).remove(predID);
+			}
+			return;
+		}
 
         // build the transposed graph of inverse constraints
         buildICG_r3();

@@ -108,4 +108,8 @@ public class InvDefaultDirectedGraph extends DefaultDirectedGraph<PrintConstrain
 		return ret;
 	}
 
+	public Map<Integer, Set<Integer>> getPredDependIDMap() {
+		return predDependID;
+	}
+
 }
