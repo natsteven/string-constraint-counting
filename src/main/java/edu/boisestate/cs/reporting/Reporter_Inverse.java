@@ -141,7 +141,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
             isSingleton = true;
         }
 
-        long initialCount = this.invSolver.getModelCount(base);
+//        long initialCount = this.invSolver.getModelCount(base);
         inMCTime = BasicTimer.getRunTime();
 
         // store symbolic string values
@@ -154,7 +154,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
             trueSat = true;
         }
 
-        long trueModelCount = this.invSolver.getModelCount(base);
+//        long trueModelCount = this.invSolver.getModelCount(base);
         tMCTime = BasicTimer.getRunTime();
 
         // revert symbolic string values
@@ -170,7 +170,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
             falseSat = true;
         }
 
-        long falseModelCount = this.invSolver.getModelCount(base);
+//        long falseModelCount = this.invSolver.getModelCount(base);
         fMCTime = BasicTimer.getRunTime();
 
         // revert symbolic string values
@@ -218,7 +218,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         }
 
         // set yes or no for disjoint branches
-        long overlap = this.invSolver.getModelCount(base);
+//        long overlap = this.invSolver.getModelCount(base);
 
         // revert symbolic string values
         solver.revertLastPredicate();
@@ -256,13 +256,13 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         // id of initial model
         columns.add(String.valueOf(base));
         // initial model count
-        columns.add(String.valueOf(initialCount));
+//        columns.add(String.valueOf(initialCount));
         // true model count
-        columns.add(String.valueOf(trueModelCount));
+//        columns.add(String.valueOf(trueModelCount));
         // false model count
-        columns.add(String.valueOf(falseModelCount));
+//        columns.add(String.valueOf(falseModelCount));
         // overlap count
-        columns.add(String.valueOf(overlap));
+//        columns.add(String.valueOf(overlap));
         // previous operations
         columns.add(ops);
 
@@ -332,55 +332,69 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         // THIS CODE DOES NOT CURRENTLY DO ANYTHING ....
 
         // indicate if output going to file ..
-        if (solutionFile != "") {
-        	System.out.println(cid + "Outputting to solution file: " + solutionFile);
-
-        	// Code to output json solution file here ...
-        	// A set of SPF inputs
-        	SPFInputSet SPFInputs = new SPFInputSet();
-
-        	// set this to reporter SAT ...
-        	SPFInputs.SAT = true;
-
-        	// for every solutionset, get possible strings, select one, add it to SPFInputSet
-//        	for (SolutionSet<T> ss : inputSolutions.values()) {
+//        if (solutionFile != "") {
+//        	System.out.println(cid + "Outputting to solution file: " + solutionFile);
+//
+//        	// Code to output json solution file here ...
+//        	// A set of SPF inputs
+//        	SPFInputSet SPFInputs = new SPFInputSet();
+//
+//        	// set this to reporter SAT ...
+//        	SPFInputs.SAT = true;
+//
+//        	// for every solutionset, get possible strings, select one, add it to SPFInputSet
+////        	for (SolutionSet<T> ss : inputSolutions.values()) {
+////        		SPFInput SPFInput = new SPFInput();
+////        		SPFInput.ID = ss.getID();
+////        		SPFInput.input = ss.getSolution().getShortestExampleString();
+////        		SPFInputs.inputSet.add(SPFInput);
+////        	}
+//
+//        	for (Integer i : inputSolution.keySet()) {
 //        		SPFInput SPFInput = new SPFInput();
-//        		SPFInput.ID = ss.getID();
-//        		SPFInput.input = ss.getSolution().getShortestExampleString();
+//        		SPFInput.ID = i;
+//        		SPFInput.input = inputSolution.get(i).getShortestExampleString();
 //        		SPFInputs.inputSet.add(SPFInput);
 //        	}
-        	
-        	for (Integer i : inputSolution.keySet()) {
-        		SPFInput SPFInput = new SPFInput();
-        		SPFInput.ID = i;
-        		SPFInput.input = inputSolution.get(i).getShortestExampleString();
-        		SPFInputs.inputSet.add(SPFInput);
-        	}
-
-        	ObjectMapper mapper = new ObjectMapper(); 
-        	mapper.enable(SerializationFeature.INDENT_OUTPUT);
-
-        	try {
-        		mapper.writeValue(new File(solutionFile), SPFInputs);
-        	} catch (JsonGenerationException e1) {
-        		System.err.println(cid + "Error Generating JSON ...");
-        	} catch (JsonMappingException e1) {
-        		System.err.println(cid + "Error Mapping JSON ...");
-        	} catch (IOException e1) {
-        		System.err.println(cid + "Error Writing JSON File ...");
-        		// return false;
-        	}
-
-        }
+//
+//        	ObjectMapper mapper = new ObjectMapper();
+//        	mapper.enable(SerializationFeature.INDENT_OUTPUT);
+//
+//        	try {
+//        		mapper.writeValue(new File(solutionFile), SPFInputs);
+//        	} catch (JsonGenerationException e1) {
+//        		System.err.println(cid + "Error Generating JSON ...");
+//        	} catch (JsonMappingException e1) {
+//        		System.err.println(cid + "Error Mapping JSON ...");
+//        	} catch (IOException e1) {
+//        		System.err.println(cid + "Error Writing JSON File ...");
+//        		// return false;
+//        	}
+//
+//        }
 
         // output all input solutions
 
         // ------------------------------------------------------------------------------------    	
         // The input solution process stops here.
         // ------------------------------------------------------------------------------------
+
+		// file output doesnt work well for HPC cluster though could be adjusted to do so
+		// regardless this is current solution output
         if (--remaining == 0) {
 			System.out.println(predProcessing.size());
 			System.out.println("DONE SOLVING, GETTING INPUT SOLUTIONS");
+			int numInputs = ((InvDefaultDirectedGraph)graph).getNumSymInputs();
+			if (allSolutions.keySet().size() != numInputs) {
+				System.out.println("MISSING SOLUTIONS");
+				System.out.println(numInputs + " expected\nIDs in set: ");
+				for (int id : allSolutions.keySet()){
+					System.out.print(id + ", ");
+				}
+				System.out.println("UNSAT");
+				return;
+			}
+
 			for (int id : allSolutions.keySet()){
 				T solution = null;
 				for (T sol : allSolutions.get(id)){
@@ -388,23 +402,24 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 					solution = solution.intersect(sol);
 					if (solution == null){
 						System.out.println("INCONSISTENT SOLUTION SET");
+						System.out.println("UNSAT");
 						return; // maybe shouldn't return?
 					}
 				}
 				// stolen from reporter_inverse_bfs, (note i did creaet a specific method for this in nat branch)
-				System.out.print("INPUT ID: " + id + "  COUNT: " + solution.modelCount() + "  VALUE(S): ");
-				BigInteger limit = new BigInteger("50");
-
-				if (solution.modelCount().compareTo(limit) > 0) {
-					System.out.print("Too many to ouput; example: ");
-					System.out.print(solution.getShortestExampleString());
-				} else {
-					for (String s : solution.getFiniteStrings()) {
-						System.out.print(s + " ");
-					}
-
-				}			
-				System.out.println();
+//				System.out.print("INPUT ID: " + id + "  COUNT: " + solution.modelCount() + "  VALUE(S): ");
+//				BigInteger limit = new BigInteger("50");
+//
+//				if (solution.modelCount().compareTo(limit) > 0) {
+//					System.out.print("Too many to ouput; example: ");
+//					System.out.print(solution.getShortestExampleString());
+//				} else {
+//					for (String s : solution.getFiniteStrings()) {
+//						System.out.print(s + " ");
+//					}
+//
+//				}
+				System.out.println("INPUT ID: " + id + ", VALUE: " + solution.getShortestExampleString());
 			}
 		}
     }
@@ -756,7 +771,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         		
         		System.out.print("INPUT ID: " + i.getID() + "  COUNT: " + solution.modelCount() + "  VALUE(S): ");
         		BigInteger limit = new BigInteger("300");
-        		
+
         		if (solution.modelCount().compareTo(limit) > 0) {
         			System.out.print("Too many values to output,  " + solution.modelCount() + "  example: ");
         			System.out.print(solution.getShortestExampleString());
@@ -764,8 +779,8 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         			for (String s : solution.getFiniteStrings()) {
         				System.out.print(s + " ");
         			}
-        		
-        		}			
+
+        		}
         		System.out.println();
         	}
         }

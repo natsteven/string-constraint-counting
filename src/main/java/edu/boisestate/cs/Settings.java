@@ -2,7 +2,7 @@ package edu.boisestate.cs;
 
 public class Settings {
 
-    public static final int DEFAULT_BOUNDING_LENGTH = 10;
+    public static final int DEFAULT_BOUNDING_LENGTH = 15;
     private String alphabetDeclaration;
     /**
      * Version of the automaton model used with JSA family of string constraint

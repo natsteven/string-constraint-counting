@@ -16,6 +16,8 @@ public class InvDefaultDirectedGraph extends DefaultDirectedGraph<PrintConstrain
 
 	private Map<PrintConstraint, Set<PrintConstraint>> predDepend;
 	private Map<Integer, Set<Integer>> predDependID;
+	private Integer numSymInputs;
+	private Integer numPreds;
 
 	public InvDefaultDirectedGraph(Class<? extends SymbolicEdge> edgeClass) {
 		super(edgeClass);
@@ -40,14 +42,15 @@ public class InvDefaultDirectedGraph extends DefaultDirectedGraph<PrintConstrain
 		//get all the symbolic sources
 		Set<PrintConstraint> sources = new HashSet<PrintConstraint>();
 		for(PrintConstraint s : vertexSet()) {
-			if(this.inDegreeOf(s) == 0 && s.getSplitValue().startsWith("r")) {
+			String val = s.getSplitValue();
+			if(this.inDegreeOf(s) == 0 && (val.startsWith("r") || val.startsWith("$r"))) {
 				sources.add(s);
 				//System.out.println(s.getSplitValue());
 			}
 		}
 
 		//System.out.println(sources);
-
+		numSymInputs = sources.size();
 		//intermediate map that remember symbolic sources for each predicate
 		Map<PrintConstraint, Set<PrintConstraint>> symbValPred = new HashMap<PrintConstraint, Set<PrintConstraint>>();
 		//DFS for each sink
@@ -76,6 +79,7 @@ public class InvDefaultDirectedGraph extends DefaultDirectedGraph<PrintConstrain
 			}
 			
 		}
+		numPreds = predDepend.size();
 
 //		//resulting map
 //		for(Entry<PrintConstraint, Set<PrintConstraint>> e : predDepend.entrySet()) {
@@ -112,4 +116,11 @@ public class InvDefaultDirectedGraph extends DefaultDirectedGraph<PrintConstrain
 		return predDependID;
 	}
 
+	public Integer getNumPredicates() {
+		return numPreds;
+	}
+
+	public Integer getNumSymInputs() {
+		return numSymInputs;
+	}
 }

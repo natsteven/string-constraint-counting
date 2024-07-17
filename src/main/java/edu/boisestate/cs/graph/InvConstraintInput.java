@@ -141,20 +141,20 @@ public class InvConstraintInput<T extends A_Model_Inverse<T>>  extends A_Inv_Con
 		//if consistent
 		if(!inputs.isEmpty()) {
 		
-			System.out.print("DEBUG " + op.toString() + " " + ID);
-			System.out.print(" solutions .... ");
-			
-    		BigInteger oneHundred = new BigInteger("300");
-    		
-    		if (inputs.modelCount().compareTo(oneHundred) > 0) {
-    			System.out.print("Too many values to output,  " + inputs.modelCount() + "  example: ");
-    			System.out.println(inputs.getShortestExampleString());
-    		} else {
-    			for (String s : inputs.getFiniteStrings()) {
-    				System.out.print(s + " ");
-    			}
-    		System.out.println();
-    		}
+//			System.out.print("DEBUG " + op.toString() + " " + ID);
+//			System.out.print(" solutions .... ");
+//
+//    		BigInteger oneHundred = new BigInteger("300");
+//
+//    		if (inputs.modelCount().compareTo(oneHundred) > 0) {
+//    			System.out.print("Too many values to output,  " + inputs.modelCount() + "  example: ");
+//    			System.out.println(inputs.getShortestExampleString());
+//    		} else {
+//    			for (String s : inputs.getFiniteStrings()) {
+//    				System.out.print(s + " ");
+//    			}
+//    		System.out.println();
+//    		}
     		this.outputSet.put(0, inputs);
 		} else {
 			//solution not consistent, then backtrack

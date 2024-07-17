@@ -218,19 +218,19 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 					solutions.add(solution);
 				}
 
-				System.out.print("INPUT ID: " + i.getID() + "  COUNT: " + solution.modelCount() + "  VALUE(S): ");
-				BigInteger limit = new BigInteger("50");
-
-				if (solution.modelCount().compareTo(limit) > 0) {
-					System.out.print("Too many values to output,  " + solution.modelCount() + "  example: ");
-					System.out.print(solution.getShortestExampleString());
-				} else {
-					for (String s : solution.getFiniteStrings()) {
-						System.out.print(s + " ");
-					}
-
-				}			
-				System.out.println();
+//				System.out.print("INPUT ID: " + i.getID() + "  COUNT: " + solution.modelCount() + "  VALUE(S): ");
+//				BigInteger limit = new BigInteger("50");
+//
+//				if (solution.modelCount().compareTo(limit) > 0) {
+//					System.out.print("Too many values to output,  " + solution.modelCount() + "  example: ");
+//					System.out.print(solution.getShortestExampleString());
+//				} else {
+//					for (String s : solution.getFiniteStrings()) {
+//						System.out.print(s + " ");
+//					}
+//
+//				}
+//				System.out.println();
 			}
 		}
 
