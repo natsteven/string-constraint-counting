@@ -1075,7 +1075,7 @@ public class Model_Acyclic extends A_Model<Model_Acyclic> {
 	 *                          the target Automaton
 	 * @return - The modified Automaton
 	 */
-	@Override
+	
 	public Model_Acyclic replaceFirstOptimized(String regexString, String replacementString) {
 		long start = System.currentTimeMillis();
 		// initialize Automata
@@ -1086,12 +1086,13 @@ public class Model_Acyclic extends A_Model<Model_Acyclic> {
 		// Automaton containing all Strings in the originalAutomaton's language which
 		// contain a substring which satisfies the regex
 		Automaton intersection = Automaton.minimize(originalAutomaton.intersection(anyPrefixAndSuffix));
-		if (intersection.isEmpty())
-			return new Model_Acyclic(originalAutomaton, this.alphabet, this.boundLength);
-		originalAutomaton = Automaton.minimize(originalAutomaton.minus(anyPrefixAndSuffix));
 		// if there are no matches to operate on, return the originalAutomaton
 		if (intersection.isEmpty())
 			return new Model_Acyclic(originalAutomaton, this.alphabet, this.boundLength);
+		
+		//separate out the unchanged by replaceFirst portion of the original automaton
+		originalAutomaton = Automaton.minimize(originalAutomaton.minus(anyPrefixAndSuffix));
+		
 		// initialize temporary States
 		State targetState = intersection.getInitialState();
 		State regexState = regexAutomaton.getInitialState();
@@ -1284,6 +1285,8 @@ public class Model_Acyclic extends A_Model<Model_Acyclic> {
 		return null;
 	}
 
+	
+	
 	/**
 	 * Gets the range between the min and max characters and returns it as a String.
 	 * 
@@ -1307,6 +1310,16 @@ public class Model_Acyclic extends A_Model<Model_Acyclic> {
 	 */
 	public String toDot() {
 		return this.automaton.toDot();
+	}
+
+	@Override
+	public Model_Acyclic replaceFirst(String regexString, String replacementString) {
+		return replaceFirstOptimized(regexString, replacementString);
+	}
+
+	@Override
+	public Model_Acyclic replaceAll(String arg1String, String arg2String) {
+		return replaceAll(arg1String, arg2String);
 	}
 
 }

@@ -288,14 +288,13 @@ public class Model_Concrete_Singleton extends A_Model<Model_Concrete_Singleton >
 	}
 
 	@Override
-	public Model_Concrete_Singleton replaceFirstOptimized(String regexString, String replacementString) {
-		return null;
+	public Model_Concrete_Singleton replaceFirst(String regexString, String replacementString) {
+		return singleton == null ? new Model_Concrete_Singleton(null) : new Model_Concrete_Singleton(singleton.replaceFirst(regexString, replacementString));
 	}
 
 	@Override
-	public Model_Concrete_Singleton replaceAllOptimized(String arg1String, String arg2String) {
-		// TODO Auto-generated method stub
-		return null;
+	public Model_Concrete_Singleton replaceAll(String arg1String, String arg2String) {
+		return singleton == null ? new Model_Concrete_Singleton(null) : new Model_Concrete_Singleton(singleton.replaceAll(arg1String, arg2String));
 	}
 	
 

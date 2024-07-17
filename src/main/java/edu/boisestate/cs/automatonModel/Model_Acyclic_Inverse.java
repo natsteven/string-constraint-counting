@@ -1469,16 +1469,26 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 	
 
 	@Override
-	public Model_Acyclic_Inverse replaceFirstOptimized(String regexString, String replacementString) {
+	public Model_Acyclic_Inverse replaceFirst(String regexString, String replacementString) {
 		return null;
 	}
 
 	@Override
-	public Model_Acyclic_Inverse replaceAllOptimized(String arg1String, String arg2String) {
+	public Model_Acyclic_Inverse replaceAll(String arg1String, String arg2String) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
+	public Model_Acyclic_Inverse inv_replaceFirst() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
+	@Override
+	public Model_Acyclic_Inverse inv_replaceAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

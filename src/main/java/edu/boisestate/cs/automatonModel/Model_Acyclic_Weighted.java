@@ -951,12 +951,12 @@ public class Model_Acyclic_Weighted extends A_Model<Model_Acyclic_Weighted>{
 	}
 
 	@Override
-	public Model_Acyclic_Weighted replaceFirstOptimized(String regexString, String replacementString) {
+	public Model_Acyclic_Weighted replaceFirst(String regexString, String replacementString) {
 		return null;
 	}
 
 	@Override
-	public Model_Acyclic_Weighted replaceAllOptimized(String arg1String, String arg2String) {
+	public Model_Acyclic_Weighted replaceAll(String arg1String, String arg2String) {
 		// TODO Auto-generated method stub
 		return null;
 	}
