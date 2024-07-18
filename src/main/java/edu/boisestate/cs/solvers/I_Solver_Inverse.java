@@ -41,7 +41,7 @@ public interface I_Solver_Inverse<T extends A_Model_Inverse<T>> {
 
 	String inv_replaceEscapes(String value);
 
-	void inv_replaceStrings(int id, int base, int argOne, int argTwo);
+	T inv_replaceStrings(T input, char[] find, char[] replace);
 
 	T inv_reverse(T input);
 

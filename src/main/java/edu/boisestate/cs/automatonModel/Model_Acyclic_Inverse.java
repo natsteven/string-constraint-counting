@@ -35,7 +35,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
     * 
     * @param automaton - ACYCLIC Automaton
     * @param alphabet - Alphabet
-    * @param initialBoundLength - Initial bound, should match Automaton length
+    * @param boundLength - Initial bound, should match Automaton length
     */
 	protected Model_Acyclic_Inverse(Automaton automaton, Alphabet alphabet, int boundLength) {
        
@@ -1063,17 +1063,21 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
         return new Model_Acyclic_Inverse(result, this.alphabet, this.boundLength);
 	}
 
+    /**
+     *
+     * @param find - String that was replaced
+     * @param replace - Replacement String that replaced find
+     * @return - Automaton representing the pre-image
+     * @author Nat
+     */
+    @Override
+    public Model_Acyclic_Inverse inv_replace(char[] find, char[] replace) {
+        // perform operation
+        Automaton result = performUnaryOperation(automaton, new InverseReplaceSS(find, replace), this.alphabet);
 
-
-
-	@Override
-	public Model_Acyclic_Inverse inv_replace(String find, String replace) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-
+        // return new model from resulting automaton
+        return new Model_Acyclic_Inverse(result, this.alphabet, this.boundLength);
+    }
 
 	@Override
 	public Model_Acyclic_Inverse inv_replaceChar() {

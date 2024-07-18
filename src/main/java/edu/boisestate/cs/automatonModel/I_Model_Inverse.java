@@ -17,7 +17,7 @@ public interface I_Model_Inverse<T extends I_Model_Inverse<T>> {
 
 	T inv_replace(char find, char replace);
 
-	T inv_replace(String find, String replace);
+	T inv_replace(char[] find, char[] replace);
 
 	T inv_replaceChar();
 

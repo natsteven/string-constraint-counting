@@ -208,9 +208,8 @@ public class Solver_Inverse<T extends A_Model_Inverse<T>> extends Solver_Count<T
 	}
 
 	@Override
-	public void inv_replaceStrings(int id, int base, int argOne, int argTwo) {
-		// TODO REPLACE with r3 model
-		
+	public T inv_replaceStrings(T input, char[] find, char[] replace) {
+		return input.inv_replace(find, replace);
 	}
 
 	

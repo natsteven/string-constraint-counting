@@ -13,6 +13,7 @@ import edu.boisestate.cs.graph.InvConstraintInput;
 import edu.boisestate.cs.graph.InvConstraintPredicate;
 import edu.boisestate.cs.graph.InvConstraintPropagation;
 import edu.boisestate.cs.graph.InvConstraintReplaceCharChar;
+import edu.boisestate.cs.graph.InvConstraintReplaceStringString;
 import edu.boisestate.cs.graph.InvConstraintSetLength;
 import edu.boisestate.cs.graph.InvConstraintSubStringStart;
 import edu.boisestate.cs.graph.InvConstraintSubStringStartEnd;
@@ -445,199 +446,209 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
     		//System.out.println("ID " + ID + " op " + op);
     		I_Inv_Constraint<T> newConstraint;
 
-    		switch (op) {
+			switch (op) {
 
-    		case INIT: 
+				case INIT:
 
-    			if (localDebug) {
-    				System.out.println("processed " + op.toString() + "  " + pc.getId());
-    			} 
-    			
-   			
-    			break;
+					if (localDebug) {
+						System.out.println("processed " + op.toString() + "  " + pc.getId());
+					}
 
-    		case INIT_CON: 
 
-    			newConstraint = new InvConstraintConcreteValue<T>(ID,invSolver);
-    			allInverseConstraints.put(ID, newConstraint);
-    			
-    			if (localDebug) {
-    				System.out.println("processed " + op.toString() + "  " + pc.getId());
-    			}
+					break;
 
-    			break;
+				case INIT_CON:
 
-    		case INIT_SYM:
+					newConstraint = new InvConstraintConcreteValue<T>(ID, invSolver);
+					allInverseConstraints.put(ID, newConstraint);
 
-    			newConstraint = new InvConstraintInput<T>(ID,invSolver);
-    			allInverseConstraints.put(ID, newConstraint);
-    			
-    			if (localDebug) {
-    				System.out.println("processed " + op.toString() + "  " + pc.getId());
-    			}
+					if (localDebug) {
+						System.out.println("processed " + op.toString() + "  " + pc.getId());
+					}
 
-    			break;
+					break;
 
-    		case PREDICATE:
+				case INIT_SYM:
 
-    			newConstraint = new InvConstraintPredicate<T>(ID,invSolver);
-    			allInverseConstraints.put(ID, newConstraint);
-    			
-    			if (localDebug) {
-    				System.out.println("processed " + op.toString() + "  " + pc.getId());
-    			}
+					newConstraint = new InvConstraintInput<T>(ID, invSolver);
+					allInverseConstraints.put(ID, newConstraint);
 
-    			break;
-    			
-    		case EQUALS:
-    			boolean output = value.equals("true")? true : false;
-    			newConstraint = new InvConstraintEquals<T>(ID,invSolver, output);
-    			allInverseConstraints.put(ID, newConstraint);
-    			
-    			if (localDebug) {
-    				System.out.println("processed " + op.toString() + "  " + pc.getId());
-    			}
+					if (localDebug) {
+						System.out.println("processed " + op.toString() + "  " + pc.getId());
+					}
 
-    			break;
-    			
-    		case PROPAGATION:
+					break;
 
-    			newConstraint = new InvConstraintPropagation<T>(ID,invSolver);
-    			allInverseConstraints.put(ID, newConstraint);
-    			
-    			if (localDebug) {
-    				System.out.println("processed " + op.toString() + "  " + pc.getId());
-    			}
+				case PREDICATE:
 
-    			break;
+					newConstraint = new InvConstraintPredicate<T>(ID, invSolver);
+					allInverseConstraints.put(ID, newConstraint);
 
-    		case CONCAT_SYM:
+					if (localDebug) {
+						System.out.println("processed " + op.toString() + "  " + pc.getId());
+					}
 
-    			newConstraint = new InvConstraintConcatSym<T>(ID,invSolver);
-    			allInverseConstraints.put(ID, newConstraint);
-    			
-    			if (localDebug) {
-    				System.out.println("processed " + op.toString() + "  " + pc.getId());
-    			}
+					break;
 
-    			break;
+				case EQUALS:
+					boolean output = value.equals("true") ? true : false;
+					newConstraint = new InvConstraintEquals<T>(ID, invSolver, output);
+					allInverseConstraints.put(ID, newConstraint);
 
-    		case CONCAT_CON:
+					if (localDebug) {
+						System.out.println("processed " + op.toString() + "  " + pc.getId());
+					}
 
-    			// FIX 
-    			// **** Using symbolic code for now, needs concrete ported to r3
-    			newConstraint = new InvConstraintConcatSym<T>(ID,invSolver);
-    			allInverseConstraints.put(ID, newConstraint);
-    			
-    			if (localDebug) {
-    				System.out.println("processed " + op.toString() + "  " + pc.getId());
-    			}
+					break;
 
-    			break;	
+				case PROPAGATION:
 
-    		case TOUPPERCASE:
-    			
-       			newConstraint = new InvConstraintToUpperCase<T>(ID,invSolver);
-    			allInverseConstraints.put(ID, newConstraint);
-    			
-    			if (localDebug) {
-    				System.out.println("processed " + op.toString() + "  " + pc.getId());
-    			}
+					newConstraint = new InvConstraintPropagation<T>(ID, invSolver);
+					allInverseConstraints.put(ID, newConstraint);
 
-    			break;    	
+					if (localDebug) {
+						System.out.println("processed " + op.toString() + "  " + pc.getId());
+					}
 
-    		case TOLOWERCASE:
+					break;
 
-    			newConstraint = new InvConstraintToLowerCase<T>(ID,invSolver);
-    			allInverseConstraints.put(ID, newConstraint); 
-    			
-    			if (localDebug) {
-    				System.out.println("processed " + op.toString() + "  " + pc.getId());
-    			}
+				case CONCAT_SYM:
 
-    			break; 
+					newConstraint = new InvConstraintConcatSym<T>(ID, invSolver);
+					allInverseConstraints.put(ID, newConstraint);
 
-    		case SUBSTR_STRT_END:
-    			
-    			args = pc.getArgList();
-    			newConstraint = new InvConstraintSubStringStartEnd<T>(ID,invSolver,args);
-    			allInverseConstraints.put(ID, newConstraint);
-    			
-    			if (localDebug) {
-    				System.out.println("processed " + op.toString() + "  " + pc.getId());
-    			}
-    			
-    			break; 
-    			
-    		case SET_LENGTH:
-    			
-    			args = pc.getArgList();
-    			newConstraint = new InvConstraintSetLength<T>(ID,invSolver,args);
-    			allInverseConstraints.put(ID, newConstraint);
-    			
-    			if (localDebug) {
-    				System.out.println("processed " + op.toString() + "  " + pc.getId());
-    			}
-    			
-    			break; 
+					if (localDebug) {
+						System.out.println("processed " + op.toString() + "  " + pc.getId());
+					}
 
-    		case SUBSTRING_START:
-    			
-    			args = pc.getArgList();
-    			newConstraint = new InvConstraintSubStringStart<T>(ID,invSolver,args);
-    			allInverseConstraints.put(ID, newConstraint);
-    			
-    			if (localDebug) {
-    				System.out.println("processed " + op.toString() + "  " + pc.getId());
-    			}
-    			
-    			break; 
-    			
-    			
-    		case DELETE_START_END:
-    			
-    			args = pc.getArgList();
-    			newConstraint = new InvConstraintDeleteStartEnd<T>(ID,invSolver,args);
-    			allInverseConstraints.put(ID, newConstraint);
-    			
-    			if (localDebug) {
-    				System.out.println("processed " + op.toString() + "  " + pc.getId());
-    			}
+					break;
 
-    			break; 
+				case CONCAT_CON:
 
-    		case DELETE_CHAR_AT:
+					// FIX
+					// **** Using symbolic code for now, needs concrete ported to r3
+					newConstraint = new InvConstraintConcatSym<T>(ID, invSolver);
+					allInverseConstraints.put(ID, newConstraint);
 
-    			args = pc.getArgList();
-    			newConstraint = new InvConstraintDeleteCharAt<T>(ID,invSolver,args);
-    			allInverseConstraints.put(ID, newConstraint);
-    			
-    			if (localDebug) {
-    				System.out.println("processed " + op.toString() + "  " + pc.getId());
-    			}
-    			
-    			break; 
+					if (localDebug) {
+						System.out.println("processed " + op.toString() + "  " + pc.getId());
+					}
 
-    		case REPLACE_CHAR_CHAR:
+					break;
 
-    			args = pc.getArgList();
-    			newConstraint = new InvConstraintReplaceCharChar<T>(ID,invSolver,args);
-    			allInverseConstraints.put(ID, newConstraint);
-    			
-    			if (localDebug) {
-    				System.out.println("processed " + op.toString() + "  " + pc.getId() + " " + args);
-    			}
-    			
-    			break; 
+				case TOUPPERCASE:
 
-    		default:
-    			
-    			if (localDebug) {
-    				System.out.println("WARNING: Unhandled constraint type... " + op.toString() + "  " + pc.getId() + "  " + pc.getValue());
-    			}
-    			
-    			
-    		} // end switch
+					newConstraint = new InvConstraintToUpperCase<T>(ID, invSolver);
+					allInverseConstraints.put(ID, newConstraint);
+
+					if (localDebug) {
+						System.out.println("processed " + op.toString() + "  " + pc.getId());
+					}
+
+					break;
+
+				case TOLOWERCASE:
+
+					newConstraint = new InvConstraintToLowerCase<T>(ID, invSolver);
+					allInverseConstraints.put(ID, newConstraint);
+
+					if (localDebug) {
+						System.out.println("processed " + op.toString() + "  " + pc.getId());
+					}
+
+					break;
+
+				case SUBSTR_STRT_END:
+
+					args = pc.getArgList();
+					newConstraint = new InvConstraintSubStringStartEnd<T>(ID, invSolver, args);
+					allInverseConstraints.put(ID, newConstraint);
+
+					if (localDebug) {
+						System.out.println("processed " + op.toString() + "  " + pc.getId());
+					}
+
+					break;
+
+				case SET_LENGTH:
+
+					args = pc.getArgList();
+					newConstraint = new InvConstraintSetLength<T>(ID, invSolver, args);
+					allInverseConstraints.put(ID, newConstraint);
+
+					if (localDebug) {
+						System.out.println("processed " + op.toString() + "  " + pc.getId());
+					}
+
+					break;
+
+				case SUBSTRING_START:
+
+					args = pc.getArgList();
+					newConstraint = new InvConstraintSubStringStart<T>(ID, invSolver, args);
+					allInverseConstraints.put(ID, newConstraint);
+
+					if (localDebug) {
+						System.out.println("processed " + op.toString() + "  " + pc.getId());
+					}
+
+					break;
+
+
+				case DELETE_START_END:
+
+					args = pc.getArgList();
+					newConstraint = new InvConstraintDeleteStartEnd<T>(ID, invSolver, args);
+					allInverseConstraints.put(ID, newConstraint);
+
+					if (localDebug) {
+						System.out.println("processed " + op.toString() + "  " + pc.getId());
+					}
+
+					break;
+
+				case DELETE_CHAR_AT:
+
+					args = pc.getArgList();
+					newConstraint = new InvConstraintDeleteCharAt<T>(ID, invSolver, args);
+					allInverseConstraints.put(ID, newConstraint);
+
+					if (localDebug) {
+						System.out.println("processed " + op.toString() + "  " + pc.getId());
+					}
+
+					break;
+
+				case REPLACE_CHAR_CHAR:
+
+					args = pc.getArgList();
+					newConstraint = new InvConstraintReplaceCharChar<T>(ID, invSolver, args);
+					allInverseConstraints.put(ID, newConstraint);
+
+					if (localDebug) {
+						System.out.println("processed " + op.toString() + "  " + pc.getId() + " " + args);
+					}
+
+					break;
+
+				case REPLACE:
+
+					args = pc.getArgList();
+					newConstraint = new InvConstraintReplaceStringString<T>(ID, invSolver, args);
+					allInverseConstraints.put(ID, newConstraint);
+					if (localDebug) {
+						System.out.println("processed " + op.toString() + " " + pc.getId() + " " + args);
+					}
+					break;
+
+				default:
+
+					if (localDebug) {
+						System.out.println("WARNING: Unhandled constraint type... " + op.toString() + "  " + pc.getId() + "  " + pc.getValue());
+					}
+
+
+			} // end switch
 
 
     	} // end for each printconstraint
