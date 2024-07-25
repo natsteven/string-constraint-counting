@@ -185,25 +185,18 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 
 		//for (I_Inv_Constraint<T> i : allInverseConstraints.values())  {
 		//those inputs that have been processed
+
+		//for (I_Inv_Constraint<T> i : allInverseConstraints.values()) {
 		for(int id : processedID) {
+
 			I_Inv_Constraint<T> i = allInverseConstraints.get(id);
 			if (i.getOp() == Operation.INIT_SYM) {
-				if (i.output(0) == null || i.output(0).isEmpty()) {
+				T solution = i.output(0);//symbolic nodes hold their solution in the output values
+				if (solution == null || solution.isEmpty()) {
 					System.out.println("\nFAILURE: Failed to get solution to one or more inputs...");
 					System.out.println("\nSOLUTION TIME ms: 0");
 					return;
 				}
-			}
-		}
-
-		System.out.println("\nSOLUTION TIME ms: " + durationInMillis);
-
-		//for (I_Inv_Constraint<T> i : allInverseConstraints.values()) {
-		for(int id : processedID) {
-			I_Inv_Constraint<T> i = allInverseConstraints.get(id);
-			if (i.getOp() == Operation.INIT_SYM) {
-				T solution = i.output(0);//symbolic nodes hold their solution in the output values
-
 				// populate map for output to file/SPF
 				inputSolution.put(i.getID(), solution);
 
@@ -217,7 +210,7 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 				} else {
 					solutions.add(solution);
 				}
-
+				System.out.println("\nSOLUTION TIME ms: " + durationInMillis);
 //				System.out.print("INPUT ID: " + i.getID() + "  COUNT: " + solution.modelCount() + "  VALUE(S): ");
 //				BigInteger limit = new BigInteger("50");
 //

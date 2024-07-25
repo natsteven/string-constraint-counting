@@ -112,6 +112,17 @@ public class InvDefaultDirectedGraph extends DefaultDirectedGraph<PrintConstrain
 		return ret;
 	}
 
+	public Set<Integer> getChildren(PrintConstraint start){
+		Set<Integer> ret = new HashSet<Integer>();
+		BreadthFirstIterator<PrintConstraint, SymbolicEdge>breadthFirstIterator =
+				new BreadthFirstIterator<PrintConstraint, SymbolicEdge>(this, start);
+		while (breadthFirstIterator.hasNext()) {
+			ret.add(breadthFirstIterator.next().getId());
+		}
+
+		return ret;
+	}
+
 	public Map<Integer, Set<Integer>> getPredDependIDMap() {
 		return predDependID;
 	}
