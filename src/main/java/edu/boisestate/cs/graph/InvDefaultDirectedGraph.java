@@ -123,6 +123,13 @@ public class InvDefaultDirectedGraph extends DefaultDirectedGraph<PrintConstrain
 		return ret;
 	}
 
+	public PrintConstraint getConstraintFromID(Integer id){
+		for (PrintConstraint constraint : vertexSet()){
+			if (constraint.getId() == id) return constraint;
+		}
+		return null;
+	}
+
 	public Map<Integer, Set<Integer>> getPredDependIDMap() {
 		return predDependID;
 	}

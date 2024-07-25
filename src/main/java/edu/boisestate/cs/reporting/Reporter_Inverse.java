@@ -294,7 +294,9 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 
 		predProcessing.remove(predID);
 
-		Set<Integer> predAncestors = ((InvDefaultDirectedGraph)graph).getChildren((PrintConstraint) allInverseConstraints.get(predID));
+		InvDefaultDirectedGraph thisgraph = (InvDefaultDirectedGraph)(graph);
+
+		Set<Integer> predAncestors = thisgraph.getAncestors(thisgraph.getConstraintFromID(predID));
 		predAncestors.retainAll(predProcessing);
 		// if this predicate has ancestors that are predicates, do not process it
 		if (!predAncestors.isEmpty()) return;
@@ -395,7 +397,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 			int numInputs = ((InvDefaultDirectedGraph)graph).getNumSymInputs();
 			if (allSolutions.size() != numInputs) {
 				System.out.println("MISSING SOLUTIONS");
-				System.out.println(numInputs + " expected but " + allSolutions.size()+" in solutions\nIDs in solutions set: ");
+				System.out.println(numInputs + " expected but " + allSolutions.size()+" in solutions");
 				for (int id : allSolutions.keySet()){
 					System.out.println(id + ", " + allSolutions.get(id).iterator().next().getShortestExampleString());
 				}
@@ -428,7 +430,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 //					}
 //
 //				}
-				System.out.println("INPUT ID: " + id + ", VALUE: " + solution.getShortestExampleString());
+				System.out.println(" " + id + " \"" + solution.getShortestExampleString() + "\",");
 			}
 		}
     }
