@@ -2,6 +2,7 @@ package edu.boisestate.cs.automatonModel;
 
 import dk.brics.automaton.Automaton;
 import dk.brics.automaton.BasicAutomata;
+import dk.brics.automaton.RegExp;
 import dk.brics.automaton.State;
 import dk.brics.automaton.Transition;
 import dk.brics.string.stringoperations.*;
@@ -1470,6 +1471,23 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 
 	@Override
 	public Model_Acyclic_Inverse replaceFirst(String regexString, String replacementString) {
+		Automaton regexAut = new RegExp(regexString).toAutomaton();
+		Automaton origAut = Automaton.minimize(automaton.clone());
+		Automaton anyPrefixAndSuffix = Automaton.makeAnyString().concatenate(regexAut)
+				.concatenate(Automaton.makeAnyString());
+		// Automaton containing all Strings in the originalAutomaton's language which
+		// contain a substring which satisfies the regex
+		Automaton intersection = Automaton.minimize(origAut.intersection(anyPrefixAndSuffix));
+		// if there are no matches to operate on, return the originalAutomaton
+		if (intersection.isEmpty()) {
+					return new Model_Acyclic_Inverse(origAut, this.alphabet, this.boundLength);
+		}
+		
+		//separate out the unchanged by replaceFirst portion of the original automaton
+		origAut= Automaton.minimize(origAut.minus(anyPrefixAndSuffix));
+		
+		//start state
+		
 		return null;
 	}
 

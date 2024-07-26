@@ -1319,7 +1319,7 @@ public class Model_Acyclic extends A_Model<Model_Acyclic> {
 
 	@Override
 	public Model_Acyclic replaceAll(String arg1String, String arg2String) {
-		return replaceAll(arg1String, arg2String);
+		return replaceAllOptimized(arg1String, arg2String);
 	}
 
 }
