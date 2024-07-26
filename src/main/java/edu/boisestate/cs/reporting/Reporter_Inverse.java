@@ -294,9 +294,9 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 
 		predProcessing.remove(predID);
 
-		InvDefaultDirectedGraph thisgraph = (InvDefaultDirectedGraph)(graph);
+		InvDefaultDirectedGraph thisGraph = (InvDefaultDirectedGraph)(graph);
 
-		Set<Integer> predAncestors = thisgraph.getAncestors(thisgraph.getConstraintFromID(predID));
+		Set<Integer> predAncestors = thisGraph.getAncestors(thisGraph.getConstraintFromID(predID));
 		predAncestors.retainAll(predProcessing);
 		// if this predicate has ancestors that are predicates, do not process it
 		if (!predAncestors.isEmpty()) return;
