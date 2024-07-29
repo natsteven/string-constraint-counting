@@ -205,7 +205,7 @@ public class BasicAcyclicWeightedOperations {
 					from.addTransition(new WeightedTransition(from,label,waS,wP));
 					//System.out.println("New trans: " + from);
 				} else{
-					System.err.println("cannot find state in the map!");
+//					System.err.println("cannot find state in the map!");
 				}
 
 				//not in the queue and has not been found yet.

@@ -83,9 +83,9 @@ public class Parser_2<T extends A_Model<T>> {
 			if (sourceMap.containsKey("t")) {
 				int base = sourceMap.get("t");
 				if (!solver.isSound(base, actualVal)) {
-					System.err.println("Base not sound:");
-					System.err.println("base: " + solver.getValue(base));
-					System.err.println("actual value: " + actualVal);
+//					System.err.println("Base not sound:");
+//					System.err.println("base: " + solver.getValue(base));
+//					System.err.println("actual value: " + actualVal);
 				}
 			}
 		}

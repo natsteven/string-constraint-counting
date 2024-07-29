@@ -50,7 +50,7 @@ public class Parser {
         if (debug) {
 
             // output end information
-            System.out.println("End: " + string + " | " + actualVal);
+//            System.out.println("End: " + string + " | " + actualVal);
         }
 
         // ensure valid actual value
@@ -118,7 +118,7 @@ public class Parser {
                                           actualVal,
                                           id,
                                           sourceMap);
-            System.out.println(opInfo);
+//            System.out.println(opInfo);
         }
 
         // ensure valid actual value
@@ -524,8 +524,8 @@ public class Parser {
         // declare operation string
         String operation;
 
-        System.out.println("processInit " + id + " val " + actualVals.get
-         (id));
+//        System.out.println("processInit " + id + " val " + actualVals.get
+//         (id));
 
         // if target and source ids exist and actual target value
         // is the empty string
@@ -1047,7 +1047,7 @@ public class Parser {
         if (debug) {
 
             // output root information
-            System.out.println("Root: " + value);
+//            System.out.println("Root: " + value);
         }
 
         // if actual value not null

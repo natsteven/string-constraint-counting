@@ -501,10 +501,10 @@ public class SolveMain {
 				if (graphData.get("inputLength") != null) {
 					int inputLength = (int) graphData.get("inputLength");
 					initialBound = inputLength;
-					System.out.println("[IGEN] Using initial bound from JSON file .. " + initialBound);
+//					System.out.println("[IGEN] Using initial bound from JSON file .. " + initialBound);
 				} else {
 					initialBound = defaultBound;
-					System.out.println("[IGEN] Using initial bound default ..." + initialBound);
+//					System.out.println("[IGEN] Using initial bound default ..." + initialBound);
 				}
 			}
 

@@ -239,10 +239,10 @@ final public class Datatypes {
 		boolean b = WeightedAutomaton.setAllowMutate(true);
 		buildAll();
 		WeightedAutomaton.setAllowMutate(b);
-		System.out.println("Storing automata...");
+//		System.out.println("Storing automata...");
 		for (Map.Entry<String,WeightedAutomaton> e : automata.entrySet())
 			store(e.getKey(), e.getValue());
-		System.out.println("Time for building automata: " + (System.currentTimeMillis() - t) + "ms");
+//		System.out.println("Time for building automata: " + (System.currentTimeMillis() - t) + "ms");
 	}
 	
 	/**
@@ -542,7 +542,7 @@ final public class Datatypes {
 				"whitespacechar", "[ \t\n\r]"
 		};
 		
-		System.out.println("Building XML automata...");
+//		System.out.println("Building XML automata...");
 		Map<String,WeightedAutomaton> t = buildMap(xmlexps);
 		putFrom("NCName", t);
 		putFrom("QName", t);

@@ -187,12 +187,12 @@ public class ImpreciseDelete
 
         // add epsilon transitions to deleted automaton
         clone1.addEpsilons(epsilons);
-        System.out.println("O \n"+clone1);
+//        System.out.println("O \n"+clone1);
         // determinize and minimize deleted automaton
         clone1.determinize();
-        System.out.println("D \n" + clone1);
+//        System.out.println("D \n" + clone1);
         clone1.minimize();
-        System.out.println("M \n" + clone1);
+//        System.out.println("M \n" + clone1);
 
         // return the deleted automaton
         return clone1;

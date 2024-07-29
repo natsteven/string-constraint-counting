@@ -30,7 +30,7 @@ public class MCDifference {
 				String[] line2Val = line2.split("\t");
 				//make sure that nodes are the same
 				if(!line1Val[0].equals(line2Val[0])){
-					System.out.println("Lines do not match: " + line1Val[0] + "\t" + line1Val[0]);
+//					System.out.println("Lines do not match: " + line1Val[0] + "\t" + line1Val[0]);
 					System.exit(2);
 				}
 				String report = "";
@@ -47,8 +47,8 @@ public class MCDifference {
 					report += "\nFCount does not match " + line1Val[13] + "\t" + line2Val[13];
 				}
 				if(!report.isEmpty()){
-					System.out.println(line1Val[0]+"\t" + line1Val[17]);
-					System.out.println(report);
+//					System.out.println(line1Val[0]+"\t" + line1Val[17]);
+//					System.out.println(report);
 					break;
 				}
 				

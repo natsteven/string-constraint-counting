@@ -146,13 +146,13 @@ final public class BasicWeightedOperations {
             a1 = a1.cloneExpandedIfRequired();
             a2 = a2.cloneExpandedIfRequired();
         }
-        System.out.println("a1 " + a1);
-        System.out.println("a2 " + a2);
+//        System.out.println("a1 " + a1);
+//        System.out.println("a2 " + a2);
         for (WeightedState s : a1.getAcceptStates()) {
             s.setAccept(false);
             s.addEpsilon(a2.initial);
         }
-        System.out.println("a1 new " + a1);
+//        System.out.println("a1 new " + a1);
         a1.deterministic = deterministic;
         a1.clearHashCode();
         a1.checkMinimizeAlways();

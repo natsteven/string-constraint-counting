@@ -133,7 +133,7 @@ public class GenerateConstraint {
 		jsonStr.append("\"}, \"vertices\":");
 		jsonStr.append(nodes.toString() +"}");
 
-		System.out.println(jsonStr);
+//		System.out.println(jsonStr);
 		//need to write it to a file
 		String benchDirPath = String.format("graphs/benchmarks");
 		File benchDir = new File(benchDirPath);

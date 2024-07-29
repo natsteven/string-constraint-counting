@@ -227,7 +227,7 @@ public class MCReporter
         String row = joinStrings(columns, "\t");
 
         // output row
-        System.out.println(row);
+//        System.out.println(row);
         
 //        System.out.println(((AcyclicWeightedAutomatonModel) solver.getValue(base)).getAutomaton());
 //        System.out.println(((AcyclicWeightedAutomatonModel) solver.getValue(arg)).getAutomaton());
