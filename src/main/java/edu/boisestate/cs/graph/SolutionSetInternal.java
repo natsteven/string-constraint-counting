@@ -94,7 +94,7 @@ public class SolutionSetInternal<T extends A_Model_Inverse<T>>  {
 	 */
 	public boolean isConsistent() {
 		
-		System.out.println("CHECKING CONSISTENCY - SOLUTIONS PRESENT: " + solutions.size());
+//		System.out.println("CHECKING CONSISTENCY - SOLUTIONS PRESENT: " + solutions.size());
 		
 		if (solutions.size() == 0) {
 			return false;

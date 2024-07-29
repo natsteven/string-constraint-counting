@@ -44,7 +44,7 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 	protected void solveInputs() {
 		//from Marlin's code
 		// output finalized inverse constraints for debug
-		if (true) {
+		if (false) {
 			System.out.println(cid);
 			System.out.println(cid + "Inverse Constraint Set:");
 			for (I_Inv_Constraint<T> c : allInverseConstraints.values()) {
@@ -60,9 +60,9 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 		//end from Marlin's code
 
 
-		System.out.println("Solving using BFS");
+//		System.out.println("Solving using BFS");
 		//create a queue of all dependent predicates
-		System.out.println(predicateIDs);
+//		System.out.println(predicateIDs);
 		InvDefaultDirectedGraph eGraph = (InvDefaultDirectedGraph)graph;
 		TreeSet <Integer> qID = new TreeSet<Integer>();
 		//predicateIDs have the last predicate is the current constraint predicate
@@ -71,8 +71,8 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 		qID.retainAll(eGraph.getDependedPredicates(predicateIDs.get(predicateIDs.size()-1)));
 		//sort it so the predicate with the largest ids processed first
 		//Collections.sort(qID, Collections.reverseOrder());
-		System.out.println("Q " + qID);
-		System.out.println(predicateIDs);
+//		System.out.println("Q " + qID);
+//		System.out.println(predicateIDs);
 		List<I_Inv_Constraint<T>> q = new ArrayList<I_Inv_Constraint<T>>();
 		Set<Integer> actual = new HashSet<Integer>();
 		for(Integer val : qID) {
@@ -81,14 +81,14 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 			actual.addAll(eGraph.getAncestors(allConstraints.get(val)));
 			actual.add(val);
 		}
-		System.out.println("actuall " + actual);
+//		System.out.println("actuall " + actual);
 		//iterate over all actual nodes and remove them from the parents
 		//those nodes that are not there
 		for (I_Inv_Constraint<T> c : allInverseConstraints.values()) {
-			System.out.println(c + "1 " + c.getPrevID());
+//			System.out.println(c + "1 " + c.getPrevID());
 			c.getPrevID().retainAll(actual);
 			c.update();
-			System.out.println(c + "2 " + c.getPrevID());
+//			System.out.println(c + "2 " + c.getPrevID());
 		}
 		
 
@@ -104,12 +104,12 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 			qID.remove(currID);
 			processedID.add(currID);
 			I_Inv_Constraint<T> curr = allInverseConstraints.get(currID);
-			System.out.println("node: " + curr);
-			System.out.println("parents are: " + curr.getPrevID());
+//			System.out.println("node: " + curr);
+//			System.out.println("parents are: " + curr.getPrevID());
 			//1st true - continue, false - backtrack
 			//2nd true - don't add to the backtrack map, false do
 			Tuple<Boolean, Boolean> result = curr.evaluate();
-			System.out.println("reslut " + result);
+//			System.out.println("reslut " + result);
 			if(result.get1()) {
 				//continue by extending the queue
 				if(curr.getNextID() != -1 && !qID.contains(curr.getNextID())) {
@@ -124,7 +124,7 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 					//just for debuging -- check to make sure there is no
 					//curr.getID in the backtracking map
 					if(backtrackMap.containsKey(curr.getID())) {
-						System.out.println("ERRROR: adding the same id to the backtrack map " + curr.getID());
+//						System.out.println("ERRROR: adding the same id to the backtrack map " + curr.getID());
 					} else {
 						backtrackQ.add(curr.getID());
 						backtrackQ.addAll(qID);
@@ -137,14 +137,14 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 				//the numbering go up as we go closer to the
 				//predicates
 				//eas: need to use lambda-expression here
-				System.out.println("BACKTRAKING " + backtrackMap);
+//				System.out.println("BACKTRAKING " + backtrackMap);
 				Integer backtrackID = Integer.MAX_VALUE; //all our nodes have positive ids
 				for(Integer ids : backtrackMap.keySet()) {
 					if(backtrackID > ids) {
 						backtrackID = ids;
 					}
 				}
-				System.out.println("backtrackID " + backtrackID);
+//				System.out.println("backtrackID " + backtrackID);
 				//case when nothing to backtrack to
 				if(backtrackID != Integer.MAX_VALUE) {
 					//get the queue
@@ -160,7 +160,7 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 					clearSet.remove(backtrackID);//remove the node itself to make more choices
 					clearSet.retainAll(processedID);//only keep those that have been computed
 					processedID.removeAll(clearSet);//now remove them from processed -- they will be added again
-					System.out.println("clearing  " + clearSet);
+//					System.out.println("clearing  " + clearSet);
 					//iterate for the clearSet and call clear on each inverse constraint 
 					for(int nodeID : clearSet) {
 						allInverseConstraints.get(nodeID).clear();
@@ -193,8 +193,8 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 			if (i.getOp() == Operation.INIT_SYM) {
 				T solution = i.output(0);//symbolic nodes hold their solution in the output values
 				if (solution == null || solution.isEmpty()) {
-					System.out.println("\nFAILURE: Failed to get solution to one or more inputs...");
-					System.out.println("\nSOLUTION TIME ms: 0");
+//					System.out.println("\nFAILURE: Failed to get solution to one or more inputs...");
+//					System.out.println("\nSOLUTION TIME ms: 0");
 					return;
 				}
 				// populate map for output to file/SPF
@@ -210,7 +210,7 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 				} else {
 					solutions.add(solution);
 				}
-				System.out.println("\nSOLUTION TIME ms: " + durationInMillis);
+//				System.out.println("\nSOLUTION TIME ms: " + durationInMillis);
 //				System.out.print("INPUT ID: " + i.getID() + "  COUNT: " + solution.modelCount() + "  VALUE(S): ");
 //				BigInteger limit = new BigInteger("50");
 //

@@ -57,7 +57,7 @@ public class InvConstraintToUpperCase<T extends A_Model_Inverse<T>> extends A_In
 	@Override
 	public boolean evaluate(I_Inv_Constraint<T> inputConstraint, int sourceIndex) {
 
-		System.out.format("EVALUATE TOUPPER %d ...\n",ID);
+//		System.out.format("EVALUATE TOUPPER %d ...\n",ID);
 		
 		T inputModel = inputConstraint.output(sourceIndex);
 
@@ -79,13 +79,13 @@ public class InvConstraintToUpperCase<T extends A_Model_Inverse<T>> extends A_In
 				// we have values, so continue solving ...
 				return nextConstraint.evaluate(this, 1);
 			} else {
-				System.out.println("TOUPPER SOLUTION SET INCONSISTENT...");
+//				System.out.println("TOUPPER SOLUTION SET INCONSISTENT...");
 				solutionSet.remSolution(inputConstraint.getID());
 				return false;
 			}
 			
 		} else {
-			System.out.println("TOUPPER RESULT MODEL EMPTY...");
+//			System.out.println("TOUPPER RESULT MODEL EMPTY...");
 			// halt solving, fallback
 			return false;
 		}
@@ -95,10 +95,10 @@ public class InvConstraintToUpperCase<T extends A_Model_Inverse<T>> extends A_In
 	@Override
 	public Tuple<Boolean, Boolean> evaluate(){
 		Tuple<Boolean,Boolean> ret = new Tuple<Boolean,Boolean>(true, true);
-		System.out.format("EVALUATE TOLOWER %d ...\n",ID);
+//		System.out.format("EVALUATE TOLOWER %d ...\n",ID);
 		T inputs = incoming();
 		if(inputs.isEmpty()) {
-			System.out.println("TOUPPER INCOMING SET INCONSISTENT...");
+//			System.out.println("TOUPPER INCOMING SET INCONSISTENT...");
 			ret = new Tuple<Boolean,Boolean>(false, true);
 		} else {
 			//done performing intersection 
@@ -110,7 +110,7 @@ public class InvConstraintToUpperCase<T extends A_Model_Inverse<T>> extends A_In
 
 
 			if (resModel.isEmpty()) {
-				System.out.println("TOUPPER RESULT MODEL EMPTY...");
+//				System.out.println("TOUPPER RESULT MODEL EMPTY...");
 				// halt solving, fallback
 				ret = new Tuple<Boolean,Boolean>(false, true);
 			} else {

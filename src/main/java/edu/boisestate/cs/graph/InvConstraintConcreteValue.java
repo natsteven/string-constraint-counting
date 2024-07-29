@@ -68,7 +68,7 @@ public class InvConstraintConcreteValue<T extends A_Model_Inverse<T>>  extends A
 	@Override
 	public boolean evaluate(I_Inv_Constraint<T> inputConstraint, int sourceIndex)  {
 		
-		System.out.format("EVALUATE CONCRETE VALUE %d ...\n",ID);
+//		System.out.format("EVALUATE CONCRETE VALUE %d ...\n",ID);
 		
 		T concrete = solver.getSymbolicModel(ID);
 		String test = concrete.getShortestExampleString();
@@ -82,7 +82,7 @@ public class InvConstraintConcreteValue<T extends A_Model_Inverse<T>>  extends A
 	
 	@Override
 	public Tuple<Boolean, Boolean> evaluate() {
-		System.out.format("EVALUATE CONCRETE VALUE %d ...\n",ID);
+//		System.out.format("EVALUATE CONCRETE VALUE %d ...\n",ID);
 		
 		T concrete = solver.getSymbolicModel(ID);
 		String test = concrete.getShortestExampleString();
@@ -102,7 +102,7 @@ public class InvConstraintConcreteValue<T extends A_Model_Inverse<T>>  extends A
 		//eas: sanity check mare sure the inputs is the
 		//actual concrete value - add || inputs.getFiniteStrings().size() != 1
 		if (inputs != null && !inputs.containsString(test) ) {
-			System.out.format("ERROR IN EVALUATE CONCRETE VALUE %d ...\n",ID);
+//			System.out.format("ERROR IN EVALUATE CONCRETE VALUE %d ...\n",ID);
 		}
 		return new Tuple<Boolean, Boolean>(true, true);
 	}

@@ -48,7 +48,7 @@ public class InvConstraintInsert<T extends A_Model_Inverse<T>> extends A_Inv_Con
 	@Override
 	public boolean evaluate(I_Inv_Constraint<T> inputConstraint, int sourceIndex) {
 		
-		System.out.format("EVALUATE INSERT %d ...\n",ID);
+//		System.out.format("EVALUATE INSERT %d ...\n",ID);
 		
 		T inputModel = inputConstraint.output(sourceIndex);
 
@@ -71,13 +71,13 @@ public class InvConstraintInsert<T extends A_Model_Inverse<T>> extends A_Inv_Con
 				// we have values, so continue solving ...
 				return nextConstraint.evaluate(this, 1);
 			} else {
-				System.out.println("INSERT SOLUTION SET INCONSISTENT...");
+//				System.out.println("INSERT SOLUTION SET INCONSISTENT...");
 				solutionSet.remSolution(inputConstraint.getID());
 				return false;
 			}
 			
 		} else {
-			System.out.println("INSERT RESULT MODEL EMPTY...");
+//			System.out.println("INSERT RESULT MODEL EMPTY...");
 			// halt solving, fallback
 			return false;
 		}

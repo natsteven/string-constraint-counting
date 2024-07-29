@@ -896,9 +896,9 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 		int resultLength = this.getBoundLength();		// should be a single string, length = bound
 		int prefixBound = base.getBoundLength();		// symbolic, could be any length up to bound
 		
-		System.out.println("attempting to split: ");
+//		System.out.println("attempting to split: ");
 		for (String s : this.getFiniteStrings()) {
-			System.out.println(s);
+//			System.out.println(s);
 		}
 		
 		Model_Acyclic_Inverse prefixModel = null;
@@ -915,13 +915,13 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 			prefixModel = this.substring(0, prefixLength);
 			
 			for (String s : prefixModel.getFiniteStrings()) {
-				System.out.println("prefixModel: " + s);
+//				System.out.println("prefixModel: " + s);
 			}
 			
 			suffixModel = this.substring(prefixLength, resultLength);
 			
 			for (String s : suffixModel.getFiniteStrings()) {
-				System.out.println("suffixModel: " + s);
+//				System.out.println("suffixModel: " + s);
 			}
 			
 			if (!base.intersect(prefixModel).isEmpty() && !arg.intersect(suffixModel).isEmpty()) {
@@ -935,7 +935,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 		}
 		
 		if (noMatch) {
-			System.out.println("ERROR: Could not find a valid prefix, returning last prefix tried...");
+//			System.out.println("ERROR: Could not find a valid prefix, returning last prefix tried...");
 		}
 		
 		return prefixModel;
@@ -959,9 +959,9 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 		int resultLength = this.getBoundLength();		// should be a single string, length = bound
 		int prefixBound = base.getBoundLength();		// symbolic, could be any length up to bound
 		
-		System.out.println("attempting to split: ");
+//		System.out.println("attempting to split: ");
 		for (String s : this.getFiniteStrings()) {
-			System.out.println(s);
+//			System.out.println(s);
 		}
 		
 		Model_Acyclic_Inverse prefixModel = null;
@@ -978,13 +978,13 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 			prefixModel = this.substring(0, prefixLength);
 			
 			for (String s : prefixModel.getFiniteStrings()) {
-				System.out.println("prefixModel: " + s);
+//				System.out.println("prefixModel: " + s);
 			}
 			
 			suffixModel = this.substring(prefixLength, resultLength);
 			
 			for (String s : suffixModel.getFiniteStrings()) {
-				System.out.println("suffixModel: " + s);
+//				System.out.println("suffixModel: " + s);
 			}
 			
 			if (!base.intersect(prefixModel).isEmpty() && !arg.intersect(suffixModel).isEmpty()) {
@@ -998,7 +998,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 		}
 		
 		if (noMatch) {
-			System.out.println("ERROR: Could not find a valid prefix, returning last prefix tried...");
+//			System.out.println("ERROR: Could not find a valid prefix, returning last prefix tried...");
 		}
 		
 		return new Tuple<Model_Acyclic_Inverse, Model_Acyclic_Inverse>(prefixModel, suffixModel);
@@ -1299,7 +1299,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 		int resultLength = this.getBoundLength();		// should be a single string, length = bound
 		int prefixBound = base.getBoundLength();		// symbolic, could be any length up to bound
 		
-		System.out.format("Bounds: S %s P %s RL %s \n", suffixBound, prefixBound, resultLength);
+//		System.out.format("Bounds: S %s P %s RL %s \n", suffixBound, prefixBound, resultLength);
 		
 		
 		List<Tuple<Model_Acyclic_Inverse,Model_Acyclic_Inverse>> results = new ArrayList<Tuple<Model_Acyclic_Inverse,Model_Acyclic_Inverse>>();
@@ -1317,15 +1317,15 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 			
 			suffixModel = this.substring(prefixLength, resultLength);
 			
-			System.out.format("SPLIT: P %4s  S %6s ", prefixModel.getShortestExampleString(), suffixModel.getShortestExampleString());
+//			System.out.format("SPLIT: P %4s  S %6s ", prefixModel.getShortestExampleString(), suffixModel.getShortestExampleString());
 			
 			if (!base.intersect(prefixModel).isEmpty() && !arg.intersect(suffixModel).isEmpty()) {
 				results.add(new Tuple<Model_Acyclic_Inverse, Model_Acyclic_Inverse>(prefixModel, suffixModel));
 				noMatch = false;
-				System.out.println(" Accepted");
+//				System.out.println(" Accepted");
 			} else {
-				System.out.print(" Intersection of prfx or sffx empty - Rejected");
-				System.out.println(" base count: " + base.modelCount() + " arg count: " + arg.modelCount());
+//				System.out.print(" Intersection of prfx or sffx empty - Rejected");
+//				System.out.println(" base count: " + base.modelCount() + " arg count: " + arg.modelCount());
 			}
 			
 			prefixLength++;
@@ -1333,7 +1333,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 		}
 		
 		if (noMatch) {
-			System.out.println("ERROR: Could not find a valid prefix / suffix ...");
+//			System.out.println("ERROR: Could not find a valid prefix / suffix ...");
 		}
 		
 		return results;
@@ -1385,7 +1385,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 			//update and check if this split works with base
 			prefixModel = base.intersect(prefixModel);
 			if (prefixModel.isEmpty()) {
-				System.out.println("Going to the next split, prefix failed");
+//				System.out.println("Going to the next split, prefix failed");
 				//does not work, go to the next split
 				continue;
 			}
@@ -1406,7 +1406,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 			//update and check if this split worked for suffix
 			suffixModel = arg.intersect(suffixModel);
 			if(suffixModel.isEmpty()) {
-				System.out.println("Going to the next split, suffix failed");
+//				System.out.println("Going to the next split, suffix failed");
 				continue;
 			}
 			
@@ -1428,7 +1428,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 		}
 		
 		if(noMatch) {
-			System.out.println("No match found, returning empty set of tuples");
+//			System.out.println("No match found, returning empty set of tuples");
 		}
 		
 		return results;

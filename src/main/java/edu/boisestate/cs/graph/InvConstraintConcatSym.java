@@ -51,7 +51,7 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 
 		evaluateCount++;
 
-		System.out.format("EVALUATE CONCAT %d ...\n",ID);
+//		System.out.format("EVALUATE CONCAT %d ...\n",ID);
 		T inputs = inputConstraint.output(sourceIndex);
 		//List<Tuple<T,T>> outputs;
 
@@ -68,7 +68,7 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 			outputs = input.inv_concatenate_sym_set(nextModel, argModel);
 
 			for (Tuple<T,T> t : outputs) {
-				System.out.format("RCVD:  P %4s  S %4s\n", t.get1().getShortestExampleString(),t.get2().getShortestExampleString());
+//				System.out.format("RCVD:  P %4s  S %4s\n", t.get1().getShortestExampleString(),t.get2().getShortestExampleString());
 			}
 
 			while (!outputs.isEmpty()) {
@@ -81,7 +81,7 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 				outputSet.put(1, prefix);
 				outputSet.put(2, suffix);
 
-				System.out.format("CHOSE: P %4s  S %4s\n", prefix.getShortestExampleString(), suffix.getShortestExampleString());
+//				System.out.format("CHOSE: P %4s  S %4s\n", prefix.getShortestExampleString(), suffix.getShortestExampleString());
 
 				newSplitOutputCount++;
 
@@ -118,20 +118,20 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 		boolean ostrich = true;
 		
 		if(inputs == null) {
-			System.out.println("inputs is null");
+//			System.out.println("inputs is null");
 			//the first time the node is evaluated
 			//do the intersection
 			inputs = incoming();
 		}
 		if(inputs.isEmpty()) {
-			System.out.println("CONCAT SYMV INCOMING SET INCONSISTENT...");
+//			System.out.println("CONCAT SYMV INCOMING SET INCONSISTENT...");
 			ret = new Tuple<Boolean,Boolean>(false, true);
 		} else {
 
 			//System.out.println("inputs " + inputs.getFiniteStrings());
 			//remove one solution from the inputs
 			T input = ostrich? inputs : inputs.getShortestExampleModel();
-			System.out.println("input " + input.getFiniteStrings() + " hash " + input.hashCode());
+//			System.out.println("input " + input.getFiniteStrings() + " hash " + input.hashCode());
 			List<Tuple<T,T>> currOutput = new ArrayList<Tuple<T,T>>();
 			//equals is implemented between two automata, but
 			//the hash functions is not, so in order to use hash map
@@ -142,13 +142,13 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 					break;
 				}
 			}
-			System.out.println("mapInOut " + mapInOut.containsKey(input));
+//			System.out.println("mapInOut " + mapInOut.containsKey(input));
 
 
 			if(mapInOut.containsKey(input)) {
 				//already computed outputs before just get the next value
 				currOutput = mapInOut.get(input);
-				System.out.println("Processed trying new valus");
+//				System.out.println("Processed trying new valus");
 			} else {
 				//compute it fresh and add to the map
 				//compute outgoing solutions
@@ -181,7 +181,7 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 					while(currOutput.isEmpty()) {
 						//more inputs left?
 						inputs.minus(input);
-						System.out.println("inputs empty " + inputs.isEmpty());
+//						System.out.println("inputs empty " + inputs.isEmpty());
 						if(inputs.isEmpty()) {
 							//backtrack to previous nodes, don't add to backtrack, no more inputs are left here
 							return new Tuple<Boolean, Boolean>(false, true);
@@ -200,7 +200,7 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 
 			for (Tuple<T,T> t : currOutput) {
 				//System.out.format("RCVD1:  P %4s  S %4s\n", t.get1().getShortestExampleString(),t.get2().getShortestExampleString());
-				System.out.format("RCVD: P " + t.get1().getFiniteStrings() + "\t S " + t.get2().getFiniteStrings() + "\n");
+//				System.out.format("RCVD: P " + t.get1().getFiniteStrings() + "\t S " + t.get2().getFiniteStrings() + "\n");
 				
 			}
 
@@ -234,7 +234,7 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 			}
 
 			//System.out.format("CHOSE: P %4s  S %4s\n", prefix.getShortestExampleString(), suffix.getShortestExampleString());
-			System.out.format("CHOSE: P " + prefix.getFiniteStrings() + "\t S " + prefix.getFiniteStrings() + "\n");
+//			System.out.format("CHOSE: P " + prefix.getFiniteStrings() + "\t S " + prefix.getFiniteStrings() + "\n");
 		}
 
 

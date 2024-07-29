@@ -392,7 +392,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 		// file output doesnt work well for HPC cluster though could be adjusted to do so
 		// regardless this is current solution output
         if (--remaining == 0) {
-			System.out.println(predProcessing.size());
+//			System.out.println(predProcessing.size());
 			System.out.println("DONE SOLVING, GETTING INPUT SOLUTIONS");
 			int numInputs = ((InvDefaultDirectedGraph)graph).getNumSymInputs();
 			if (allSolutions.size() != numInputs) {

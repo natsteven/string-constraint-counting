@@ -81,7 +81,7 @@ public class InvConstraintPropagation<T extends A_Model_Inverse<T>> extends A_In
 	@Override
 	public boolean evaluate(I_Inv_Constraint<T> inputConstraint, int sourceIndex) {
 		
-		System.out.format("\nEVALUATE PROPAGATE %d ...\n",ID);
+//		System.out.format("\nEVALUATE PROPAGATE %d ...\n",ID);
 		//T predicateResult = solver.getSymbolicModel(ID);
 		T propagateResult = solver.getSymbolicModel(nextConstraint.getID());
 		
@@ -96,14 +96,14 @@ public class InvConstraintPropagation<T extends A_Model_Inverse<T>> extends A_In
 			return nextConstraint.evaluate(this, 1);
 		}
 		
-		System.out.println("ERROR: Propagate has no forward results, UNSAT");
+//		System.out.println("ERROR: Propagate has no forward results, UNSAT");
 		return false;
 
 	}
 
 @Override
 	public Tuple<Boolean, Boolean> evaluate() {
-	System.out.format("\nBFS EVALUATE PREDICATE %d ...\n",ID);
+//	System.out.format("\nBFS EVALUATE PREDICATE %d ...\n",ID);
 	Tuple<Boolean, Boolean>  ret = new Tuple<Boolean,Boolean>(true, true);
 	//T predicateResult = solver.getSymbolicModel(ID);
 	T predicateResult = solver.getSymbolicModel(nextConstraint.getID());
@@ -120,13 +120,13 @@ public class InvConstraintPropagation<T extends A_Model_Inverse<T>> extends A_In
 			indxSymb = 2;
 			indxConcr = 1;
 		}
-		System.out.println("arg " + (this.argConstraint==null? null : this.argConstraint.getOp()));
-		System.out.println("oper " + this.nextConstraint.getOp());
+//		System.out.println("arg " + (this.argConstraint==null? null : this.argConstraint.getOp()));
+//		System.out.println("oper " + this.nextConstraint.getOp());
 		// place symbolic string from solver string table into output set, position 1
 		outputSet.put(indxSymb, predicateResult);
 		outputSet.put(indxConcr, solver.getSymbolicModel(argID));//the argument for now is concrete, so whatever is coming from it
 	} else {
-		System.out.println("ERROR: Predicate has no forward results, UNSAT");
+//		System.out.println("ERROR: Predicate has no forward results, UNSAT");
 		ret = new Tuple<Boolean,Boolean>(false, true);
 	}
 	

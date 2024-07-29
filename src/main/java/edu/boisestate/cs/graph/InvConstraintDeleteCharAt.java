@@ -64,7 +64,7 @@ public class InvConstraintDeleteCharAt<T extends A_Model_Inverse<T>> extends A_I
 	@Override
 	public boolean evaluate(I_Inv_Constraint<T> inputConstraint, int sourceIndex) {
 		
-		System.out.format("EVALUATE DELETE CHAR %d ...\n",ID);
+//		System.out.format("EVALUATE DELETE CHAR %d ...\n",ID);
 		
 		T inputModel = inputConstraint.output(sourceIndex);
 
@@ -87,13 +87,13 @@ public class InvConstraintDeleteCharAt<T extends A_Model_Inverse<T>> extends A_I
 				// we have values, so continue solving ...
 				return nextConstraint.evaluate(this, 1);
 			} else {
-				System.out.println("DELETE CHAR SOLUTION SET INCONSISTENT...");
+//				System.out.println("DELETE CHAR SOLUTION SET INCONSISTENT...");
 				solutionSet.remSolution(inputConstraint.getID());
 				return false;
 			}
 			
 		} else {
-			System.out.println("DELETE CHAR RESULT MODEL EMPTY...");
+//			System.out.println("DELETE CHAR RESULT MODEL EMPTY...");
 			// halt solving, fallback
 			return false;
 		}

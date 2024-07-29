@@ -52,7 +52,7 @@ public class InvConstraintReplaceCharChar<T extends A_Model_Inverse<T>> extends 
 	public boolean evaluate(I_Inv_Constraint<T> inputConstraint, int sourceIndex) {
 		
 		// solver.inv_replaceCharKnown(ID, prevConstraint.getID(), (char) find, (char) replace);
-		System.out.format("EVALUATE REPLACE CHAR %d ...\n",ID);
+//		System.out.format("EVALUATE REPLACE CHAR %d ...\n",ID);
 		
 		T inputModel = inputConstraint.output(sourceIndex);
 
@@ -75,13 +75,13 @@ public class InvConstraintReplaceCharChar<T extends A_Model_Inverse<T>> extends 
 				// we have values, so continue solving ...
 				return nextConstraint.evaluate(this, 1);
 			} else {
-				System.out.println("REPLACE CHAR SOLUTION SET INCONSISTENT...");
+//				System.out.println("REPLACE CHAR SOLUTION SET INCONSISTENT...");
 				solutionSet.remSolution(inputConstraint.getID());
 				return false;
 			}
 			
 		} else {
-			System.out.println("REPLACE CHAR RESULT MODEL EMPTY...");
+//			System.out.println("REPLACE CHAR RESULT MODEL EMPTY...");
 			// halt solving, fallback
 			return false;
 		}
@@ -91,25 +91,25 @@ public class InvConstraintReplaceCharChar<T extends A_Model_Inverse<T>> extends 
 	@Override
 	public Tuple<Boolean, Boolean> evaluate(){
 		Tuple<Boolean,Boolean> ret = new Tuple<Boolean,Boolean>(true, true);
-		System.out.format("EVALUATE TREPLACE CHAR %d ...\n",ID);
+//		System.out.format("EVALUATE TREPLACE CHAR %d ...\n",ID);
 		T inputs = incoming();
 		
 		if(inputs.isEmpty()) {
-			System.out.println("REPLACE CHAR INCOMING SET INCONSISTENT...");
+//			System.out.println("REPLACE CHAR INCOMING SET INCONSISTENT...");
 			ret = new Tuple<Boolean,Boolean>(false, true);
 		} else {
 			//done performing intersection 
 			// perform inverse function on output from the input constraint at given index
 			T resModel = solver.inv_replaceCharKnown(inputs, (char) find, (char) replace);
-			System.out.println("resModel " + resModel.getFiniteStrings());
+//			System.out.println("resModel " + resModel.getFiniteStrings());
 			
 			// intersect result with forward analysis results from previous constraint
 			resModel = solver.intersect(resModel, nextConstraint.getID());
-			System.out.println("find " + (char) find + " replace " + (char)replace);
-			System.out.println("resModelInter " + resModel.getFiniteStrings());
+//			System.out.println("find " + (char) find + " replace " + (char)replace);
+//			System.out.println("resModelInter " + resModel.getFiniteStrings());
 			
 			if (resModel.isEmpty()) {
-				System.out.println("REPLACE CHAR RESULT MODEL EMPTY...");
+//				System.out.println("REPLACE CHAR RESULT MODEL EMPTY...");
 				// halt solving, fallback
 				ret = new Tuple<Boolean,Boolean>(false, true);
 			} else {

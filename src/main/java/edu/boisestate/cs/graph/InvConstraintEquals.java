@@ -89,7 +89,7 @@ public class InvConstraintEquals<T extends A_Model_Inverse<T>> extends A_Inv_Con
 	@Override
 	public boolean evaluate(I_Inv_Constraint<T> inputConstraint, int sourceIndex) {
 
-		System.out.format("\nEVALUATE PREDICATE %d ...\n",ID);
+//		System.out.format("\nEVALUATE PREDICATE %d ...\n",ID);
 		//T predicateResult = solver.getSymbolicModel(ID);
 		T predicateResult = solver.getSymbolicModel(nextConstraint.getID());
 
@@ -104,14 +104,14 @@ public class InvConstraintEquals<T extends A_Model_Inverse<T>> extends A_Inv_Con
 			return nextConstraint.evaluate(this, 1);
 		}
 
-		System.out.println("ERROR: Predicate has no forward results, UNSAT");
+//		System.out.println("ERROR: Predicate has no forward results, UNSAT");
 		return false;
 
 	}
 
 	@Override
 	public Tuple<Boolean, Boolean> evaluate() {
-		System.out.format("\nBFS EVALUATE PREDICATE %d ...\n",ID);
+//		System.out.format("\nBFS EVALUATE PREDICATE %d ...\n",ID);
 		Tuple<Boolean, Boolean>  ret = new Tuple<Boolean,Boolean>(true, true);
 		//9-15-23 handling two symbolic values
 		//requires ensuring consistency between values
@@ -122,7 +122,7 @@ public class InvConstraintEquals<T extends A_Model_Inverse<T>> extends A_Inv_Con
 
 		//first time around inputs have not been initialize
 		if(inputs == null) {
-			System.out.println("original is null");
+//			System.out.println("original is null");
 			inputs = solver.getSymbolicModel(nextConstraint.getID()).clone();
 		}
 
@@ -159,11 +159,11 @@ public class InvConstraintEquals<T extends A_Model_Inverse<T>> extends A_Inv_Con
 			} else {
 				//none of them are concrete need to ensure consistency
 				//should be operator dependent
-				System.out.println("Two Symbolic " + this.getOp()); 
+//				System.out.println("Two Symbolic " + this.getOp());
 				if(result) {
 					//expected result is true	
 					T input = inputs.getShortestExampleModel();
-					System.out.println("Solution " + input.getFiniteStrings());
+//					System.out.println("Solution " + input.getFiniteStrings());
 					//remove it from the inputs
 					inputs.minus(input);
 					//because of the equality operator perform intersection
@@ -178,13 +178,13 @@ public class InvConstraintEquals<T extends A_Model_Inverse<T>> extends A_Inv_Con
 					}
 				} else {
 					//expected result is false
-					System.out.println("Not equals");
+//					System.out.println("Not equals");
 
 					//argument model
 					T input2 = solver.getSymbolicModel(argConstraint.getID()).clone();
 					//if both have no common strings: intersection is empty
 					boolean common = !solver.intersect(inputs, argID).isEmpty();
-					System.out.println("Target and args have common strings? " + common);
+//					System.out.println("Target and args have common strings? " + common);
 
 					//if no common string then propagate them both up
 					if(!common) { //turn back to !common after done debugging
@@ -231,7 +231,7 @@ public class InvConstraintEquals<T extends A_Model_Inverse<T>> extends A_Inv_Con
 			}
 
 		} else {
-			System.out.println("ERROR: Euqals has no forward results, UNSAT");
+//			System.out.println("ERROR: Euqals has no forward results, UNSAT");
 			ret = new Tuple<Boolean,Boolean>(false, true);
 		}
 

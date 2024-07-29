@@ -93,25 +93,25 @@ public class InvConstraintReplaceStringString<T extends A_Model_Inverse<T>> exte
     @Override
     public Tuple<Boolean, Boolean> evaluate(){
         Tuple<Boolean,Boolean> ret = new Tuple<Boolean,Boolean>(true, true);
-        System.out.format("EVALUATE REPLACE STRING %d ...\n",ID);
+//        System.out.format("EVALUATE REPLACE STRING %d ...\n",ID);
         T inputs = incoming();
 
         if(inputs.isEmpty()) {
-            System.out.println("REPLACE STRING INCOMING SET INCONSISTENT...");
+//            System.out.println("REPLACE STRING INCOMING SET INCONSISTENT...");
             ret = new Tuple<Boolean,Boolean>(false, true);
         } else {
             //done performing intersection
             // perform inverse function on output from the input constraint at given index
             T resModel = solver.inv_replaceStrings(inputs, find, replace);
-            System.out.println("resModel " + resModel.getFiniteStrings());
+//            System.out.println("resModel " + resModel.getFiniteStrings());
 
             // intersect result with forward analysis results from previous constraint
             resModel = solver.intersect(resModel, nextConstraint.getID());
-            System.out.println("find " + find + " replace " + replace);
-            System.out.println("resModelInter " + resModel.getFiniteStrings());
+//            System.out.println("find " + find + " replace " + replace);
+//            System.out.println("resModelInter " + resModel.getFiniteStrings());
 
             if (resModel.isEmpty()) {
-                System.out.println("REPLACE STRING RESULT MODEL EMPTY...");
+//                System.out.println("REPLACE STRING RESULT MODEL EMPTY...");
                 // halt solving, fallback
                 ret = new Tuple<Boolean,Boolean>(false, true);
             } else {

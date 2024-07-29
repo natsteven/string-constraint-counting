@@ -71,18 +71,18 @@ public class InvConstraintInput<T extends A_Model_Inverse<T>>  extends A_Inv_Con
 	public boolean evaluate(I_Inv_Constraint<T> inputConstraint, int sourceIndex)  {
 		
 		//T solution = solver.getSymbolicModel(this.prevConstraint.getID());
-		System.out.format("EVALUATE INPUT %d ...\n",ID);
+//		System.out.format("EVALUATE INPUT %d ...\n",ID);
 		T solution = inputConstraint.output(sourceIndex);
 		
-		if (true) {
+		if (false) {
 			System.out.print("DEBUG " + op.toString() + " " + ID);
 			System.out.print(" solutions .... ");
 			
     		BigInteger oneHundred = new BigInteger("300");
     		
     		if (solution.modelCount().compareTo(oneHundred) > 0) {
-    			System.out.print("Too many values to output,  " + solution.modelCount() + "  example: ");
-    			System.out.println(solution.getShortestExampleString());
+//    			System.out.print("Too many values to output,  " + solution.modelCount() + "  example: ");
+//    			System.out.println(solution.getShortestExampleString());
     		} else {
     			for (String s : solution.getFiniteStrings()) {
     				System.out.print(s + " ");
@@ -105,17 +105,17 @@ public class InvConstraintInput<T extends A_Model_Inverse<T>>  extends A_Inv_Con
 //			//solutionSet.set(solution, solutionIndex);
 //		}
 		
-		System.out.format("SETTING INPUT %d INCOMING EDGE %d\n", ID, inputConstraint.getID());
+//		System.out.format("SETTING INPUT %d INCOMING EDGE %d\n", ID, inputConstraint.getID());
 		solutionSet.setSolution(inputConstraint.getID(), solution);
 		
 		if (!solutionSet.isConsistent()) {
-			System.out.println("      solution set " + this.ID + " not consistent, falling back ...");
+//			System.out.println("      solution set " + this.ID + " not consistent, falling back ...");
 			solutionSet.remSolution(inputConstraint.getID());
 			return false;
 		}
 		
 		//if (debug) {
-			System.out.println("      solution set " + ID + " consistent ...");
+//			System.out.println("      solution set " + ID + " consistent ...");
 		//}
 		
 		return true;
@@ -124,7 +124,7 @@ public class InvConstraintInput<T extends A_Model_Inverse<T>>  extends A_Inv_Con
 	@Override
 	public Tuple<Boolean, Boolean> evaluate() {
 		Tuple<Boolean, Boolean>  ret = new Tuple<Boolean, Boolean>(true, true) ; //don't backtrack
-		System.out.format("EVALUATE INPUT %d ...\n",ID);
+//		System.out.format("EVALUATE INPUT %d ...\n",ID);
 //		Iterator<I_Inv_Constraint<T>> iter = prevConstraint.iterator();
 //		I_Inv_Constraint<T> nextC = iter.next();
 //		System.out.println("nextInput " + nextC);
@@ -159,7 +159,7 @@ public class InvConstraintInput<T extends A_Model_Inverse<T>>  extends A_Inv_Con
 		} else {
 			//solution not consistent, then backtrack
 			ret = new Tuple<Boolean, Boolean> (false, true);
-			System.out.println("      solution set " + this.ID + " not consistent, falling back ...");
+//			System.out.println("      solution set " + this.ID + " not consistent, falling back ...");
 		}
 		return ret;//never backtrack here
 	}

@@ -69,7 +69,7 @@ public abstract class A_Inv_Constraint<T extends A_Model_Inverse<T>> implements 
 		T inputs = incoming();
 
 		if(inputs.isEmpty()) {
-			System.out.println("INCOMING SET INCONSISTENT...");
+//			System.out.println("INCOMING SET INCONSISTENT...");
 			ret = new Tuple<Boolean,Boolean>(false, true);
 		}
 		return ret;

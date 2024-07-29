@@ -56,7 +56,7 @@ public class InvConstraintReverse<T extends A_Model_Inverse<T>> extends A_Inv_Co
 	@Override
 	public boolean evaluate(I_Inv_Constraint<T> inputConstraint, int sourceIndex) {
 
-		System.out.format("EVALUATE REVERSE %d ...\n",ID);
+//		System.out.format("EVALUATE REVERSE %d ...\n",ID);
 		
 		T inputModel = inputConstraint.output(sourceIndex);
 
@@ -79,13 +79,13 @@ public class InvConstraintReverse<T extends A_Model_Inverse<T>> extends A_Inv_Co
 				// we have values, so continue solving ...
 				return nextConstraint.evaluate(this, 1);
 			} else {
-				System.out.println("REVERSE SOLUTION SET INCONSISTENT...");
+//				System.out.println("REVERSE SOLUTION SET INCONSISTENT...");
 				solutionSet.remSolution(inputConstraint.getID());
 				return false;
 			}
 			
 		} else {
-			System.out.println("REVERSE RESULT MODEL EMPTY...");
+//			System.out.println("REVERSE RESULT MODEL EMPTY...");
 			// halt solving, fallback
 			return false;
 		}
