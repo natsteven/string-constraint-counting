@@ -11,36 +11,6 @@
       "sourceConstraints": [],
       "timeStamp": 1482521433,
       "type": 0,
-      "id": 1,
-      "value": "\"A\"!:!<init>"
-    },
-    {
-      "num": 0,
-      "actualValue": "B",
-      "incomingEdges": [],
-      "sourceConstraints": [],
-      "timeStamp": 1482521433,
-      "type": 0,
-      "id": 2,
-      "value": "\"B\"!:!<init>"
-    },
-    {
-      "num": 0,
-      "actualValue": "C",
-      "incomingEdges": [],
-      "sourceConstraints": [],
-      "timeStamp": 1482521433,
-      "type": 0,
-      "id": 3,
-      "value": "\"C\"!:!<init>"
-    },
-    {
-      "num": 0,
-      "actualValue": "A",
-      "incomingEdges": [],
-      "sourceConstraints": [],
-      "timeStamp": 1482521433,
-      "type": 0,
       "id": 36,
       "value": "\"A\"!:!<init>"
     },

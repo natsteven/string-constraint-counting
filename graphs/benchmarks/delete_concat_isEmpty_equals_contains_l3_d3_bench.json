@@ -446,16 +446,6 @@
     },
     {
       "num": 0,
-      "actualValue": "",
-      "incomingEdges": [],
-      "sourceConstraints": [],
-      "timeStamp": 1482521433,
-      "type": 0,
-      "id": 191,
-      "value": "\"\"!:!<init>"
-    },
-    {
-      "num": 0,
       "actualValue": "0",
       "incomingEdges": [],
       "sourceConstraints": [],
@@ -623,56 +613,6 @@
       "type": 0,
       "id": 81,
       "value": "\"10\"!:!<init>"
-    },
-    {
-      "num": 0,
-      "actualValue": "CBC",
-      "incomingEdges": [],
-      "sourceConstraints": [],
-      "timeStamp": 1482521433,
-      "type": 0,
-      "id": 4,
-      "value": "r4!:!getStringValue!!"
-    },
-    {
-      "num": 0,
-      "actualValue": "CAC",
-      "incomingEdges": [],
-      "sourceConstraints": [],
-      "timeStamp": 1482521433,
-      "type": 0,
-      "id": 5,
-      "value": "r5!:!getStringValue!!"
-    },
-    {
-      "num": 0,
-      "actualValue": "BCC",
-      "incomingEdges": [],
-      "sourceConstraints": [],
-      "timeStamp": 1482521433,
-      "type": 0,
-      "id": 6,
-      "value": "r6!:!getStringValue!!"
-    },
-    {
-      "num": 0,
-      "actualValue": "ACA",
-      "incomingEdges": [],
-      "sourceConstraints": [],
-      "timeStamp": 1482521433,
-      "type": 0,
-      "id": 7,
-      "value": "r7!:!getStringValue!!"
-    },
-    {
-      "num": 0,
-      "actualValue": "BAC",
-      "incomingEdges": [],
-      "sourceConstraints": [],
-      "timeStamp": 1482521433,
-      "type": 0,
-      "id": 8,
-      "value": "r8!:!getStringValue!!"
     },
     {
       "num": 0,
