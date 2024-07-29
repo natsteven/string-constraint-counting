@@ -723,7 +723,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
     			}
     			
     		}
-    		System.out.println("Parents  "  + p + " are " + invParents);
+//    		System.out.println("Parents  "  + p + " are " + invParents);
     		I_Inv_Constraint<T> invP = allInverseConstraints.get(p.getID());
     		invP.setPrev(invParents);
     	}
@@ -738,7 +738,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
     protected void solveInputs () {
         
     	// output finalized inverse constraints for debug
-        if (true) {
+        if (false) {
         	System.out.println(cid);
         	System.out.println(cid + "Inverse Constraint Set:");
         	for (I_Inv_Constraint<T> c : allInverseConstraints.values()) {
@@ -774,14 +774,14 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         for (I_Inv_Constraint<T> i : allInverseConstraints.values())  {
         	if (i.getOp() == Operation.INIT_SYM) {
         		if (i.getSolution() == null) {
-        			System.out.println("\nFAILURE: Failed to get solution to one or more inputs...");
-        			System.out.println("\nSOLUTION TIME ms: 0");
+//        			System.out.println("\nFAILURE: Failed to get solution to one or more inputs...");
+//        			System.out.println("\nSOLUTION TIME ms: 0");
         			return;
         		}
         	}
         }
         
-        System.out.println("\nSOLUTION TIME ms: " + durationInMillis);
+//        System.out.println("\nSOLUTION TIME ms: " + durationInMillis);
         
         for (I_Inv_Constraint<T> i : allInverseConstraints.values()) {
         	if (i.getOp() == Operation.INIT_SYM) {
@@ -790,19 +790,19 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         		// populate map for output to file/SPF
         		inputSolution.put(i.getID(), solution);
         		
-        		System.out.print("INPUT ID: " + i.getID() + "  COUNT: " + solution.modelCount() + "  VALUE(S): ");
+//        		System.out.print("INPUT ID: " + i.getID() + "  COUNT: " + solution.modelCount() + "  VALUE(S): ");
         		BigInteger limit = new BigInteger("300");
 
         		if (solution.modelCount().compareTo(limit) > 0) {
-        			System.out.print("Too many values to output,  " + solution.modelCount() + "  example: ");
-        			System.out.print(solution.getShortestExampleString());
+//        			System.out.print("Too many values to output,  " + solution.modelCount() + "  example: ");
+//        			System.out.print(solution.getShortestExampleString());
         		} else {
         			for (String s : solution.getFiniteStrings()) {
-        				System.out.print(s + " ");
+//        				System.out.print(s + " ");
         			}
 
         		}
-        		System.out.println();
+//        		System.out.println();
         	}
         }
         

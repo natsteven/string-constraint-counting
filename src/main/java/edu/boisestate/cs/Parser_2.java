@@ -897,7 +897,7 @@ public class Parser_2<T extends A_Model<T>> {
 				if (findKnown && replaceKnown) {
 
 					// MJR store arguments in constraint for use during inverse
-					System.out.println("findChar " + findChar + " replaceChar " + replaceChar);
+//					System.out.println("findChar " + findChar + " replaceChar " + replaceChar);
 					constraint.addArg(findChar);
 					constraint.addArg(replaceChar);
 					constraint.setOp(REPLACE_CHAR_CHAR);
@@ -1167,7 +1167,7 @@ public class Parser_2<T extends A_Model<T>> {
 			if (solver.modelManager instanceof Model_Concrete_Singleton_Manager) {
 				// singleton solver should look up its value in the graph
 				solver.newConcreteString(id, actualValue);
-				System.out.println("setting value of " + id + " to " + actualValue);
+//				System.out.println("setting value of " + id + " to " + actualValue);
 			} else {
 				solver.newSymbolicString(id);
 			}
