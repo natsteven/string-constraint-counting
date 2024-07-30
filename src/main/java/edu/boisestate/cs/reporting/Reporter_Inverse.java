@@ -397,9 +397,8 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 			}
 
 			for (int id : allSolutions.keySet()){
-				T solution = null;
+				T solution = allSolutions.get(id).iterator().next();
 				for (T sol : allSolutions.get(id)){
-					if (solution == null) solution = sol; //first iter
 					solution = solution.intersect(sol);
 					if (solution == null){
 						System.out.println("INCONSISTENT SOLUTION SET");

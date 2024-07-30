@@ -163,7 +163,7 @@ public class InvConstraintEquals<T extends A_Model_Inverse<T>> extends A_Inv_Con
 				if(result) {
 					//expected result is true	
 					T input = inputs.getShortestExampleModel();
-					System.out.println("Solution " + input.getFiniteStrings());
+//					System.out.println("Solution " + input.getFiniteStrings());
 					//remove it from the inputs
 					inputs.minus(input);
 					//because of the equality operator perform intersection

@@ -101,12 +101,12 @@ public class InvConstraintReplaceCharChar<T extends A_Model_Inverse<T>> extends 
 			//done performing intersection 
 			// perform inverse function on output from the input constraint at given index
 			T resModel = solver.inv_replaceCharKnown(inputs, (char) find, (char) replace);
-			System.out.println("resModel " + resModel.getFiniteStrings());
+//			System.out.println("resModel " + resModel.getFiniteStrings());
 			
 			// intersect result with forward analysis results from previous constraint
 			resModel = solver.intersect(resModel, nextConstraint.getID());
 			System.out.println("find " + (char) find + " replace " + (char)replace);
-			System.out.println("resModelInter " + resModel.getFiniteStrings());
+//			System.out.println("resModelInter " + resModel.getFiniteStrings());
 			
 			if (resModel.isEmpty()) {
 				System.out.println("REPLACE CHAR RESULT MODEL EMPTY...");

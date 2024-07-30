@@ -103,12 +103,12 @@ public class InvConstraintReplaceStringString<T extends A_Model_Inverse<T>> exte
             //done performing intersection
             // perform inverse function on output from the input constraint at given index
             T resModel = solver.inv_replaceStrings(inputs, find, replace);
-            System.out.println("resModel " + resModel.getFiniteStrings());
+//            System.out.println("resModel " + resModel.getFiniteStrings());
 
             // intersect result with forward analysis results from previous constraint
             resModel = solver.intersect(resModel, nextConstraint.getID());
             System.out.println("find " + find + " replace " + replace);
-            System.out.println("resModelInter " + resModel.getFiniteStrings());
+//            System.out.println("resModelInter " + resModel.getFiniteStrings());
 
             if (resModel.isEmpty()) {
                 System.out.println("REPLACE STRING RESULT MODEL EMPTY...");
