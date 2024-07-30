@@ -6,66 +6,6 @@
   "vertices": [
     {
       "num": 0,
-      "actualValue": "A",
-      "incomingEdges": [],
-      "sourceConstraints": [],
-      "timeStamp": 1482521433,
-      "type": 0,
-      "id": 1,
-      "value": "\"A\"!:!<init>"
-    },
-    {
-      "num": 0,
-      "actualValue": "B",
-      "incomingEdges": [],
-      "sourceConstraints": [],
-      "timeStamp": 1482521433,
-      "type": 0,
-      "id": 2,
-      "value": "\"B\"!:!<init>"
-    },
-    {
-      "num": 0,
-      "actualValue": "C",
-      "incomingEdges": [],
-      "sourceConstraints": [],
-      "timeStamp": 1482521433,
-      "type": 0,
-      "id": 3,
-      "value": "\"C\"!:!<init>"
-    },
-    {
-      "num": 0,
-      "actualValue": "a",
-      "incomingEdges": [],
-      "sourceConstraints": [],
-      "timeStamp": 1482521433,
-      "type": 0,
-      "id": 4,
-      "value": "\"a\"!:!<init>"
-    },
-    {
-      "num": 0,
-      "actualValue": "b",
-      "incomingEdges": [],
-      "sourceConstraints": [],
-      "timeStamp": 1482521433,
-      "type": 0,
-      "id": 5,
-      "value": "\"b\"!:!<init>"
-    },
-    {
-      "num": 0,
-      "actualValue": "c",
-      "incomingEdges": [],
-      "sourceConstraints": [],
-      "timeStamp": 1482521433,
-      "type": 0,
-      "id": 6,
-      "value": "\"c\"!:!<init>"
-    },
-    {
-      "num": 0,
       "actualValue": "B",
       "incomingEdges": [],
       "sourceConstraints": [],

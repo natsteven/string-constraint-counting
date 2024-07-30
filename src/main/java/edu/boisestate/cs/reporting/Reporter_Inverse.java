@@ -292,16 +292,25 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         
         predicateIDs.add(predID);
 
-		if (predProcessing.get(predID).size() > 1){
-			Set<Integer> removals = predProcessing.get(predID);
-			removals.remove(predID);
-			predProcessing.remove(predID);
-			for (Integer i : removals) {
-				predProcessing.get(i).remove(predID);
-			}
-			remaining--;
-			return;
-		}
+		predProcessing.remove(predID);
+
+		InvDefaultDirectedGraph thisGraph = (InvDefaultDirectedGraph)(graph);
+
+		Set<Integer> predAncestors = thisGraph.getAncestors(thisGraph.getConstraintFromID(predID));
+		predAncestors.retainAll(predProcessing);
+		// if this predicate has ancestors that are predicates, do not process it
+		if (!predAncestors.isEmpty()) return;
+
+//		if (predProcessing.get(predID).size() > 1){
+//			Set<Integer> removals = predProcessing.get(predID);
+//			removals.remove(predID);
+//			predProcessing.remove(predID);
+//			for (Integer i : removals) {
+//				predProcessing.get(i).remove(predID);
+//			}
+//			remaining--;
+//			return;
+//		}
 
         // build the transposed graph of inverse constraints
         buildICG_r3();
@@ -386,11 +395,11 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 			System.out.println(predProcessing.size());
 			System.out.println("DONE SOLVING, GETTING INPUT SOLUTIONS");
 			int numInputs = ((InvDefaultDirectedGraph)graph).getNumSymInputs();
-			if (allSolutions.keySet().size() != numInputs) {
+			if (allSolutions.size() != numInputs) {
 				System.out.println("MISSING SOLUTIONS");
-				System.out.println(numInputs + " expected\nIDs in set: ");
+				System.out.println(numInputs + " expected but " + allSolutions.size()+" in solutions");
 				for (int id : allSolutions.keySet()){
-					System.out.print(id + ", ");
+					System.out.println(id + ", " + allSolutions.get(id).iterator().next().getShortestExampleString());
 				}
 				System.out.println("UNSAT");
 				return;
@@ -419,7 +428,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 //					}
 //
 //				}
-				System.out.println("INPUT ID: " + id + ", VALUE: " + solution.getShortestExampleString());
+				System.out.println(" " + id + " \"" + solution.getShortestExampleString() + "\",");
 			}
 		}
     }

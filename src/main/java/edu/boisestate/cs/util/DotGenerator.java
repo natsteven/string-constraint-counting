@@ -63,19 +63,20 @@ public class DotGenerator {
                                       new EdgeInfoProvider());
 
             dotExporter.export(dotWriter, graph);
+            dotWriter.close();
 
         } catch (IOException ex) {
             ex.printStackTrace();
         }
 
-//        // use dot on file to produce png
-//        Runtime rt = Runtime.getRuntime();
-//
-//        try {
-//            rt.exec("dot -Tsvg " + filePath + ".dot -o " + filePath + ".svg");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        // use dot on file to produce png
+        Runtime rt = Runtime.getRuntime();
+
+        try {
+            rt.exec("dot -Tsvg " + filePath + ".dot -o " + filePath + ".svg");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

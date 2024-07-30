@@ -31,7 +31,7 @@ abstract public class A_Reporter <T extends A_Model<T>> {
     protected final Map<Integer, String[]> operationsMap;
     protected final Map<Integer, Long> timerMap;
 
-    protected Map<Integer, Set<Integer>> predProcessing = new HashMap<>();
+    protected Set<Integer> predProcessing = new HashSet<>();
     protected Integer remaining = 0;
     protected Map<Integer, Set<T>> allSolutions = new HashMap<>();
 
@@ -68,10 +68,11 @@ abstract public class A_Reporter <T extends A_Model<T>> {
         //all incoming constraints of a constraint (node)
         Map<PrintConstraint, Set<PrintConstraint>> unfinishedInEdges = new HashMap<>();
 
-        for (Integer key : ((InvDefaultDirectedGraph)graph).getPredDependIDMap().keySet()) {
-            Set<Integer> set = new HashSet<>(((InvDefaultDirectedGraph)graph).getPredDependIDMap().get(key));
-            predProcessing.put(key, set);
-        }
+//        for (Integer key : ((InvDefaultDirectedGraph)graph).getPredDependIDMap().keySet()) {
+//            Set<Integer> set = new HashSet<>(((InvDefaultDirectedGraph)graph).getPredDependIDMap().get(key));
+//            predProcessing.put(key, set);
+//        }
+        predProcessing = new HashSet<>( ((InvDefaultDirectedGraph)graph).getPredDependIDMap().keySet() );
         remaining = ((InvDefaultDirectedGraph)graph).getPredDependIDMap().keySet().size();
 
         int maxId = 0;
