@@ -406,10 +406,8 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 			}
 
 			for (int id : allSolutions.keySet()){
-				T solution = null;
-				int i = 0;
+				T solution = allSolutions.get(id).iterator().next();
 				for (T sol : allSolutions.get(id)){
-					if (i++ == 0) solution = sol; //first iter, int cause maybe care for debugging about num sols
 					solution = solution.intersect(sol);
 					if (solution == null){
 						System.out.println("INCONSISTENT SOLUTION SET");
@@ -774,14 +772,14 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         for (I_Inv_Constraint<T> i : allInverseConstraints.values())  {
         	if (i.getOp() == Operation.INIT_SYM) {
         		if (i.getSolution() == null) {
-//        			System.out.println("\nFAILURE: Failed to get solution to one or more inputs...");
-//        			System.out.println("\nSOLUTION TIME ms: 0");
+        			System.out.println("\nFAILURE: Failed to get solution to one or more inputs...");
+        			System.out.println("\nSOLUTION TIME ms: 0");
         			return;
         		}
         	}
         }
         
-//        System.out.println("\nSOLUTION TIME ms: " + durationInMillis);
+        System.out.println("\nSOLUTION TIME ms: " + durationInMillis);
         
         for (I_Inv_Constraint<T> i : allInverseConstraints.values()) {
         	if (i.getOp() == Operation.INIT_SYM) {
@@ -791,17 +789,17 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         		inputSolution.put(i.getID(), solution);
         		
 //        		System.out.print("INPUT ID: " + i.getID() + "  COUNT: " + solution.modelCount() + "  VALUE(S): ");
-        		BigInteger limit = new BigInteger("300");
-
-        		if (solution.modelCount().compareTo(limit) > 0) {
+//        		BigInteger limit = new BigInteger("300");
+//
+//        		if (solution.modelCount().compareTo(limit) > 0) {
 //        			System.out.print("Too many values to output,  " + solution.modelCount() + "  example: ");
 //        			System.out.print(solution.getShortestExampleString());
-        		} else {
-        			for (String s : solution.getFiniteStrings()) {
+//        		} else {
+//        			for (String s : solution.getFiniteStrings()) {
 //        				System.out.print(s + " ");
-        			}
-
-        		}
+//        			}
+//
+//        		}
 //        		System.out.println();
         	}
         }

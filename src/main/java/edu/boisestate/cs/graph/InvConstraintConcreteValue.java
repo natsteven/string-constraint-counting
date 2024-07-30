@@ -94,7 +94,9 @@ public class InvConstraintConcreteValue<T extends A_Model_Inverse<T>>  extends A
 		while(iter.hasNext()) {
 			T next = iter.next().output(this);
 			if (inputs == null || next == null){
-				inputs = next;
+//				inputs = next;
+				System.out.format("ERROR IN EVALUATE CONCRETE VALUE %d ...\nINCOMING SOLUTIONS INCONSISTENT",ID);
+				return new Tuple<Boolean, Boolean>(false, true);
 			}
 			inputs = inputs.intersect(next);
 		}
