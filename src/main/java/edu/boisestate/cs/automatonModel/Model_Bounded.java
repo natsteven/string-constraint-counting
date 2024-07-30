@@ -796,12 +796,12 @@ public class Model_Bounded extends A_Model<Model_Bounded> {
 	}
 
 	@Override
-	public Model_Bounded replaceFirstOptimized(String regexString, String replacementString) {
+	public Model_Bounded replaceFirst(String regexString, String replacementString) {
 		return null;
 	}
 
 	@Override
-	public Model_Bounded replaceAllOptimized(String arg1String, String arg2String) {
+	public Model_Bounded replaceAll(String arg1String, String arg2String) {
 		return null;
 	}
 }

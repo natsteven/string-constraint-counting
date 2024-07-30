@@ -594,7 +594,7 @@ public class Solver<T extends A_Model<T>> extends A_Solver_Extended<T> implement
     	// start timer
     	BasicTimer.start();
     	// perform replaceFirst string operation
-    	baseModel = baseModel.replaceAllOptimized(arg1String, arg2String);
+    	baseModel = baseModel.replaceAll(arg1String, arg2String);
     	// stop timer
     	BasicTimer.stop();
 //    	System.out.println("After:\n" + baseModel.getFiniteStrings());
@@ -623,7 +623,7 @@ public class Solver<T extends A_Model<T>> extends A_Solver_Extended<T> implement
     	// start timer
     	BasicTimer.start();
     	// perform replaceFirst string operation
-    	baseModel = baseModel.replaceFirstOptimized(arg1String, arg2String);
+    	baseModel = baseModel.replaceFirst(arg1String, arg2String);
     	// stop timer
     	BasicTimer.stop();
     	System.out.println("After:\n" + baseModel.getFiniteStrings());

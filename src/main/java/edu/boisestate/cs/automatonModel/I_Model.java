@@ -104,8 +104,8 @@ public interface I_Model<T extends I_Model<T>> {
 
 	String getAutomaton();
 	
-	T replaceFirstOptimized(String regexString, String replacementString);
+	T replaceFirst(String regexString, String replacementString);
 
-	T replaceAllOptimized(String arg1String, String arg2String);
+	T replaceAll(String arg1String, String arg2String);
 
 }

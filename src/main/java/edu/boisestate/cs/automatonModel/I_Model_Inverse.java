@@ -43,6 +43,10 @@ public interface I_Model_Inverse<T extends I_Model_Inverse<T>> {
 
 	T inv_trim();
 	
+	T inv_replaceFirst();
+	
+	T inv_replaceAll();
+	
 	/**
 	 * 
 	 * Returns new model with strings from input model removed.
