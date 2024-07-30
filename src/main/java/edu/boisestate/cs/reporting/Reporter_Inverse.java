@@ -409,7 +409,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 				T solution = allSolutions.get(id).iterator().next();
 				for (T sol : allSolutions.get(id)){
 					solution = solution.intersect(sol);
-					if (solution == null){
+					if (solution == null|| solution.isEmpty()){
 						System.out.println("INCONSISTENT SOLUTION SET");
 						System.out.println("UNSAT");
 						return; // maybe shouldn't return?

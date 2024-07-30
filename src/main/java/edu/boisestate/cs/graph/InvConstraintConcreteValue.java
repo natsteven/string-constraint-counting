@@ -105,6 +105,7 @@ public class InvConstraintConcreteValue<T extends A_Model_Inverse<T>>  extends A
 		//actual concrete value - add || inputs.getFiniteStrings().size() != 1
 		if (inputs != null && !inputs.containsString(test) ) {
 			System.out.format("ERROR IN EVALUATE CONCRETE VALUE %d ...\n",ID);
+			return new Tuple<Boolean, Boolean>(false, true);
 		}
 		return new Tuple<Boolean, Boolean>(true, true);
 	}
