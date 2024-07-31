@@ -44,7 +44,7 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 	protected void solveInputs() {
 		//from Marlin's code
 		// output finalized inverse constraints for debug
-		if (true) {
+		if (false) {
 			System.out.println(cid);
 			System.out.println(cid + "Inverse Constraint Set:");
 			for (I_Inv_Constraint<T> c : allInverseConstraints.values()) {
@@ -207,19 +207,8 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 				// populate map for output to file/SPF
 				inputSolution.put(i.getID(), solution);
 
-				System.out.print("INPUT ID: " + i.getID() + "  COUNT: " + solution.modelCount() + "  VALUE(S): ");
-				BigInteger limit = new BigInteger("50");
+				System.out.println(i.getID() + ": " + solution.getShortestExampleString());
 
-				if (solution.modelCount().compareTo(limit) > 0) {
-					System.out.print("Too many values to output,  " + solution.modelCount() + "  example: ");
-					System.out.print(solution.getShortestExampleString());
-				} else {
-					for (String s : solution.getFiniteStrings()) {
-						System.out.print(s + " ");
-					}
-
-				}			
-				System.out.println();
 			}
 		}
 

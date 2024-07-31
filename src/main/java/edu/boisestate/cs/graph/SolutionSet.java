@@ -112,7 +112,7 @@ public class SolutionSet<T extends A_Model_Inverse<T>> {
 		fm.format(cid + "INPUT:      [%d]\n", ID);
 		fm.format(cid + "EDGES:      [%d]\n", solutions.size());
 		fm.format(cid + "CONSISTENT: [%s]\n", this.isConsistent() ? "YES" : "NO");
-		fm.format(cid + "COUNT:      [%d]", solution.modelCount());
+//		fm.format(cid + "COUNT:      [%d]", solution.modelCount());
 		
 		fm.close();
 		

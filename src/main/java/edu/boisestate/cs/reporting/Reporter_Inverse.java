@@ -141,7 +141,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
             isSingleton = true;
         }
 
-        long initialCount = this.invSolver.getModelCount(base);
+//        long initialCount = this.invSolver.getModelCount(base);
         inMCTime = BasicTimer.getRunTime();
 
         // store symbolic string values
@@ -154,7 +154,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
             trueSat = true;
         }
 
-        long trueModelCount = this.invSolver.getModelCount(base);
+//        long trueModelCount = this.invSolver.getModelCount(base);
         tMCTime = BasicTimer.getRunTime();
 
         // revert symbolic string values
@@ -170,7 +170,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
             falseSat = true;
         }
 
-        long falseModelCount = this.invSolver.getModelCount(base);
+//        long falseModelCount = this.invSolver.getModelCount(base);
         fMCTime = BasicTimer.getRunTime();
 
         // revert symbolic string values
@@ -218,7 +218,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         }
 
         // set yes or no for disjoint branches
-        long overlap = this.invSolver.getModelCount(base);
+//        long overlap = this.invSolver.getModelCount(base);
 
         // revert symbolic string values
         solver.revertLastPredicate();
@@ -256,13 +256,13 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         // id of initial model
         columns.add(String.valueOf(base));
         // initial model count
-        columns.add(String.valueOf(initialCount));
+//        columns.add(String.valueOf(initialCount));
         // true model count
-        columns.add(String.valueOf(trueModelCount));
+//        columns.add(String.valueOf(trueModelCount));
         // false model count
-        columns.add(String.valueOf(falseModelCount));
+//        columns.add(String.valueOf(falseModelCount));
         // overlap count
-        columns.add(String.valueOf(overlap));
+//        columns.add(String.valueOf(overlap));
         // previous operations
         columns.add(ops);
 
@@ -287,9 +287,21 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 
         // save this predicate ID so we can grab the new inverse constraint
         // from the allInverseConstraints container later
-        //int predicateID = constraint.getId();
-        
-        predicateIDs.add(constraint.getId());
+		int predID = constraint.getId();
+
+		predicateIDs.add(predID);
+
+		toProcess.remove(predID);
+
+		InvDefaultDirectedGraph thisGraph = (InvDefaultDirectedGraph)(graph);
+
+		Set<Integer> predAncestors = thisGraph.getAncestors(thisGraph.getConstraint(predID));
+		predAncestors.retainAll(toProcess);
+		// if this predicate has ancestors that are predicates, do not process it
+		if (!predAncestors.isEmpty()){
+			System.out.println("NOT PROCESSING " + predID + " DUE TO ANCESTORS");
+			return;
+		}
 
         // build the transposed graph of inverse constraints
         buildICG_r3();
@@ -663,7 +675,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
     protected void solveInputs () {
         
     	// output finalized inverse constraints for debug
-        if (true) {
+        if (false) {
         	System.out.println(cid);
         	System.out.println(cid + "Inverse Constraint Set:");
         	for (I_Inv_Constraint<T> c : allInverseConstraints.values()) {
@@ -707,27 +719,16 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         }
         
         System.out.println("\nSOLUTION TIME ms: " + durationInMillis);
-        
+
         for (I_Inv_Constraint<T> i : allInverseConstraints.values()) {
         	if (i.getOp() == Operation.INIT_SYM) {
         		T solution = i.getSolution();
-        		
+
         		// populate map for output to file/SPF
         		inputSolution.put(i.getID(), solution);
-        		
-        		System.out.print("INPUT ID: " + i.getID() + "  COUNT: " + solution.modelCount() + "  VALUE(S): ");
-        		BigInteger limit = new BigInteger("300");
-        		
-        		if (solution.modelCount().compareTo(limit) > 0) {
-        			System.out.print("Too many values to output,  " + solution.modelCount() + "  example: ");
-        			System.out.print(solution.getShortestExampleString());
-        		} else {
-        			for (String s : solution.getFiniteStrings()) {
-        				System.out.print(s + " ");
-        			}
-        		
-        		}			
-        		System.out.println();
+
+				System.out.println(i.getID() + ": " + solution.getShortestExampleString());
+
         	}
         }
         

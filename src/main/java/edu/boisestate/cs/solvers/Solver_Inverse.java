@@ -325,9 +325,9 @@ public class Solver_Inverse<T extends A_Model_Inverse<T>> extends Solver_Count<T
 	public void showStrings(int id) {
 		T baseModel = invStringMap.get(id);
 		if (baseModel.getFiniteStrings() != null) {
-			for (String s : baseModel.getFiniteStrings()) {
-			System.out.println(s);
-			}
+//			for (String s : baseModel.getFiniteStrings()) {
+//			System.out.println(s);
+//			}
 		} else {
 			System.out.println("No Strings...");
 		}

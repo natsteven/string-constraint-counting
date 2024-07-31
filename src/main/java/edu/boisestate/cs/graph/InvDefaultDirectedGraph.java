@@ -108,4 +108,18 @@ public class InvDefaultDirectedGraph extends DefaultDirectedGraph<PrintConstrain
 		return ret;
 	}
 
+	public PrintConstraint getConstraint(Integer id) {
+		for(PrintConstraint c : vertexSet()) {
+			if(c.getId() == id) {
+				return c;
+			}
+		}
+		return null;
+	}
+
+	public Set<Integer> getPredicates(){
+		return predDependID.keySet();
+	}
+
+
 }

@@ -4,6 +4,7 @@ import edu.boisestate.cs.BasicTimer;
 import edu.boisestate.cs.Parser;
 import edu.boisestate.cs.Parser_2;
 import edu.boisestate.cs.automatonModel.A_Model;
+import edu.boisestate.cs.graph.InvDefaultDirectedGraph;
 import edu.boisestate.cs.graph.PrintConstraint;
 import edu.boisestate.cs.graph.PrintConstraintComparator;
 import edu.boisestate.cs.graph.SymbolicEdge;
@@ -30,6 +31,7 @@ abstract public class A_Reporter <T extends A_Model<T>> {
     protected final Map<Integer, String[]> operationsMap;
     protected final Map<Integer, Long> timerMap;
 
+    protected HashSet<Integer> toProcess = new HashSet<>();
     /**
      * 
      * @param graph
@@ -62,6 +64,8 @@ abstract public class A_Reporter <T extends A_Model<T>> {
         Map<PrintConstraint, Set<PrintConstraint>> unfinishedOutEdges = new HashMap<>();
         //all incoming constraints of a constraint (node)
         Map<PrintConstraint, Set<PrintConstraint>> unfinishedInEdges = new HashMap<>();
+
+        toProcess = new HashSet<>(((InvDefaultDirectedGraph)graph).getPredicates());
 
         int maxId = 0;
 

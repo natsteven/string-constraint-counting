@@ -136,7 +136,7 @@ public class SolutionSetInternal<T extends A_Model_Inverse<T>>  {
 		fm.format("\nINPUT:      [%d]\n", ID);
 		fm.format("EDGES:      [%d]\n", solutions.size());
 		fm.format("CONSISTENT: [%s]\n", this.isConsistent() ? "YES" : "NO");
-		fm.format("COUNT:      [%d]\n", solution.modelCount());
+//		fm.format("COUNT:      [%d]\n", solution.modelCount());
 		fm.close();
 
 		return output.toString();
