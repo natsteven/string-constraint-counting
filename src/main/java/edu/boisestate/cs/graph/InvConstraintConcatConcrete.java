@@ -46,13 +46,14 @@ public class InvConstraintConcatConcrete<T extends A_Model_Inverse<T>> extends A
 		int arg = argList.get(0);
 		solver.inv_append(ID, prevConstraint.iterator().next().getID(), arg);
 		solver.intersectPrevious(ID, nextConstraint.getID());
-		
+
+
 		if (false) {
 			System.out.println("\nDEBUG evaluate inv_Concat_Con " + op.toString() + " " + ID);
 			System.out.print("      prefixes .... ");
-//			for (String s : solver.getSymbolicModel(ID).getFiniteStrings()) {
-//				System.out.print(s + " ");
-//			}
+			for (String s : solver.getSymbolicModel(ID).getFiniteStrings()) {
+				System.out.print(s + " ");
+			}
 			System.out.println();
 		}
 		

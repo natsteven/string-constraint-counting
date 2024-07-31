@@ -4,10 +4,7 @@ import edu.boisestate.cs.BasicTimer;
 import edu.boisestate.cs.Parser;
 import edu.boisestate.cs.Parser_2;
 import edu.boisestate.cs.automatonModel.A_Model;
-import edu.boisestate.cs.graph.InvDefaultDirectedGraph;
-import edu.boisestate.cs.graph.PrintConstraint;
-import edu.boisestate.cs.graph.PrintConstraintComparator;
-import edu.boisestate.cs.graph.SymbolicEdge;
+import edu.boisestate.cs.graph.*;
 //import edu.boisestate.cs.solvers.ExtendedSolver;
 import edu.boisestate.cs.solvers.Solver;
 
@@ -338,5 +335,8 @@ abstract public class A_Reporter <T extends A_Model<T>> {
     protected abstract void calculateStats(PrintConstraint constraint);
     
     protected abstract void solveInputs();
-    
+
+    public void printDebug(String message){
+        if (debug) System.out.println(message);
+    }
 }

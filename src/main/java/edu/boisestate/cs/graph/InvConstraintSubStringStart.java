@@ -90,12 +90,14 @@ public class InvConstraintSubStringStart<T extends A_Model_Inverse<T>> extends A
 
 	@Override
 	public Tuple<Boolean, Boolean> evaluate(){
-		System.out.format("EVALUATE SUBSTRING %d ...\n",ID);
+		printDebug("EVALUATE SUBSTRING " + ID + " ...");
+//		System.out.format("EVALUATE SUBSTRING %d ...\n",ID);
 		Tuple<Boolean, Boolean>  ret = new Tuple<Boolean,Boolean>(true, true);
 
 		T inputs = incoming();
 		if(inputs.isEmpty()) {
-			System.out.println("SUBSTRING SOLUTION INCOMING SET INCONSISTENT...");
+			printDebug("SUBSTRING INCOMING SET INCONSISTENT...");
+//			System.out.println("SUBSTRING SOLUTION INCOMING SET INCONSISTENT...");
 			ret = new Tuple<Boolean,Boolean>(false, true);
 		} else {
 			// perform inverse function on output from the input constraint at given index
@@ -108,7 +110,8 @@ public class InvConstraintSubStringStart<T extends A_Model_Inverse<T>> extends A
 				// store result in this constraints output set at index 1
 				outputSet.put(1, resModel);	
 			} else {
-				System.out.println("SUBSTRING OUTPUT SET IS EMTPY...");
+				printDebug("SUBSTRING OUTPUT SET IS EMPTY...");
+//				System.out.println("SUBSTRING OUTPUT SET IS EMTPY...");
 				ret = new Tuple<Boolean,Boolean>(false, true);
 			}
 		}

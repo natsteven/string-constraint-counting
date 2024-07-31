@@ -111,7 +111,8 @@ public class InvConstraintEquals<T extends A_Model_Inverse<T>> extends A_Inv_Con
 
 	@Override
 	public Tuple<Boolean, Boolean> evaluate() {
-		System.out.format("\nBFS EVALUATE PREDICATE %d ...\n",ID);
+		printDebug("EVALUATE PREDICATE " + ID + " ...");
+//		System.out.format("\nBFS EVALUATE PREDICATE %d ...\n",ID);
 		Tuple<Boolean, Boolean>  ret = new Tuple<Boolean,Boolean>(true, true);
 		//9-15-23 handling two symbolic values
 		//requires ensuring consistency between values
@@ -122,7 +123,8 @@ public class InvConstraintEquals<T extends A_Model_Inverse<T>> extends A_Inv_Con
 
 		//first time around inputs have not been initialize
 		if(inputs == null) {
-			System.out.println("original is null");
+			printDebug("original is null");
+//			System.out.println("original is null");
 			inputs = solver.getSymbolicModel(nextConstraint.getID()).clone();
 		}
 
@@ -159,7 +161,8 @@ public class InvConstraintEquals<T extends A_Model_Inverse<T>> extends A_Inv_Con
 			} else {
 				//none of them are concrete need to ensure consistency
 				//should be operator dependent
-				System.out.println("Two Symbolic " + this.getOp()); 
+				printDebug("Two Symbolic " + this.getOp());
+//				System.out.println("Two Symbolic " + this.getOp());
 				if(result) {
 					//expected result is true	
 					T input = inputs.getShortestExampleModel();
@@ -178,13 +181,15 @@ public class InvConstraintEquals<T extends A_Model_Inverse<T>> extends A_Inv_Con
 					}
 				} else {
 					//expected result is false
-					System.out.println("Not equals");
+					printDebug("Not equals");
+//					System.out.println("Not equals");
 
 					//argument model
 					T input2 = solver.getSymbolicModel(argConstraint.getID()).clone();
 					//if both have no common strings: intersection is empty
 					boolean common = !solver.intersect(inputs, argID).isEmpty();
-					System.out.println("Target and args have common strings? " + common);
+					printDebug("Target and args have common strings? " + common);
+//					System.out.println("Target and args have common strings? " + common);
 
 					//if no common string then propagate them both up
 					if(!common) { //turn back to !common after done debugging
@@ -231,7 +236,8 @@ public class InvConstraintEquals<T extends A_Model_Inverse<T>> extends A_Inv_Con
 			}
 
 		} else {
-			System.out.println("ERROR: Euqals has no forward results, UNSAT");
+			printDebug("ERROR: Equals has no forward results");
+//			System.out.println("ERROR: Euqals has no forward results, UNSAT");
 			ret = new Tuple<Boolean,Boolean>(false, true);
 		}
 

@@ -44,13 +44,13 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 	protected void solveInputs() {
 		//from Marlin's code
 		// output finalized inverse constraints for debug
-		if (false) {
-			System.out.println(cid);
-			System.out.println(cid + "Inverse Constraint Set:");
+		if (true) {
+			printDebug(cid);
+			printDebug(cid + "Inverse Constraint Set:");
 			for (I_Inv_Constraint<T> c : allInverseConstraints.values()) {
-				System.out.println(cid + c.toString() + "\t" + allConstraints.get(c.getID()).toString());
+				printDebug(cid + c.toString() + "\t" + allConstraints.get(c.getID()).toString());
 			}
-			System.out.println(cid);
+			printDebug(cid);
 		}
 
 		long startTime = System.nanoTime();
@@ -60,9 +60,9 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 		//end from Marlin's code
 
 
-		System.out.println("Solving using BFS");
+		printDebug("Solving using BFS");
 		//create a queue of all dependent predicates
-		System.out.println(predicateIDs);
+		printDebug(predicateIDs.toString());
 		InvDefaultDirectedGraph eGraph = (InvDefaultDirectedGraph)graph;
 		TreeSet <Integer> qID = new TreeSet<Integer>();
 		//predicateIDs have the last predicate is the current constraint predicate
@@ -71,8 +71,8 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 		qID.retainAll(eGraph.getDependedPredicates(predicateIDs.get(predicateIDs.size()-1)));
 		//sort it so the predicate with the largest ids processed first
 		//Collections.sort(qID, Collections.reverseOrder());
-		System.out.println("Q " + qID);
-		System.out.println(predicateIDs);
+		printDebug("Q " + qID);
+		printDebug(predicateIDs.toString());
 		List<I_Inv_Constraint<T>> q = new ArrayList<I_Inv_Constraint<T>>();
 		Set<Integer> actual = new HashSet<Integer>();
 		for(Integer val : qID) {
@@ -81,14 +81,14 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 			actual.addAll(eGraph.getAncestors(allConstraints.get(val)));
 			actual.add(val);
 		}
-		System.out.println("actuall " + actual);
+		printDebug("actuall " + actual);
 		//iterate over all actual nodes and remove them from the parents
 		//those nodes that are not there
 		for (I_Inv_Constraint<T> c : allInverseConstraints.values()) {
-			System.out.println(c + "1 " + c.getPrevID());
+			printDebug(c + "1 " + c.getPrevID());
 			c.getPrevID().retainAll(actual);
 			c.update();
-			System.out.println(c + "2 " + c.getPrevID());
+			printDebug(c + "2 " + c.getPrevID());
 		}
 		
 
@@ -104,12 +104,12 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 			qID.remove(currID);
 			processedID.add(currID);
 			I_Inv_Constraint<T> curr = allInverseConstraints.get(currID);
-			System.out.println("node: " + curr);
-			System.out.println("parents are: " + curr.getPrevID());
+			printDebug("node: " + curr);
+			printDebug("parents are: " + curr.getPrevID());
 			//1st true - continue, false - backtrack
 			//2nd true - don't add to the backtrack map, false do
 			Tuple<Boolean, Boolean> result = curr.evaluate();
-			System.out.println("reslut " + result);
+			printDebug("reslut " + result);
 			if(result.get1()) {
 				//continue by extending the queue
 				if(curr.getNextID() != -1 && !qID.contains(curr.getNextID())) {
@@ -124,7 +124,7 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 					//just for debuging -- check to make sure there is no
 					//curr.getID in the backtracking map
 					if(backtrackMap.containsKey(curr.getID())) {
-						System.out.println("ERRROR: adding the same id to the backtrack map " + curr.getID());
+						printDebug("ERRROR: adding the same id to the backtrack map " + curr.getID());
 					} else {
 						backtrackQ.add(curr.getID());
 						backtrackQ.addAll(qID);
@@ -137,14 +137,14 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 				//the numbering go up as we go closer to the
 				//predicates
 				//eas: need to use lambda-expression here
-				System.out.println("BACKTRAKING " + backtrackMap);
+				printDebug("BACKTRAKING " + backtrackMap);
 				Integer backtrackID = Integer.MAX_VALUE; //all our nodes have positive ids
 				for(Integer ids : backtrackMap.keySet()) {
 					if(backtrackID > ids) {
 						backtrackID = ids;
 					}
 				}
-				System.out.println("backtrackID " + backtrackID);
+				printDebug("backtrackID " + backtrackID);
 				//case when nothing to backtrack to
 				if(backtrackID != Integer.MAX_VALUE) {
 					//get the queue
@@ -160,7 +160,7 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 					clearSet.remove(backtrackID);//remove the node itself to make more choices
 					clearSet.retainAll(processedID);//only keep those that have been computed
 					processedID.removeAll(clearSet);//now remove them from processed -- they will be added again
-					System.out.println("clearing  " + clearSet);
+					printDebug("clearing  " + clearSet);
 					//iterate for the clearSet and call clear on each inverse constraint 
 					for(int nodeID : clearSet) {
 						allInverseConstraints.get(nodeID).clear();
@@ -189,14 +189,14 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 			I_Inv_Constraint<T> i = allInverseConstraints.get(id);
 			if (i.getOp() == Operation.INIT_SYM) {
 				if (i.output(0) == null || i.output(0).isEmpty()) {
-					System.out.println("\nFAILURE: Failed to get solution to one or more inputs...");
-					System.out.println("\nSOLUTION TIME ms: 0");
+					printDebug("\nFAILURE: Failed to get solution to one or more inputs...");
+					printDebug("\nSOLUTION TIME ms: 0");
 					return;
 				}
 			}
 		}
 
-		System.out.println("\nSOLUTION TIME ms: " + durationInMillis);
+		printDebug("\nSOLUTION TIME ms: " + durationInMillis);
 
 		//for (I_Inv_Constraint<T> i : allInverseConstraints.values()) {
 		for(int id : processedID) {
@@ -207,7 +207,7 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 				// populate map for output to file/SPF
 				inputSolution.put(i.getID(), solution);
 
-				System.out.println(i.getID() + ": " + solution.getShortestExampleString());
+				printDebug(i.getID() + ": " + solution.getShortestExampleString());
 
 			}
 		}

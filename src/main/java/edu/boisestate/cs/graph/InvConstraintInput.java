@@ -124,7 +124,8 @@ public class InvConstraintInput<T extends A_Model_Inverse<T>>  extends A_Inv_Con
 	@Override
 	public Tuple<Boolean, Boolean> evaluate() {
 		Tuple<Boolean, Boolean>  ret = new Tuple<Boolean, Boolean>(true, true) ; //don't backtrack
-		System.out.format("EVALUATE INPUT %d ...\n",ID);
+		printDebug("EVALUATE INPUT " + ID + "...");
+//		System.out.format("EVALUATE INPUT %d ...\n",ID);
 //		Iterator<I_Inv_Constraint<T>> iter = prevConstraint.iterator();
 //		I_Inv_Constraint<T> nextC = iter.next();
 //		System.out.println("nextInput " + nextC);
@@ -140,10 +141,8 @@ public class InvConstraintInput<T extends A_Model_Inverse<T>>  extends A_Inv_Con
 		
 		//if consistent
 		if(!inputs.isEmpty()) {
-		
-			System.out.print("DEBUG " + op.toString() + " " + ID);
-			System.out.print(" solutions .... ");
-			
+			printDebug("DEBUG " + op.toString() + " " + ID);
+
 //    		BigInteger oneHundred = new BigInteger("300");
 //
 //    		if (inputs.modelCount().compareTo(oneHundred) > 0) {
@@ -159,7 +158,8 @@ public class InvConstraintInput<T extends A_Model_Inverse<T>>  extends A_Inv_Con
 		} else {
 			//solution not consistent, then backtrack
 			ret = new Tuple<Boolean, Boolean> (false, true);
-			System.out.println("      solution set " + this.ID + " not consistent, falling back ...");
+			printDebug("      solution set " + this.ID + " not consistent, falling back ...");
+//			System.out.println("      solution set " + this.ID + " not consistent, falling back ...");
 		}
 		return ret;//never backtrack here
 	}

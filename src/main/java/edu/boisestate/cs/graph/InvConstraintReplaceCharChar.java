@@ -91,11 +91,13 @@ public class InvConstraintReplaceCharChar<T extends A_Model_Inverse<T>> extends 
 	@Override
 	public Tuple<Boolean, Boolean> evaluate(){
 		Tuple<Boolean,Boolean> ret = new Tuple<Boolean,Boolean>(true, true);
-		System.out.format("EVALUATE TREPLACE CHAR %d ...\n",ID);
+		printDebug("EVALUATE REPLACE CHAR " + ID + " ...");
+//		System.out.format("EVALUATE TREPLACE CHAR %d ...\n",ID);
 		T inputs = incoming();
 		
 		if(inputs.isEmpty()) {
-			System.out.println("REPLACE CHAR INCOMING SET INCONSISTENT...");
+			printDebug("REPLACE CHAR INCOMING SET INCONSISTENT");
+//			System.out.println("REPLACE CHAR INCOMING SET INCONSISTENT...");
 			ret = new Tuple<Boolean,Boolean>(false, true);
 		} else {
 			//done performing intersection 
@@ -105,11 +107,13 @@ public class InvConstraintReplaceCharChar<T extends A_Model_Inverse<T>> extends 
 			
 			// intersect result with forward analysis results from previous constraint
 			resModel = solver.intersect(resModel, nextConstraint.getID());
-			System.out.println("find " + (char) find + " replace " + (char)replace);
+			printDebug("find " + (char) find + " replace " + (char)replace);
+//			System.out.println("find " + (char) find + " replace " + (char)replace);
 //			System.out.println("resModelInter " + resModel.getFiniteStrings());
 			
 			if (resModel.isEmpty()) {
-				System.out.println("REPLACE CHAR RESULT MODEL EMPTY...");
+				printDebug("REPLACE CHAR RESULT MODEL EMPTY...");
+//				System.out.println("REPLACE CHAR RESULT MODEL EMPTY...");
 				// halt solving, fallback
 				ret = new Tuple<Boolean,Boolean>(false, true);
 			} else {

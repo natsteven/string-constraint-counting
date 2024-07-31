@@ -99,12 +99,14 @@ public class InvConstraintDeleteStartEnd<T extends A_Model_Inverse<T>> extends A
 	
 	@Override
 	public Tuple<Boolean, Boolean> evaluate(){
-		System.out.format("EVALUATE DELETE %d ...\n",ID);
+		printDebug("EVALUATE DELETE " + ID + " ...");
+//		System.out.format("EVALUATE DELETE %d ...\n",ID);
 		Tuple<Boolean, Boolean>  ret = new Tuple<Boolean,Boolean>(true, true);
 
 		T inputs = incoming();
 		if(inputs.isEmpty()) {
-			System.out.println("DELETE SOLUTION INCOMING SET INCONSISTENT...");
+			printDebug("DELETE INCOMING SET INCONSISTENT...");
+//			System.out.println("DELETE SOLUTION INCOMING SET INCONSISTENT...");
 			ret = new Tuple<Boolean,Boolean>(false, true);
 		} else {
 			// perform inverse function on output from the input constraint at given index
@@ -117,7 +119,8 @@ public class InvConstraintDeleteStartEnd<T extends A_Model_Inverse<T>> extends A
 				// store result in this constraints output set at index 1
 				outputSet.put(1, resModel);	
 			} else {
-				System.out.println("DELETE OUTPUT SET IS EMTPY...");
+				printDebug("DELETE RESULT MODEL EMPTY...");
+//				System.out.println("DELETE OUTPUT SET IS EMTPY...");
 				ret = new Tuple<Boolean,Boolean>(false, true);
 			}
 		}

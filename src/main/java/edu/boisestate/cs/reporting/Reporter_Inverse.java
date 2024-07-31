@@ -270,7 +270,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         String row = joinStrings(columns, "\t");
 
         // output row
-        System.out.println(cid + row);
+        printDebug(cid + row);
 
         // --------------------------------------------------------------------------------------------
         // The process for solving the inputs needed to reach the current predicate location starts here.
@@ -333,53 +333,59 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         // THIS CODE DOES NOT CURRENTLY DO ANYTHING ....
 
         // indicate if output going to file ..
-        if (solutionFile != "") {
-        	System.out.println(cid + "Outputting to solution file: " + solutionFile);
-
-        	// Code to output json solution file here ...
-        	// A set of SPF inputs
-        	SPFInputSet SPFInputs = new SPFInputSet();
-
-        	// set this to reporter SAT ...
-        	SPFInputs.SAT = true;
-
-        	// for every solutionset, get possible strings, select one, add it to SPFInputSet
-//        	for (SolutionSet<T> ss : inputSolutions.values()) {
+//        if (solutionFile != "") {
+//        	printDebug(cid + "Outputting to solution file: " + solutionFile);
+//
+//        	// Code to output json solution file here ...
+//        	// A set of SPF inputs
+//        	SPFInputSet SPFInputs = new SPFInputSet();
+//
+//        	// set this to reporter SAT ...
+//        	SPFInputs.SAT = true;
+//
+//        	// for every solutionset, get possible strings, select one, add it to SPFInputSet
+////        	for (SolutionSet<T> ss : inputSolutions.values()) {
+////        		SPFInput SPFInput = new SPFInput();
+////        		SPFInput.ID = ss.getID();
+////        		SPFInput.input = ss.getSolution().getShortestExampleString();
+////        		SPFInputs.inputSet.add(SPFInput);
+////        	}
+//
+//        	for (Integer i : inputSolution.keySet()) {
 //        		SPFInput SPFInput = new SPFInput();
-//        		SPFInput.ID = ss.getID();
-//        		SPFInput.input = ss.getSolution().getShortestExampleString();
+//        		SPFInput.ID = i;
+//        		SPFInput.input = inputSolution.get(i).getShortestExampleString();
 //        		SPFInputs.inputSet.add(SPFInput);
 //        	}
-        	
-        	for (Integer i : inputSolution.keySet()) {
-        		SPFInput SPFInput = new SPFInput();
-        		SPFInput.ID = i;
-        		SPFInput.input = inputSolution.get(i).getShortestExampleString();
-        		SPFInputs.inputSet.add(SPFInput);
-        	}
-
-        	ObjectMapper mapper = new ObjectMapper(); 
-        	mapper.enable(SerializationFeature.INDENT_OUTPUT);
-
-        	try {
-        		mapper.writeValue(new File(solutionFile), SPFInputs);
-        	} catch (JsonGenerationException e1) {
-        		System.err.println(cid + "Error Generating JSON ...");
-        	} catch (JsonMappingException e1) {
-        		System.err.println(cid + "Error Mapping JSON ...");
-        	} catch (IOException e1) {
-        		System.err.println(cid + "Error Writing JSON File ...");
-        		// return false;
-        	}
-
-        }
+//
+//        	ObjectMapper mapper = new ObjectMapper();
+//        	mapper.enable(SerializationFeature.INDENT_OUTPUT);
+//
+//        	try {
+//        		mapper.writeValue(new File(solutionFile), SPFInputs);
+//        	} catch (JsonGenerationException e1) {
+//        		System.err.println(cid + "Error Generating JSON ...");
+//        	} catch (JsonMappingException e1) {
+//        		System.err.println(cid + "Error Mapping JSON ...");
+//        	} catch (IOException e1) {
+//        		System.err.println(cid + "Error Writing JSON File ...");
+//        		// return false;
+//        	}
+//
+//        }
 
         // output all input solutions
 
         // ------------------------------------------------------------------------------------    	
         // The input solution process stops here.
         // ------------------------------------------------------------------------------------
-         
+
+		if (toProcess.isEmpty()) {
+			for (Integer id : inputSolution.keySet()) {
+				System.out.println(id + ": " + inputSolution.get(id).getShortestExampleString());
+			}
+		}
+
     }
     
     /*
@@ -400,7 +406,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
     		int ID = pc.getId();
     		Operation op = pc.getOp();
     		String value = pc.getActualVal();
-    		//System.out.println("ID " + ID + " op " + op);
+    		printDebug("ID " + ID + " op " + op);
     		I_Inv_Constraint<T> newConstraint;
 
     		switch (op) {
@@ -660,7 +666,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
     			}
     			
     		}
-    		System.out.println("Parents  "  + p + " are " + invParents);
+    		printDebug("Parents  "  + p + " are " + invParents);
     		I_Inv_Constraint<T> invP = allInverseConstraints.get(p.getID());
     		invP.setPrev(invParents);
     	}
@@ -767,6 +773,6 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         String header = joinStrings(headers, "\t");
 
         // output header
-        System.out.println(cid + header);
+        printDebug(cid + header);
     }
 }

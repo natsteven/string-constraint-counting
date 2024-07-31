@@ -73,9 +73,8 @@ public class SolveMain {
 		 * graph and run the acyclic inverse method. 
 		 */
 		if (settings.getSolverType() == SolverType.INVERSE) {
-
-			printHeader(inputFile, initialBound, "Inverse", "Inverse", "Acyclic");
-
+			debug = settings.getDebug();
+			if (debug)printHeader(inputFile, initialBound, "Inverse", "Inverse", "Acyclic");
 			reduce = true;
 			DirectedGraph<PrintConstraint, SymbolicEdge> graph = loadGraph(inputFile);
 			run_Acyclic_Inverse_r3(graph);

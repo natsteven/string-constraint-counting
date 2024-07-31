@@ -95,10 +95,12 @@ public class InvConstraintToUpperCase<T extends A_Model_Inverse<T>> extends A_In
 	@Override
 	public Tuple<Boolean, Boolean> evaluate(){
 		Tuple<Boolean,Boolean> ret = new Tuple<Boolean,Boolean>(true, true);
-		System.out.format("EVALUATE TOLOWER %d ...\n",ID);
+		printDebug("EVALUATE TOUPPER " + ID + " ...");
+//		System.out.format("EVALUATE TOLOWER %d ...\n",ID);
 		T inputs = incoming();
 		if(inputs.isEmpty()) {
-			System.out.println("TOUPPER INCOMING SET INCONSISTENT...");
+			printDebug("TOUPPER INCOMING SET INCONSISTENT");
+//			System.out.println("TOUPPER INCOMING SET INCONSISTENT...");
 			ret = new Tuple<Boolean,Boolean>(false, true);
 		} else {
 			//done performing intersection 
@@ -110,7 +112,8 @@ public class InvConstraintToUpperCase<T extends A_Model_Inverse<T>> extends A_In
 
 
 			if (resModel.isEmpty()) {
-				System.out.println("TOUPPER RESULT MODEL EMPTY...");
+				printDebug("TOUPPER RESULTS MODEL EMPTY...");
+//				System.out.println("TOUPPER RESULT MODEL EMPTY...");
 				// halt solving, fallback
 				ret = new Tuple<Boolean,Boolean>(false, true);
 			} else {

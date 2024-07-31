@@ -51,7 +51,7 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 
 		evaluateCount++;
 
-		System.out.format("EVALUATE CONCAT %d ...\n",ID);
+		printDebug("EVALUATE CONCAT " + ID + " ...");
 		T inputs = inputConstraint.output(sourceIndex);
 		//List<Tuple<T,T>> outputs;
 
@@ -68,7 +68,8 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 			outputs = input.inv_concatenate_sym_set(nextModel, argModel);
 
 			for (Tuple<T,T> t : outputs) {
-				System.out.format("RCVD:  P %4s  S %4s\n", t.get1().getShortestExampleString(),t.get2().getShortestExampleString());
+				printDebug("RCVD: P " + t.get1().getShortestExampleString() + "\t S " + t.get2().getShortestExampleString());
+//				System.out.format("RCVD:  P %4s  S %4s\n", t.get1().getShortestExampleString(),t.get2().getShortestExampleString());
 			}
 
 			while (!outputs.isEmpty()) {
@@ -81,7 +82,8 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 				outputSet.put(1, prefix);
 				outputSet.put(2, suffix);
 
-				System.out.format("CHOSE: P %4s  S %4s\n", prefix.getShortestExampleString(), suffix.getShortestExampleString());
+				printDebug("CHOSE: P " + prefix.getShortestExampleString() + "\t S " + suffix.getShortestExampleString());
+//				System.out.format("CHOSE: P %4s  S %4s\n", prefix.getShortestExampleString(), suffix.getShortestExampleString());
 
 				newSplitOutputCount++;
 
@@ -118,13 +120,13 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 		boolean ostrich = true;
 		
 		if(inputs == null) {
-			System.out.println("inputs is null");
+			printDebug("inputs is null");
 			//the first time the node is evaluated
 			//do the intersection
 			inputs = incoming();
 		}
 		if(inputs.isEmpty()) {
-			System.out.println("CONCAT SYMV INCOMING SET INCONSISTENT...");
+			printDebug("CONCAT SYMV INCOMING SET INCONSISTENT...");
 			ret = new Tuple<Boolean,Boolean>(false, true);
 		} else {
 
@@ -142,13 +144,13 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 					break;
 				}
 			}
-			System.out.println("mapInOut " + mapInOut.containsKey(input));
+			printDebug("mapInOut " + mapInOut.containsKey(input));
 
 
 			if(mapInOut.containsKey(input)) {
 				//already computed outputs before just get the next value
 				currOutput = mapInOut.get(input);
-				System.out.println("Processed trying new valus");
+				printDebug("Processed trying new valus");
 			} else {
 				//compute it fresh and add to the map
 				//compute outgoing solutions
@@ -177,11 +179,11 @@ public class InvConstraintConcatSym<T extends A_Model_Inverse<T>> extends A_Inv_
 					//let's try this input
 					currOutput = input.inv_concatenate_sym_set(nextModel, argModel);
 					//if not a single split is produced then try another if some inputs are left
-					//System.out.println("currOutput " + currOutput);
+					printDebug("currOutput " + currOutput);
 					while(currOutput.isEmpty()) {
 						//more inputs left?
 						inputs.minus(input);
-						System.out.println("inputs empty " + inputs.isEmpty());
+						printDebug("inputs empty " + inputs.isEmpty());
 						if(inputs.isEmpty()) {
 							//backtrack to previous nodes, don't add to backtrack, no more inputs are left here
 							return new Tuple<Boolean, Boolean>(false, true);

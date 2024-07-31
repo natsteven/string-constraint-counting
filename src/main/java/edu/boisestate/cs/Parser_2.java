@@ -897,7 +897,7 @@ public class Parser_2<T extends A_Model<T>> {
 				if (findKnown && replaceKnown) {
 
 					// MJR store arguments in constraint for use during inverse
-					System.out.println("findChar " + findChar + " replaceChar " + replaceChar);
+					printDebug("findChar " + findChar + " replaceChar " + replaceChar);
 					constraint.addArg(findChar);
 					constraint.addArg(replaceChar);
 					constraint.setOp(REPLACE_CHAR_CHAR);
@@ -1259,5 +1259,9 @@ public class Parser_2<T extends A_Model<T>> {
 	 * Traverses the flow graph and solves PCs
 	 */
 	public void runSolver() {
+	}
+
+	public void printDebug(String message){
+		if (debug) System.out.println(message);
 	}
 }
