@@ -4,18 +4,17 @@ import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.EdgeReversedGraph;
 import org.jgrapht.traverse.BreadthFirstIterator;
 import org.jgrapht.traverse.DepthFirstIterator;
+import org.jgrapht.traverse.TopologicalOrderIterator;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
+
 public class InvDefaultDirectedGraph extends DefaultDirectedGraph<PrintConstraint, SymbolicEdge> {
 
 	private Map<PrintConstraint, Set<PrintConstraint>> predDepend;
 	private Map<Integer, Set<Integer>> predDependID;
+	private Set<Integer> necessaryPredicates = new HashSet<Integer>();
+	private int numInputs;
 
 	public InvDefaultDirectedGraph(Class<? extends SymbolicEdge> edgeClass) {
 		super(edgeClass);
@@ -47,7 +46,7 @@ public class InvDefaultDirectedGraph extends DefaultDirectedGraph<PrintConstrain
 		}
 
 		//System.out.println(sources);
-
+		numInputs = sources.size();
 		//intermediate map that remember symbolic sources for each predicate
 		Map<PrintConstraint, Set<PrintConstraint>> symbValPred = new HashMap<PrintConstraint, Set<PrintConstraint>>();
 		//DFS for each sink
@@ -76,6 +75,8 @@ public class InvDefaultDirectedGraph extends DefaultDirectedGraph<PrintConstrain
 			}
 			
 		}
+
+		findNecessaryPredicates();
 
 //		//resulting map
 //		for(Entry<PrintConstraint, Set<PrintConstraint>> e : predDepend.entrySet()) {
@@ -121,5 +122,42 @@ public class InvDefaultDirectedGraph extends DefaultDirectedGraph<PrintConstrain
 		return predDependID.keySet();
 	}
 
+	public Integer getNumSymInputs(){
+		return numInputs;
+	}
 
+	public Set<Integer> getNecessaryPredicates(){
+		return necessaryPredicates;
+	}
+
+	public void findNecessaryPredicates() {
+		// create priority queue structure for topological iteration
+		Queue<PrintConstraint> queue = new PriorityQueue<>(1, new PrintConstraintComparator());
+
+		// create topological iterator for graph
+		TopologicalOrderIterator<PrintConstraint, SymbolicEdge> iterator = new TopologicalOrderIterator<>(this, queue);
+
+		HashMap<Integer, Set<Integer>> copyPredDepends = new HashMap<Integer, Set<Integer>>();
+		for (Entry<Integer, Set<Integer>> e : predDependID.entrySet()) {
+			copyPredDepends.put(e.getKey(), new HashSet<Integer>(e.getValue()));
+		}
+
+		// iterate over graph in topological order to find predicates that will need to be processed
+		while (iterator.hasNext()) {
+			PrintConstraint current = iterator.next();
+			int currentID = current.getId();
+			if (copyPredDepends.containsKey(currentID)) {
+				// if not just itself, remove itself from all predicates that depend on it
+				if (copyPredDepends.get(currentID).size() > 1) {
+					Set<Integer> removals = new HashSet<Integer>(copyPredDepends.get(currentID));
+					copyPredDepends.remove(currentID);
+					for (Integer pred : removals) {
+						if (copyPredDepends.containsKey(pred)) copyPredDepends.get(pred).remove(currentID);
+					}
+				} else {
+					necessaryPredicates.add(current.getId());
+				}
+			}
+		}
+	}
 }

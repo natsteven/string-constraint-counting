@@ -291,17 +291,11 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 
 		predicateIDs.add(predID);
 
-		toProcess.remove(predID);
-
-		InvDefaultDirectedGraph thisGraph = (InvDefaultDirectedGraph)(graph);
-
-		Set<Integer> predAncestors = thisGraph.getAncestors(thisGraph.getConstraint(predID));
-		predAncestors.retainAll(toProcess);
-		// if this predicate has ancestors that are predicates, do not process it
-		if (!predAncestors.isEmpty()){
-			System.out.println("NOT PROCESSING " + predID + " DUE TO ANCESTORS");
+		if (!toProcess.contains(predID)){
+			printDebug("SKIPPING PROCESSING PREDICATE " + predID);
 			return;
 		}
+		toProcess.remove(predID);
 
         // build the transposed graph of inverse constraints
         buildICG_r3();
@@ -380,7 +374,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         // The input solution process stops here.
         // ------------------------------------------------------------------------------------
 
-		if (toProcess.isEmpty()) {
+		if (toProcess.isEmpty() && !debug) {
 			for (Integer id : inputSolution.keySet()) {
 				System.out.println(id + ": " + inputSolution.get(id).getShortestExampleString());
 			}

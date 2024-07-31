@@ -28,7 +28,7 @@ abstract public class A_Reporter <T extends A_Model<T>> {
     protected final Map<Integer, String[]> operationsMap;
     protected final Map<Integer, Long> timerMap;
 
-    protected HashSet<Integer> toProcess = new HashSet<>();
+    protected Set<Integer> toProcess = new HashSet<>();
     /**
      * 
      * @param graph
@@ -62,7 +62,7 @@ abstract public class A_Reporter <T extends A_Model<T>> {
         //all incoming constraints of a constraint (node)
         Map<PrintConstraint, Set<PrintConstraint>> unfinishedInEdges = new HashMap<>();
 
-        toProcess = new HashSet<>(((InvDefaultDirectedGraph)graph).getPredicates());
+        toProcess = ((InvDefaultDirectedGraph)graph).getNecessaryPredicates();
 
         int maxId = 0;
 

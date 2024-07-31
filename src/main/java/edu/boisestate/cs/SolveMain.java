@@ -76,7 +76,12 @@ public class SolveMain {
 			debug = settings.getDebug();
 			if (debug)printHeader(inputFile, initialBound, "Inverse", "Inverse", "Acyclic");
 			reduce = true;
-			DirectedGraph<PrintConstraint, SymbolicEdge> graph = loadGraph(inputFile);
+			InvDefaultDirectedGraph graph = (InvDefaultDirectedGraph) loadGraph(inputFile);
+			printDebug("=".repeat(42) + "GRAPH STATS" + "=".repeat(42));
+			printDebug("NUM CONSTRAINTS:\t" + graph.vertexSet().size());
+			printDebug("NUM PREDICATES:\t\t" + graph.getPredicates().size());
+			printDebug("NUM SYMBOLIC INPUTS:\t" + graph.getNumSymInputs());
+			printDebug("=".repeat(95));
 			run_Acyclic_Inverse_r3(graph);
 
 
@@ -695,5 +700,9 @@ public class SolveMain {
 		System.out.println("Using automata....... : " + automata + "\n");
 		}
 		
+	}
+
+	private static void printDebug(String s) {
+		if (debug) System.out.println(s);
 	}
 }
