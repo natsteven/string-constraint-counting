@@ -28,7 +28,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 	
 	
 	private Automaton automaton;
-	
+	private final boolean modelDebug = false;
 
    /**
     * Constructor 1: Requires *ACYCLIC* automata as argument. <br>
@@ -37,7 +37,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
     * 
     * @param automaton - ACYCLIC Automaton
     * @param alphabet - Alphabet
-    * @param initialBoundLength - Initial bound, should match Automaton length
+    * @param boundLength - Initial bound, should match Automaton length
     */
 	protected Model_Acyclic_Inverse(Automaton automaton, Alphabet alphabet, int boundLength) {
        
@@ -898,7 +898,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 		int resultLength = this.getBoundLength();		// should be a single string, length = bound
 		int prefixBound = base.getBoundLength();		// symbolic, could be any length up to bound
 		
-		System.out.println("attempting to split: ");
+		printDebug("attempting to split: ");
 //		for (String s : this.getFiniteStrings()) {
 //			System.out.println(s);
 //		}
@@ -937,7 +937,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 		}
 		
 		if (noMatch) {
-			System.out.println("ERROR: Could not find a valid prefix, returning last prefix tried...");
+            printDebug("ERROR: Could not find a valid prefix, returning last prefix tried...");
 		}
 		
 		return prefixModel;
@@ -960,8 +960,8 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 		//int suffixBound = arg.getBoundLength();			// symbolic, could be any length up to bound
 		int resultLength = this.getBoundLength();		// should be a single string, length = bound
 		int prefixBound = base.getBoundLength();		// symbolic, could be any length up to bound
-		
-		System.out.println("attempting to split: ");
+
+        printDebug("attempting to split: ");
 //		for (String s : this.getFiniteStrings()) {
 //			System.out.println(s);
 //		}
@@ -1000,7 +1000,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 		}
 		
 		if (noMatch) {
-			System.out.println("ERROR: Could not find a valid prefix, returning last prefix tried...");
+            printDebug("ERROR: Could not find a valid prefix, returning last prefix tried...");
 		}
 		
 		return new Tuple<Model_Acyclic_Inverse, Model_Acyclic_Inverse>(prefixModel, suffixModel);
@@ -1296,8 +1296,9 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 		int suffixBound = arg.getBoundLength();			// symbolic, could be any length up to bound
 		int resultLength = this.getBoundLength();		// should be a single string, length = bound
 		int prefixBound = base.getBoundLength();		// symbolic, could be any length up to bound
-		
-		System.out.format("Bounds: S %s P %s RL %s \n", suffixBound, prefixBound, resultLength);
+
+        printDebug("Bounds: S " + suffixBound + " P " + prefixBound + " RL " + resultLength);
+//		System.out.format("Bounds: S %s P %s RL %s \n", suffixBound, prefixBound, resultLength);
 		
 		
 		List<Tuple<Model_Acyclic_Inverse,Model_Acyclic_Inverse>> results = new ArrayList<Tuple<Model_Acyclic_Inverse,Model_Acyclic_Inverse>>();
@@ -1314,15 +1315,16 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 			prefixModel = this.substring(0, prefixLength);
 			
 			suffixModel = this.substring(prefixLength, resultLength);
-			
-			System.out.format("SPLIT: P %4s  S %6s ", prefixModel.getShortestExampleString(), suffixModel.getShortestExampleString());
+
+            printDebug("SPLIT: P " + prefixModel.getShortestExampleString() + " S " + suffixModel.getShortestExampleString();
+//			System.out.format("SPLIT: P %4s  S %6s ", prefixModel.getShortestExampleString(), suffixModel.getShortestExampleString());
 			
 			if (!base.intersect(prefixModel).isEmpty() && !arg.intersect(suffixModel).isEmpty()) {
 				results.add(new Tuple<Model_Acyclic_Inverse, Model_Acyclic_Inverse>(prefixModel, suffixModel));
 				noMatch = false;
-				System.out.println(" Accepted");
+                printDebug("Accepted");
 			} else {
-				System.out.print(" Intersection of prfx or sffx empty - Rejected");
+                printDebug(" Intersection of prfx or sffx empty - Rejected");
 //				System.out.println(" base count: " + base.modelCount() + " arg count: " + arg.modelCount());
 			}
 			
@@ -1331,7 +1333,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 		}
 		
 		if (noMatch) {
-			System.out.println("ERROR: Could not find a valid prefix / suffix ...");
+            printDebug("ERROR: Could not find a valid prefix / suffix ...");
 		}
 		
 		return results;
@@ -1383,7 +1385,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 			//update and check if this split works with base
 			prefixModel = base.intersect(prefixModel);
 			if (prefixModel.isEmpty()) {
-				System.out.println("Going to the next split, prefix failed");
+                printDebug("Going to the next split, prefix failed");
 				//does not work, go to the next split
 				continue;
 			}
@@ -1404,7 +1406,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 			//update and check if this split worked for suffix
 			suffixModel = arg.intersect(suffixModel);
 			if(suffixModel.isEmpty()) {
-				System.out.println("Going to the next split, suffix failed");
+                printDebug("Going to the next split, suffix failed");
 				continue;
 			}
 			
@@ -1426,7 +1428,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 		}
 		
 		if(noMatch) {
-			System.out.println("No match found, returning empty set of tuples");
+            printDebug("No match found, returning empty set of tuples");
 		}
 		
 		return results;
@@ -1499,7 +1501,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 
 	@Override
 	public Model_Acyclic_Inverse inv_replaceFirst() {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub`
 		return null;
 	}
 
@@ -1508,5 +1510,9 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+    private void printDebug(String message) {
+    	if (modelDebug) System.out.println(message);
+    }
 
 }

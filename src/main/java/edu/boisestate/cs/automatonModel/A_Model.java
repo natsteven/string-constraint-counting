@@ -52,6 +52,7 @@ public abstract class A_Model <T extends A_Model <T>> implements Cloneable, I_Mo
 
     @Override
 	public abstract boolean isEmpty();
+	public abstract boolean isEmpty();
 
     @Override
 	public abstract boolean isSingleton();
