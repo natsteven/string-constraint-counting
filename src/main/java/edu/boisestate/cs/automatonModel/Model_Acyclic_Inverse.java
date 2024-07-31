@@ -1316,7 +1316,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 			
 			suffixModel = this.substring(prefixLength, resultLength);
 
-            printDebug("SPLIT: P " + prefixModel.getShortestExampleString() + " S " + suffixModel.getShortestExampleString();
+            printDebug("SPLIT: P " + prefixModel.getShortestExampleString() + " S " + suffixModel.getShortestExampleString());
 //			System.out.format("SPLIT: P %4s  S %6s ", prefixModel.getShortestExampleString(), suffixModel.getShortestExampleString());
 			
 			if (!base.intersect(prefixModel).isEmpty() && !arg.intersect(suffixModel).isEmpty()) {
