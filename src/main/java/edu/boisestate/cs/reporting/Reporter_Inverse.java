@@ -299,7 +299,10 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 		Set<Integer> predAncestors = thisGraph.getAncestors(thisGraph.getConstraintFromID(predID));
 		predAncestors.retainAll(predProcessing);
 		// if this predicate has ancestors that are predicates, do not process it
-		if (!predAncestors.isEmpty()) return;
+		if (!predAncestors.isEmpty()){
+			System.out.println("NOT PROCESSING " + predID + " DUE TO ANCESTORS");
+			return;
+		}
 
 //		if (predProcessing.get(predID).size() > 1){
 //			Set<Integer> removals = predProcessing.get(predID);
