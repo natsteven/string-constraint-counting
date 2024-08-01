@@ -375,10 +375,44 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         // ------------------------------------------------------------------------------------
 
 		if (toProcess.isEmpty() && !debug) {
+			if (inputSolution.size() != ((InvDefaultDirectedGraph)graph).getNumSymInputs()){
+				System.out.println("unsat");
+				return;
+			}
+			System.out.println("sat,");
 			for (Integer id : inputSolution.keySet()) {
-				System.out.println(id + ": " + inputSolution.get(id).getShortestExampleString());
+				System.out.println(id + ": \"" + inputSolution.get(id).getShortestExampleString() + "\"");
+			}
+		} else if (toProcess.isEmpty() && (inputSolution.size() == ((InvDefaultDirectedGraph)graph).getNumSymInputs())) {
+			System.out.println("sat");
+		}
+
+
+		if (debug) { //printing of solutions done each iteration just print unsat/sat
+			if (toProcess.isEmpty()) {//processing is done
+				if (inputSolution.size() != ((InvDefaultDirectedGraph) graph).getNumSymInputs()) {
+					System.out.println("error in solutions set");
+					System.out.println("expected: " + ((InvDefaultDirectedGraph) graph).getNumSymInputs());
+					System.out.println("actual: " + inputSolution.size());
+					for (Integer id : inputSolution.keySet()) {
+						System.out.println(id + ": \"" + inputSolution.get(id).getShortestExampleString() + "\"");
+					}
+					System.out.println("unsat");
+				} else {
+					System.out.println("sat");
+				}
+			}
+		} else {
+			if (toProcess.isEmpty()) { //done
+				if (inputSolution.size() != ((InvDefaultDirectedGraph)graph).getNumSymInputs())
+					System.out.println("unsat");
+				else {
+					System.out.println("sat");
+				}
 			}
 		}
+
+
 
     }
     
