@@ -291,10 +291,10 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 
 		predicateIDs.add(predID);
 
-		if (!toProcess.contains(predID)){
-			printDebug("SKIPPING PROCESSING PREDICATE " + predID);
-			return;
-		}
+//		if (!toProcess.contains(predID)){
+//			printDebug("SKIPPING PROCESSING PREDICATE " + predID);
+//			return;
+//		}
 		toProcess.remove(predID);
 
         // build the transposed graph of inverse constraints
@@ -765,16 +765,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         
     	
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     @Override
     protected void outputHeader() {
 
