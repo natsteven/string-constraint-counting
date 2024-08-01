@@ -11,7 +11,7 @@ public abstract class A_Model_Inverse <T extends A_Model_Inverse <T>> extends A_
 	// MJR - widened string cut back to size when intersected with previous state
 	protected int maxStringPadding = 64;
 	protected Automaton automaton;
-    protected boolean debug;
+    protected boolean debug = true;
 	
     protected A_Model_Inverse(Alphabet alphabet, int initialBoundLength) {
     	super(alphabet,initialBoundLength);
@@ -26,8 +26,9 @@ public abstract class A_Model_Inverse <T extends A_Model_Inverse <T>> extends A_
     public Automaton getAutomatonObject() {
  	   return this.automaton;
     }
-    
 
+    protected void printDebug(String message) {
+        if (debug) System.out.println(message);
+    }
 
-    
 }

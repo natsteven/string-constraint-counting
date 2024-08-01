@@ -28,7 +28,6 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 	
 	
 	private Automaton automaton;
-	private final boolean modelDebug = false;
 
    /**
     * Constructor 1: Requires *ACYCLIC* automata as argument. <br>
@@ -1511,8 +1510,5 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
 		return null;
 	}
 
-    private void printDebug(String message) {
-    	if (modelDebug) System.out.println(message);
-    }
 
 }

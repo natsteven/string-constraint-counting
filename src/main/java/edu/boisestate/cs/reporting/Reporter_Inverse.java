@@ -299,7 +299,13 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 
         // build the transposed graph of inverse constraints
         buildICG_r3();
-        
+
+		if (debug) {
+			for (I_Inv_Constraint<T> con : allInverseConstraints.values()){
+				con.setDebug(true);
+			}
+		}
+
         solveInputs();
 
         // output finalized inverse constraints for debug
@@ -374,19 +380,6 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         // The input solution process stops here.
         // ------------------------------------------------------------------------------------
 
-		if (toProcess.isEmpty() && !debug) {
-			if (inputSolution.size() != ((InvDefaultDirectedGraph)graph).getNumSymInputs()){
-				System.out.println("unsat");
-				return;
-			}
-			System.out.println("sat,");
-			for (Integer id : inputSolution.keySet()) {
-				System.out.println(id + ": \"" + inputSolution.get(id).getShortestExampleString() + "\"");
-			}
-		} else if (toProcess.isEmpty() && (inputSolution.size() == ((InvDefaultDirectedGraph)graph).getNumSymInputs())) {
-			System.out.println("sat");
-		}
-
 
 		if (debug) { //printing of solutions done each iteration just print unsat/sat
 			if (toProcess.isEmpty()) {//processing is done
@@ -407,7 +400,10 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 				if (inputSolution.size() != ((InvDefaultDirectedGraph)graph).getNumSymInputs())
 					System.out.println("unsat");
 				else {
-					System.out.println("sat");
+					System.out.println("sat,");
+					for (Integer id : inputSolution.keySet()) {
+						System.out.println(id + ": \"" + inputSolution.get(id).getShortestExampleString() + "\"");
+					}
 				}
 			}
 		}
