@@ -291,20 +291,22 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 
 		predicateIDs.add(predID);
 
+		// ------------------------ Traversal Optimization?
 //		if (!toProcess.contains(predID)){
 //			printDebug("SKIPPING PROCESSING PREDICATE " + predID);
 //			return;
 //		}
+		// ------------------------
 		toProcess.remove(predID);
 
         // build the transposed graph of inverse constraints
         buildICG_r3();
 
-		if (debug) {
-			for (I_Inv_Constraint<T> con : allInverseConstraints.values()){
-				con.setDebug(true);
-			}
-		}
+//		if (debug) {
+//			for (I_Inv_Constraint<T> con : allInverseConstraints.values()){
+//				con.setDebug(true);
+//			}
+//		}
 
         solveInputs();
 
@@ -391,8 +393,6 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 						System.out.println(id + ": \"" + inputSolution.get(id).getShortestExampleString() + "\"");
 					}
 					System.out.println("unsat");
-				} else {
-					System.out.println("sat");
 				}
 			}
 		} else {

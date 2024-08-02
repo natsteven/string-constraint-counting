@@ -236,7 +236,7 @@ public class InvConstraintEquals<T extends A_Model_Inverse<T>> extends A_Inv_Con
 			}
 
 		} else {
-			printDebug("ERROR: Equals has no forward results");
+			printDebug("ERROR: Equals has no forward results, UNSAT");
 //			System.out.println("ERROR: Euqals has no forward results, UNSAT");
 			ret = new Tuple<Boolean,Boolean>(false, true);
 		}

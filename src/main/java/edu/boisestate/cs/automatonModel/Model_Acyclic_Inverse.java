@@ -535,6 +535,7 @@ public class Model_Acyclic_Inverse extends A_Model_Inverse <Model_Acyclic_Invers
         Automaton result = this.automaton.concatenate(arg);
 
         // minimize result automaton
+//        result.reduce(); //?
         result.minimize();
 
         // calculate new bound length

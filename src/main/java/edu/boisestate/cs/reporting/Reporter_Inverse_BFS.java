@@ -189,8 +189,8 @@ public class Reporter_Inverse_BFS<T extends A_Model_Inverse<T>> extends Reporter
 			I_Inv_Constraint<T> i = allInverseConstraints.get(id);
 			if (i.getOp() == Operation.INIT_SYM) {
 				if (i.output(0) == null || i.output(0).isEmpty()) {
-					printDebug("\nFAILURE: Failed to get solution to one or more inputs...");
-					printDebug("\nSOLUTION TIME ms: 0");
+					printDebug("FAILURE: Failed to get solution to one or more inputs...");
+					inputSolution.remove(i.getID());
 					return;
 				}
 			}

@@ -129,7 +129,7 @@ public class InvConstraintPredicate<T extends A_Model_Inverse<T>> extends A_Inv_
 		outputSet.put(indxSymb, predicateResult);
 		outputSet.put(indxConcr, solver.getSymbolicModel(argID));//the argument for now is concrete, so whatever is coming from it
 	} else {
-		printDebug("ERROR: Predicate has no forward results");
+		printDebug("ERROR: Predicate has no forward results, UNSAT");
 //		System.out.println("ERROR: Predicate has no forward results, UNSAT");
 		ret = new Tuple<Boolean,Boolean>(false, true);
 	}
