@@ -98,7 +98,7 @@ public class InvConstraintConcreteValue<T extends A_Model_Inverse<T>>  extends A
 		
 		//eas: sanity check mare sure the inputs is the
 		//actual concrete value - add || inputs.getFiniteStrings().size() != 1
-		if (!inputs.containsString(test) ) {
+		if (inputs == null || !inputs.containsString(test) ) {
 			printDebug("ERROR IN EVALUATE CONCRETE VALUE " + ID + "...");
 //			System.out.format("ERROR IN EVALUATE CONCRETE VALUE %d ...\n",ID);
 		}

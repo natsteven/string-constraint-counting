@@ -291,13 +291,15 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
 
 		predicateIDs.add(predID);
 
+		// this stops any backprop from happening until forward prop has finished
+		// also currently only works on a necessary subset though the soundness should be confirmed
 		// ------------------------ Traversal Optimization?
-		if (!toProcess.contains(predID)){
-			printDebug("SKIPPING PROCESSING PREDICATE " + predID);
+		if (!toProcess.contains(constraint)){
+//			printDebug("SKIPPING PROCESSING PREDICATE " + predID);
 			return;
 		}
 		// ------------------------
-		toProcess.remove(predID);
+		processIt.remove();
 
         // build the transposed graph of inverse constraints
         buildICG_r3();

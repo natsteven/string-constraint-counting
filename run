@@ -16,5 +16,4 @@ if [ "$status" -ne 0 ]; then
 	exit "$status"
 fi
 
-
 java -cp target/string-constraint-solvers-1.0-SNAPSHOT-jar-with-dependencies.jar edu.boisestate.cs.SolveMain "$1" -s inverse -v 2 -l "$2" $3

@@ -3,6 +3,7 @@ package edu.boisestate.cs.reporting;
 import edu.boisestate.cs.BasicTimer;
 import edu.boisestate.cs.Parser;
 import edu.boisestate.cs.Parser_2;
+import edu.boisestate.cs.Settings;
 import edu.boisestate.cs.automatonModel.A_Model;
 import edu.boisestate.cs.graph.*;
 //import edu.boisestate.cs.solvers.ExtendedSolver;
@@ -28,7 +29,8 @@ abstract public class A_Reporter <T extends A_Model<T>> {
     protected final Map<Integer, String[]> operationsMap;
     protected final Map<Integer, Long> timerMap;
 
-    protected Set<Integer> toProcess = new HashSet<>();
+    protected Set<PrintConstraint> toProcess = new HashSet<>();
+    protected Iterator<PrintConstraint> processIt;
     /**
      * 
      * @param graph
@@ -61,8 +63,6 @@ abstract public class A_Reporter <T extends A_Model<T>> {
         Map<PrintConstraint, Set<PrintConstraint>> unfinishedOutEdges = new HashMap<>();
         //all incoming constraints of a constraint (node)
         Map<PrintConstraint, Set<PrintConstraint>> unfinishedInEdges = new HashMap<>();
-
-        toProcess = ((InvDefaultDirectedGraph)graph).getNecessaryPredicates();
 
         int maxId = 0;
 
@@ -170,6 +170,7 @@ abstract public class A_Reporter <T extends A_Model<T>> {
                 boolean isBoolFunc = parser.addEnd(constraint);//parses the constraints
 
                 if (isBoolFunc) {
+                    // this is called but no backward propogation is done, just certain necessary forward stuff
                     this.calculateStats(constraint); //invokes prints and stats computations, also sat checks
                 }
 
@@ -225,7 +226,19 @@ abstract public class A_Reporter <T extends A_Model<T>> {
                 finishEdges(unfinishedInEdges, unfinishedOutEdges, constraint);
             }
         }
-       
+
+        // ----------------------------------BACKPROP STARTS -----------------------------------------------------------
+        // if this.solver == inverse or something?
+
+        // optimized?
+        toProcess = ((InvDefaultDirectedGraph)graph).getNecessaryPredicates();
+        // not optimized
+//        toProcess = ((InvDefaultDirectedGraph)graph).getPredicates();
+
+        processIt = toProcess.iterator();
+        while (processIt.hasNext()) {
+            calculateStats(processIt.next());
+        }
         //solveInputs();
         
         // shut down solver

@@ -13,7 +13,7 @@ public class InvDefaultDirectedGraph extends DefaultDirectedGraph<PrintConstrain
 
 	private Map<PrintConstraint, Set<PrintConstraint>> predDepend;
 	private Map<Integer, Set<Integer>> predDependID;
-	private Set<Integer> necessaryPredicates = new HashSet<Integer>();
+	private Set<PrintConstraint> necessaryPredicates = new HashSet<PrintConstraint>();
 	private int numInputs;
 
 	public InvDefaultDirectedGraph(Class<? extends SymbolicEdge> edgeClass) {
@@ -118,15 +118,15 @@ public class InvDefaultDirectedGraph extends DefaultDirectedGraph<PrintConstrain
 		return null;
 	}
 
-	public Set<Integer> getPredicates(){
-		return predDependID.keySet();
+	public Set<PrintConstraint> getPredicates(){
+		return predDepend.keySet();
 	}
 
 	public Integer getNumSymInputs(){
 		return numInputs;
 	}
 
-	public Set<Integer> getNecessaryPredicates(){
+	public Set<PrintConstraint> getNecessaryPredicates(){
 		return necessaryPredicates;
 	}
 
@@ -155,7 +155,7 @@ public class InvDefaultDirectedGraph extends DefaultDirectedGraph<PrintConstrain
 						if (copyPredDepends.containsKey(pred)) copyPredDepends.get(pred).remove(currentID);
 					}
 				} else {
-					necessaryPredicates.add(current.getId());
+					necessaryPredicates.add(current);
 				}
 			}
 		}
