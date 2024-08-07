@@ -191,6 +191,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         // branches disjoint?
         parser.assertBooleanConstraint(result, constraint);
 
+
         // update accumulated timer for base
         long prevTime = 0;
         if (timerMap.containsKey(base)) {
@@ -205,6 +206,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
             prevTime = timerMap.get(arg);
         }
         timerMap.put(arg, lastTime + prevTime);
+
 
         // store symbolic string values
         solver.setLast(base, arg);
