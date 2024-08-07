@@ -1,0 +1,144 @@
+sat
+(
+  (define-fun sym7 () String
+    "")
+  (define-fun sym8 () String
+    "A")
+  (define-fun Alphabet () RegLan
+    (let ((a!1 (re.union (re.union (re.union (str.to_re "A") (str.to_re "B"))
+                               (str.to_re "C"))
+                     (str.to_re "a"))))
+  (re.* (re.union (re.union a!1 (str.to_re "b")) (str.to_re "c")))))
+)
+sat
+(
+  (define-fun sym8 () String
+    "")
+  (define-fun Alphabet () RegLan
+    (let ((a!1 (re.union (re.union (re.union (str.to_re "A") (str.to_re "B"))
+                               (str.to_re "C"))
+                     (str.to_re "a"))))
+  (re.* (re.union (re.union a!1 (str.to_re "b")) (str.to_re "c")))))
+  (define-fun sym7 () String
+    "")
+)
+sat
+(
+  (define-fun sym7 () String
+    "aB")
+  (define-fun sym8 () String
+    "aBAa")
+  (define-fun Alphabet () RegLan
+    (let ((a!1 (re.union (re.union (re.union (str.to_re "A") (str.to_re "B"))
+                               (str.to_re "C"))
+                     (str.to_re "a"))))
+  (re.* (re.union (re.union a!1 (str.to_re "b")) (str.to_re "c")))))
+)
+sat
+(
+  (define-fun sym8 () String
+    "aB")
+  (define-fun Alphabet () RegLan
+    (let ((a!1 (re.union (re.union (re.union (str.to_re "A") (str.to_re "B"))
+                               (str.to_re "C"))
+                     (str.to_re "a"))))
+  (re.* (re.union (re.union a!1 (str.to_re "b")) (str.to_re "c")))))
+  (define-fun sym7 () String
+    "aB")
+)
+sat
+(
+  (define-fun sym7 () String
+    "Ba")
+  (define-fun sym8 () String
+    "Ab")
+  (define-fun Alphabet () RegLan
+    (let ((a!1 (re.union (re.union (re.union (str.to_re "A") (str.to_re "B"))
+                               (str.to_re "C"))
+                     (str.to_re "a"))))
+  (re.* (re.union (re.union a!1 (str.to_re "b")) (str.to_re "c")))))
+)
+sat
+(
+  (define-fun sym7 () String
+    "")
+  (define-fun sym8 () String
+    "")
+  (define-fun Alphabet () RegLan
+    (let ((a!1 (re.union (re.union (re.union (str.to_re "A") (str.to_re "B"))
+                               (str.to_re "C"))
+                     (str.to_re "a"))))
+  (re.* (re.union (re.union a!1 (str.to_re "b")) (str.to_re "c")))))
+)
+sat
+(
+  (define-fun sym7 () String
+    "")
+  (define-fun sym8 () String
+    "")
+  (define-fun Alphabet () RegLan
+    (let ((a!1 (re.union (re.union (re.union (str.to_re "A") (str.to_re "B"))
+                               (str.to_re "C"))
+                     (str.to_re "a"))))
+  (re.* (re.union (re.union a!1 (str.to_re "b")) (str.to_re "c")))))
+)
+sat
+(
+  (define-fun sym7 () String
+    "B")
+  (define-fun sym8 () String
+    "C")
+  (define-fun Alphabet () RegLan
+    (let ((a!1 (re.union (re.union (re.union (str.to_re "A") (str.to_re "B"))
+                               (str.to_re "C"))
+                     (str.to_re "a"))))
+  (re.* (re.union (re.union a!1 (str.to_re "b")) (str.to_re "c")))))
+)
+unsat
+(error "line 15 column 10: model is not available")
+unsat
+(error "line 15 column 10: model is not available")
+sat
+(
+  (define-fun sym7 () String
+    "A")
+  (define-fun Alphabet () RegLan
+    (let ((a!1 (re.union (re.union (re.union (str.to_re "A") (str.to_re "B"))
+                               (str.to_re "C"))
+                     (str.to_re "a"))))
+  (re.* (re.union (re.union a!1 (str.to_re "b")) (str.to_re "c")))))
+)
+unsat
+(error "line 11 column 10: model is not available")
+unsat
+(error "line 18 column 10: model is not available")
+sat
+(
+  (define-fun sym9 () String
+    "")
+  (define-fun sym7 () String
+    "a")
+  (define-fun sym8 () String
+    "b")
+  (define-fun Alphabet () RegLan
+    (let ((a!1 (re.union (re.union (re.union (str.to_re "A") (str.to_re "B"))
+                               (str.to_re "C"))
+                     (str.to_re "a"))))
+  (re.* (re.union (re.union a!1 (str.to_re "b")) (str.to_re "c")))))
+)
+sat
+(
+  (define-fun sym9 () String
+    "C")
+  (define-fun sym7 () String
+    "a")
+  (define-fun sym8 () String
+    "b")
+  (define-fun Alphabet () RegLan
+    (let ((a!1 (re.union (re.union (re.union (str.to_re "A") (str.to_re "B"))
+                               (str.to_re "C"))
+                     (str.to_re "a"))))
+  (re.* (re.union (re.union a!1 (str.to_re "b")) (str.to_re "c")))))
+)
+unsat
+(error "line 19 column 10: model is not available")

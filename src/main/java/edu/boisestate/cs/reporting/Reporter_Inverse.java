@@ -148,7 +148,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         solver.setLast(base, arg);
 
         // test if true branch is SAT
-        parser.assertBooleanConstraint(true, constraint);
+//        parser.assertBooleanConstraint(true, constraint);
         tTime = BasicTimer.getRunTime();
         if (solver.isSatisfiable(base)) {
             trueSat = true;
@@ -164,7 +164,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         solver.setLast(base, arg);
 
         // test if false branch is SAT
-        parser.assertBooleanConstraint(false, constraint);
+//        parser.assertBooleanConstraint(false, constraint);
         fTime = BasicTimer.getRunTime();
         if (solver.isSatisfiable(base)) {
             falseSat = true;
@@ -209,7 +209,7 @@ public class Reporter_Inverse<T extends A_Model_Inverse<T>> extends A_Reporter<T
         // store symbolic string values
         solver.setLast(base, arg);
 
-        parser.assertBooleanConstraint(!result, constraint);
+//        parser.assertBooleanConstraint(!result, constraint);
 
         // set yes or no for disjoint branches
         String disjoint = "yes";

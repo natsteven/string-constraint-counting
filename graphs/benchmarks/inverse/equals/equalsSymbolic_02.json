@@ -1,0 +1,15 @@
+{"alphabet": {"size": 6, "declaration": "A,B,C,a,b,c"}, 
+"vertices":[
+{"num": 0, "actualValue": "aB", "incomingEdges": [], "sourceConstraints": [], "timeStamp": 1482521433, "type": 0, "id": 3,"value": "\"aB\"!:!<init>"}, 
+{"num": 0, "actualValue": "aB", "incomingEdges": [], "sourceConstraints": [], "timeStamp": 1482521433, "type": 0, "id": 10,"value": "\"aB\"!:!<init>"}, 
+
+
+{"num": 0, "actualValue": "aBc", "incomingEdges": [], "sourceConstraints": [], "timeStamp": 1482521433, "type": 0, "id": 7,"value": "r7!:!getStringValue!!"}, 
+{"num": 0, "actualValue": "aAc", "incomingEdges": [], "sourceConstraints": [], "timeStamp": 1482521433, "type": 0, "id": 8,"value": "r8!:!getStringValue!!"}, 
+
+ {"num": 0, "actualValue": "true", "incomingEdges": [{"source": 7, "type": "t"}, {"source": 10, "type": "s1"}], "sourceConstraints": [], "timeStamp": 1482521433, "type": 0, "id": 13,"value": "contains!!Ljava/lang/CharSequence;!:!0"}, 
+
+{"num": 0, "actualValue": "false", "incomingEdges": [{"source": 7, "type": "t"}, {"source": 8, "type": "s1"}], "sourceConstraints": [], "timeStamp": 1482521433, "type": 0, "id": 11,"value": "equals!!Ljava/lang/Object;!:!0"}, 
+
+{"num": 0, "actualValue": "true", "incomingEdges": [{"source": 8, "type": "t"}, {"source": 3, "type": "s1"}], "sourceConstraints": [], "timeStamp": 1482521433, "type": 0, "id": 15,"value": "contains!!Ljava/lang/CharSequence;!:!0"}
+]}

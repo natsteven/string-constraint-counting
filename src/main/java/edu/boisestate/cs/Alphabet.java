@@ -127,7 +127,7 @@ public class Alphabet {
 	/**
 	 * Constructor
 	 * 
-	 * @param string - Takes an input of alphabet in format of "A,B,c,D" and so on
+	 * @param symbolString - Takes an input of alphabet in format of "A,B,c,D" and so on
 	 * @return
 	 */
 	public Alphabet(String symbolString) {

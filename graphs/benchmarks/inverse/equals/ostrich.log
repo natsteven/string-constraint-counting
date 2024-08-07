@@ -1,0 +1,77 @@
+equalsSymbolic_00
+sat
+(model
+  (define-fun sym8 () String "A")
+  (define-fun sym7 () String "")
+)
+equalsSymbolic_01
+sat
+(model
+  (define-fun sym8 () String "")
+  (define-fun sym7 () String "")
+)
+equalsSymbolic_02
+sat
+(model
+  (define-fun sym8 () String "aBA")
+  (define-fun sym7 () String "aB")
+)
+equalsSymbolic_03
+sat
+(model
+  (define-fun sym8 () String "aB")
+  (define-fun sym7 () String "aB")
+)
+equalsSymbolic_04
+sat
+(model
+  (define-fun sym8 () String "Ab")
+  (define-fun sym7 () String "Ba")
+)
+equalsSymbolic_05
+sat
+(model
+  (define-fun sym8 () String "")
+  (define-fun sym7 () String "")
+)
+equalsSymbolic_06
+sat
+(model
+  (define-fun sym8 () String "")
+  (define-fun sym7 () String "")
+)
+equalsSymbolic_07
+equalsSymbolic_08
+unsat
+(error "no model available")
+equalsSymbolic_09
+unsat
+(error "no model available")
+equalsSymbolic_10
+sat
+(model
+  (define-fun sym7 () String "A")
+)
+equalsSymbolic_11
+unsat
+(error "no model available")
+equalsSymbolic_12
+unsat
+(error "no model available")
+equalsSymbolic_13
+sat
+(model
+  (define-fun sym8 () String "b")
+  (define-fun sym7 () String "a")
+  (define-fun sym9 () String "")
+)
+equalsSymbolic_14
+sat
+(model
+  (define-fun sym8 () String "b")
+  (define-fun sym7 () String "a")
+  (define-fun sym9 () String "A")
+)
+equalsSymbolic_15
+unsat
+(error "no model available")

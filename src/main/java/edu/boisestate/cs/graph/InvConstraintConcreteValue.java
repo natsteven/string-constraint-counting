@@ -95,12 +95,18 @@ public class InvConstraintConcreteValue<T extends A_Model_Inverse<T>>  extends A
 		while(iter.hasNext()) {
 				inputs = inputs.intersect(iter.next().output(this));
 		}
-		
+
+		if (inputs == null) {
+			printDebug("NO VALUE FOR CONCRETE EXISTS " + ID );
+			return new Tuple<>(false, true);
+		}
 		//eas: sanity check mare sure the inputs is the
 		//actual concrete value - add || inputs.getFiniteStrings().size() != 1
-		if (inputs == null || !inputs.containsString(test) ) {
+
+		if (!inputs.containsString(test)) {
 			printDebug("ERROR IN EVALUATE CONCRETE VALUE " + ID + "...");
 //			System.out.format("ERROR IN EVALUATE CONCRETE VALUE %d ...\n",ID);
+			return new Tuple<>(false, true);
 		}
 		return new Tuple<Boolean, Boolean>(true, true);
 	}

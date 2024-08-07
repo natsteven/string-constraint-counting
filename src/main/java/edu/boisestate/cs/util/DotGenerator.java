@@ -69,13 +69,13 @@ public class DotGenerator {
         }
 
 //        // use dot on file to produce png
-//        Runtime rt = Runtime.getRuntime();
-//
-//        try {
-//            rt.exec("dot -Tsvg " + filePath + ".dot -o " + filePath + ".svg");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        Runtime rt = Runtime.getRuntime();
+
+        try {
+            rt.exec("dot -Tsvg " + filePath + ".dot -o " + filePath + ".svg");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
